@@ -36,6 +36,16 @@ const overrideSettings: Record<OverrideField, OverrideSetting> = {
   hydraulic_temperature_c: { label: "Hydraulic temperature", min: -20, max: 130, step: 1, value: 55 },
   load_percent: { label: "Machine load", min: 0, max: 100, step: 1, value: 24 },
 };
+const buttonIcons = {
+  engine: '<path d="M5 9h3l2-2h5l2 2h2v7h-2l-2 2h-5l-2-2H5z"/><path d="M8 9V6m8 3V6m-9 7h3m5 0h2"/>',
+  belt: '<path d="m8 4-2 4 3 2 1 7 6 3 2-3-5-4-1-7z"/><path d="m8 10 6 4"/>',
+  brake: '<circle cx="12" cy="12" r="8"/><path d="M10 17V7h4a3 3 0 0 1 0 6h-4"/>',
+  pause: '<path d="M9 6v12M15 6v12"/>',
+  play: '<path d="m9 6 9 6-9 6z"/>',
+  hazard: '<path d="M12 4 21 20H3z"/><path d="M12 10v4m0 3h.01"/>',
+  reset: '<path d="M4 11a8 8 0 1 1 2 6"/><path d="M4 5v6h6"/>',
+  work: '<path d="M4 19h16M7 17l3-7 3 2 4-7 2 1-5 9-4-2-2 4"/>',
+} as const;
 const state: SimState = {
   x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0,
   boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15,
@@ -64,16 +74,16 @@ function renderShell(): void {
     <header class="topbar"><a class="brand" href="#"><span class="cat-badge">CAT</span><span>OPERATOR SIMULATOR</span></a><div class="top-status"><span class="operator-label">CAT 325</span></div></header>
     <main class="cockpit">
       <section class="workspace">
-        <div class="section-heading"><div><p class="eyebrow">${escapeHtml(siteData.name)} · ${siteData.width_m} × ${siteData.height_m} m</p><h1>CAT 325</h1></div></div>
+        <div class="section-heading"><h1>CAT 325</h1></div>
         <div class="viewport"><div id="sim-world"></div><div id="map-tooltip" class="map-tooltip" role="tooltip" hidden></div><div class="viewport-label"><span>SITE MAP</span><span id="metric-position">18, 22 M</span></div></div>
-        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button"></button><button id="belt-control" class="toggle-button"></button><button id="brake-control" class="toggle-button"></button></div><div class="action-group"><button id="pause-control" class="primary small">Pause simulation</button><button id="hazard-control" class="secondary small">Stage worker proximity</button><button id="reset-control" class="secondary small">Reset session</button></div></div>
+        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="belt-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="brake-control" class="toggle-button" type="button" aria-pressed="false"></button></div><div class="action-group"><button id="pause-control" class="primary small" type="button" data-icon="pause">${iconMarkup("pause")}<span class="button-label">Pause simulation</span></button><button id="hazard-control" class="secondary small" type="button" aria-pressed="false" data-icon="hazard">${iconMarkup("hazard")}<span class="button-label">Stage worker proximity</span></button><button id="reset-control" class="secondary small" type="button" data-icon="reset">${iconMarkup("reset")}<span class="button-label">Reset session</span></button></div></div>
         <div class="key-legend"><span class="legend-title">KEYS</span>W / S Drive <span>·</span> A / D Steer <span>·</span> Q / E Swing <span>·</span> R / F Boom <span>·</span> T / G Stick <span>·</span> Y / H Bucket <span>·</span> Space Work</div>
         <div class="banner hidden" id="banner" role="status"></div>
       </section>
       <aside class="telemetry-panel">
         <div class="panel-title"><div><h2>Readings</h2></div></div>
         <div class="metric-grid"><div class="metric"><span>GROUND SPEED</span><strong id="metric-speed">0.0</strong><small>km/h</small></div><div class="metric"><span>ENGINE SPEED</span><strong id="metric-rpm">1,200</strong><small>RPM</small></div><div class="metric"><span>FUEL USED</span><strong id="metric-fuel">0.0</strong><small>L this session</small></div><div class="metric"><span>LOAD CYCLES</span><strong id="metric-cycles">0</strong><small>cycles</small></div></div>
-        <div class="task-card"><div class="task-heading"><h3>Preset job · A → B</h3><span id="task-state" class="task-state">READY</span></div><strong id="task-title">${escapeHtml(taskData.title)}</strong><p id="task-route">Pickup at Material pickup · Deposit at Deposit</p><div id="task-amount" class="task-amount">No deposits pending acknowledgement.</div><button id="work-control" class="primary work-button">Pickup / deposit material</button></div>
+        <div class="task-card"><div class="task-heading"><h3>Preset job · A → B</h3><span id="task-state" class="task-state">READY</span></div><strong id="task-title">${escapeHtml(taskData.title)}</strong><div id="task-amount" class="task-amount">No deposits pending acknowledgement.</div><button id="work-control" class="primary work-button" type="button" data-icon="work">${iconMarkup("work")}<span class="button-label">Pickup / deposit material</span></button></div>
         <div class="task-card attachment-card"><div class="task-heading"><h3>Attachment pose</h3></div><div class="pose-grid"><div><span>Boom</span><strong id="metric-boom">35°</strong></div><div><span>Stick</span><strong id="metric-stick">−30°</strong></div><div><span>Bucket</span><strong id="metric-bucket">15°</strong></div><div><span>Upper body</span><strong id="metric-swing">000°</strong></div></div></div>
         <details id="override-card" class="override-card"><summary><span>Telemetry overrides</span><span id="override-mark" class="override-mark">0 OVERRIDDEN</span></summary><p class="hint">Override individual readings; active fields are marked in every schema-validated frame.</p><div id="override-list" class="override-list"></div><button id="clear-overrides" class="text-button" type="button">Clear all overrides</button></details>
         <div class="site-facts"><div><span>HEADING</span><strong id="metric-heading">000°</strong></div><div><span>BUCKET LOAD</span><strong id="metric-load">0.00 m³</strong></div><div><span>SIM TIME</span><strong id="metric-time">00:00</strong></div></div>
@@ -95,12 +105,10 @@ function createGame(): void {
   game.events.once("ready", () => scene?.configure(siteData, state, actors));
   animationFrame = window.setInterval(() => tick(performance.now()), 50);
   frameStream = new FrameStream(makeFrame, 200, error => {
-    setFrameStatus("FRAME REJECTED BY SHARED SCHEMA", "error");
     showBanner(error instanceof Error ? error.message : "The simulator generated an invalid frame.", true);
   });
   unsubscribeFrames = frameStream.subscribe(frame => {
     latestFrame = frame;
-    setFrameStatus(`FRAME ${frame.sequence} VALIDATED · 5 HZ`, "live");
     onFrame(frame);
   });
   frameStream.start();
@@ -246,9 +254,6 @@ function makeFrame(sequence: number): WorldFrame {
 }
 
 function onFrame(frame: WorldFrame): void {
-  const dot = root.querySelector<HTMLSpanElement>("#frame-dot");
-  dot?.classList.add("live");
-  if (frame.sequence === 0) setFrameStatus(`FRAME ${frame.sequence} VALIDATED · 5 HZ`, "live");
   updateReadings();
 }
 
@@ -282,14 +287,8 @@ function toggleHazard(): void {
   hazardStaged = !hazardStaged;
   moveActors(); scene?.setActors(actors);
   const button = root.querySelector<HTMLButtonElement>("#hazard-control");
-  if (button) button.textContent = hazardStaged ? "Clear worker proximity" : "Stage worker proximity";
+  if (button) { setButtonLabel(button, hazardStaged ? "Clear worker proximity" : "Stage worker proximity"); button.setAttribute("aria-pressed", String(hazardStaged)); }
   showBanner(hazardStaged ? "Proximity scenario staged: the worker is held 3 m from the machine. No safety action changes movement." : "Proximity staging cleared; the worker is back on the preset route.");
-}
-
-function setFrameStatus(label: string, stateClass: "live" | "error"): void {
-  const status = root.querySelector<HTMLElement>("#frame-status"), dot = root.querySelector<HTMLElement>("#frame-dot");
-  if (status) status.textContent = label;
-  if (dot) dot.className = `status-dot ${stateClass}`;
 }
 
 function bucketTip(): Point {
@@ -319,15 +318,32 @@ function updateReadings(): void {
   setToggle("#engine-control", `ENGINE ${state.engine_running ? "ON" : "OFF"}`, state.engine_running);
   setToggle("#belt-control", `SEATBELT ${state.seatbelt_fastened ? "FASTENED" : "UNFASTENED"}`, state.seatbelt_fastened);
   setToggle("#brake-control", `PARKING BRAKE ${state.parking_brake_engaged ? "ON" : "OFF"}`, state.parking_brake_engaged);
-  setText("#pause-control", paused ? "Resume simulation" : "Pause simulation");
-  const machine = root.querySelector<HTMLSpanElement>("#machine-state");
-  if (machine) { machine.textContent = paused ? "PAUSED" : state.engine_running ? "RUNNING" : "ENGINE OFF"; machine.className = `machine-state ${paused ? "paused" : state.engine_running ? "running" : "off"}`; }
+  const pauseButton = root.querySelector<HTMLButtonElement>("#pause-control");
+  if (pauseButton) { setButtonLabel(pauseButton, paused ? "Resume simulation" : "Pause simulation"); setButtonIcon(pauseButton, paused ? "play" : "pause"); }
   const overrideMark = root.querySelector<HTMLElement>("#override-mark");
   if (overrideMark) overrideMark.textContent = `${Object.keys(overrides).length} OVERRIDDEN`;
 }
 
 function setToggle(selector: string, label: string, active: boolean): void {
-  const button = root.querySelector<HTMLButtonElement>(selector); if (button) { button.textContent = label; button.classList.toggle("active", active); }
+  const button = root.querySelector<HTMLButtonElement>(selector); if (!button) return;
+  const icon = selector === "#engine-control" ? "engine" : selector === "#belt-control" ? "belt" : "brake";
+  setButtonLabel(button, label); setButtonIcon(button, icon);
+  button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active));
+}
+function setButtonLabel(button: HTMLButtonElement, label: string): void {
+  const text = button.querySelector<HTMLElement>(".button-label");
+  if (text) text.textContent = label;
+  else button.textContent = label;
+  button.setAttribute("aria-label", label);
+}
+function setButtonIcon(button: HTMLButtonElement, name: keyof typeof buttonIcons): void {
+  if (button.dataset.icon === name && button.querySelector(".button-icon")) return;
+  button.querySelector(".button-icon")?.remove();
+  button.insertAdjacentHTML("afterbegin", iconMarkup(name));
+  button.dataset.icon = name;
+}
+function iconMarkup(name: keyof typeof buttonIcons): string {
+  return `<svg class="button-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${buttonIcons[name]}</svg>`;
 }
 function resetSimulation(): void {
   Object.assign(state, { x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0, boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15, bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true, parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0, load_cycles: 0, elapsed_s: 0 });

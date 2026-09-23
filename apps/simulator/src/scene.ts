@@ -60,12 +60,13 @@ export class SiteScene extends Phaser.Scene {
     for (const destination of this.site.destinations) {
       this.labels.push(this.add.text(0, 0, destination.label.toUpperCase(), {
         color: "#f1f0e7", backgroundColor: destination.destination_id === "DEST_A" ? "#56402e" : "#4d4329",
-        fontSize: "10px", fontFamily: "monospace", fontStyle: "bold", padding: { left: 7, right: 7, top: 5, bottom: 5 },
+        fontSize: "13px", fontFamily: '"Segoe UI", system-ui, sans-serif', fontStyle: "bold", resolution: 2,
+        padding: { left: 9, right: 9, top: 6, bottom: 6 },
       }).setDepth(3));
     }
-    this.labels.push(this.add.text(0, 0, "RESTRICTED", {
-      color: "#fff0df", backgroundColor: "#7e3d32", fontSize: "9px", fontFamily: "monospace", fontStyle: "bold",
-      padding: { left: 7, right: 7, top: 4, bottom: 4 },
+    this.labels.push(this.add.text(0, 0, "RESTRICTED AREA", {
+      color: "#fff0df", backgroundColor: "#7e3d32", fontSize: "12px", fontFamily: '"Segoe UI", system-ui, sans-serif', fontStyle: "bold", resolution: 2,
+      padding: { left: 8, right: 8, top: 5, bottom: 5 },
     }).setDepth(3));
     this.positionLabels();
   }
@@ -74,9 +75,9 @@ export class SiteScene extends Phaser.Scene {
     this.site?.destinations.forEach((destination, index) => {
       const point = this.point(destination.position), label = this.labels[index];
       if (!label) return;
-      // The destinations are close together in the shared site layout; outward callouts keep the icons distinct.
-      if (index === 0) label.setPosition(point.x - 102, point.y + 17);
-      else label.setPosition(point.x + 17, point.y - 37);
+      const radius = Math.max(12, destination.radius_m * this.pxPerMeter);
+      label.setPosition(point.x - label.width / 2,
+        index === 0 ? point.y + radius + 10 : point.y - radius - label.height - 10);
     });
     const zone = this.site?.zones.find(item => item.kind === "restricted"), zoneLabel = this.labels[2];
     if (zone && zoneLabel) {
@@ -149,8 +150,8 @@ export class SiteScene extends Phaser.Scene {
     const label = this.labels[destination.destination_id === "DEST_A" ? 0 : 1];
     if (label) {
       const anchor = destination.destination_id === "DEST_A"
-        ? { x: label.x + label.width, y: label.y + label.height / 2 }
-        : { x: label.x, y: label.y + label.height / 2 };
+        ? { x: label.x + label.width / 2, y: label.y }
+        : { x: label.x + label.width / 2, y: label.y + label.height };
       g.lineStyle(1, color, 0.75).lineBetween(p.x, p.y, anchor.x, anchor.y);
       g.fillStyle(color, 1).fillCircle(p.x, p.y, 2.5);
     }

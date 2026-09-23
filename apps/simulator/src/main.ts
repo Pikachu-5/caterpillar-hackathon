@@ -1,7 +1,12 @@
 import Phaser from "phaser";
 import site from "../../../shared/fixtures/site.json";
+import environment from "../../../shared/fixtures/environment.json";
+import machine from "../../../shared/fixtures/machine.json";
+import operator from "../../../shared/fixtures/operator.json";
+import task from "../../../shared/fixtures/task.json";
 import { SiteScene } from "./scene";
-import type { Point, Site as SiteContract } from "@cat-hub/contracts";
+import { FrameStream, WorkEventOutbox } from "./telemetry";
+import type { Point, Site as SiteContract, Telemetry, WorldFrame, WorkEvent } from "@cat-hub/contracts";
 import "./style.css";
 
 type SimState = {
@@ -13,41 +18,64 @@ type SimState = {
   deposited_m3: number; engine_hours: number;
 };
 type SiteActor = { actor_id: string; kind: "worker" | "vehicle"; position: Point; heading_deg: number; radius_m: number; speed_kmh: number };
+type OverrideField = "rpm" | "throttle_percent" | "fuel_percent" | "engine_temperature_c" | "hydraulic_pressure_psi" | "hydraulic_temperature_c" | "load_percent";
+type OverrideSetting = { label: string; min: number; max: number; step: number; value: number };
 
 const siteData = site as SiteContract;
 const root = document.querySelector<HTMLDivElement>("#app")!;
+const machineData = machine;
+const operatorData = operator;
+const taskData = task;
+const environmentData = environment;
+const overrideSettings: Record<OverrideField, OverrideSetting> = {
+  rpm: { label: "Engine RPM", min: 0, max: 5000, step: 50, value: 1350 },
+  throttle_percent: { label: "Throttle", min: 0, max: 100, step: 1, value: 36 },
+  fuel_percent: { label: "Fuel level", min: 0, max: 100, step: 1, value: 78 },
+  engine_temperature_c: { label: "Engine temperature", min: -20, max: 150, step: 1, value: 82 },
+  hydraulic_pressure_psi: { label: "Hydraulic pressure", min: 0, max: 6000, step: 50, value: 2100 },
+  hydraulic_temperature_c: { label: "Hydraulic temperature", min: -20, max: 130, step: 1, value: 55 },
+  load_percent: { label: "Machine load", min: 0, max: 100, step: 1, value: 24 },
+};
 const state: SimState = {
-  x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 0, speed_mps: 0,
-  boom_angle_deg: 35, stick_angle_deg: -30, bucket_angle_deg: 15,
+  x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0,
+  boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15,
   bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true,
   parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0,
   load_cycles: 0, elapsed_s: 0, deposited_m3: 0, engine_hours: 1523.5,
 };
 const actors: SiteActor[] = [];
+const outbox = new WorkEventOutbox(64);
+const overrides: Partial<Record<OverrideField, number>> = {};
 let game: Phaser.Game | null = null;
 let scene: SiteScene | null = null;
+let frameStream: FrameStream | null = null;
+let unsubscribeFrames: (() => void) | null = null;
+let latestFrame: WorldFrame | null = null;
 let paused = false;
 let animationFrame = 0;
 let previousTick = performance.now();
 let keys = new Set<string>();
 let bannerTimer = 0;
+let hazardStaged = false;
+let localSessionId = makeLocalSessionId();
 
 function renderShell(): void {
   root.innerHTML = `<div class="app-shell">
-    <header class="topbar"><a class="brand" href="#"><span class="cat-badge">CAT</span><span>OPERATOR SIMULATOR</span></a><div class="top-status"><span class="status-dot live"></span><span>LOCAL SIMULATION</span><span class="divider"></span><span class="operator-label">CAT 325 · TRACKED EXCAVATOR</span></div></header>
+    <header class="topbar"><a class="brand" href="#"><span class="cat-badge">CAT</span><span>OPERATOR SIMULATOR</span></a><div class="top-status"><span id="frame-dot" class="status-dot live"></span><span id="frame-status">LOCAL FRAME STREAM · 5 HZ</span><span class="divider"></span><span class="operator-label">CAT 325 · TRACKED EXCAVATOR</span></div></header>
     <main class="cockpit">
       <section class="workspace">
         <div class="section-heading"><div><p class="eyebrow">${escapeHtml(siteData.name)} · ${siteData.width_m} × ${siteData.height_m} m</p><h1>CAT 325 <span class="subheading">Site Simulator</span></h1></div><div class="source-chip"><span class="pulse"></span>LOCAL SESSION</div></div>
         <div class="viewport"><div id="sim-world"></div><div class="viewport-label"><span>LOCAL SITE COORDINATES</span><span id="metric-position">MACHINE 018, 024 M</span><span>ORIGIN SOUTHWEST · +X EAST · +Y NORTH</span></div></div>
-        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button"></button><button id="belt-control" class="toggle-button"></button><button id="brake-control" class="toggle-button"></button></div><div class="action-group"><button id="pause-control" class="primary small">Pause simulation</button><button id="reset-control" class="secondary small">Reset site</button></div></div>
+        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button"></button><button id="belt-control" class="toggle-button"></button><button id="brake-control" class="toggle-button"></button></div><div class="action-group"><button id="pause-control" class="primary small">Pause simulation</button><button id="hazard-control" class="secondary small">Stage worker proximity</button><button id="reset-control" class="secondary small">Reset session</button></div></div>
         <div class="key-legend"><span class="legend-title">CONTROLS</span><kbd>W</kbd><kbd>S</kbd><span>travel</span><kbd>A</kbd><kbd>D</kbd><span>tracks</span><kbd>Q</kbd><kbd>E</kbd><span>swing</span><kbd>R</kbd><kbd>F</kbd><span>boom</span><kbd>T</kbd><kbd>G</kbd><span>stick</span><kbd>Y</kbd><kbd>H</kbd><span>bucket</span><kbd>Space</kbd><span>pickup / deposit</span></div>
         <div class="banner hidden" id="banner" role="status"></div>
       </section>
       <aside class="telemetry-panel">
         <div class="panel-title"><div><p class="eyebrow">SIMULATED READINGS</p><h2>Machine status</h2></div><span id="machine-state" class="machine-state running">RUNNING</span></div>
         <div class="metric-grid"><div class="metric"><span>GROUND SPEED</span><strong id="metric-speed">0.0</strong><small>km/h</small></div><div class="metric"><span>ENGINE SPEED</span><strong id="metric-rpm">1,200</strong><small>RPM</small></div><div class="metric"><span>FUEL USED</span><strong id="metric-fuel">0.0</strong><small>L this session</small></div><div class="metric"><span>LOAD CYCLES</span><strong id="metric-cycles">0</strong><small>cycles</small></div></div>
-        <div class="task-card"><div class="task-heading"><h3>Preset job · A → B</h3><span id="task-state" class="task-state">READY</span></div><strong id="task-title">Move material from A to B</strong><p id="task-route">Pickup at Material pickup · Deposit at Deposit</p><div class="progress-track"><span id="task-progress"></span></div><div id="task-amount" class="task-amount">0.00 / 5.00 m³ deposited</div><button id="work-control" class="primary work-button">Pickup / deposit material</button></div>
+        <div class="task-card"><div class="task-heading"><h3>Preset job · A → B</h3><span id="task-state" class="task-state">READY</span></div><strong id="task-title">${escapeHtml(taskData.title)}</strong><p id="task-route">Pickup at Material pickup · Deposit at Deposit</p><div id="task-amount" class="task-amount">No deposits pending acknowledgement.</div><button id="work-control" class="primary work-button">Pickup / deposit material</button></div>
         <div class="task-card attachment-card"><div class="task-heading"><h3>Attachment pose</h3><span class="local-tag">SIMPLIFIED KINEMATICS</span></div><div class="pose-grid"><div><span>BOOM</span><strong id="metric-boom">35°</strong></div><div><span>STICK</span><strong id="metric-stick">−30°</strong></div><div><span>BUCKET</span><strong id="metric-bucket">15°</strong></div><div><span>UPPER BODY</span><strong id="metric-swing">000°</strong></div></div></div>
+        <details id="override-card" class="override-card"><summary><span>Telemetry overrides</span><span id="override-mark" class="override-mark">0 OVERRIDDEN</span></summary><p class="hint">Override individual readings; active fields are marked in every schema-validated frame.</p><div id="override-list" class="override-list"></div><button id="clear-overrides" class="text-button" type="button">Clear all overrides</button></details>
         <div class="site-facts"><div><span>HEADING</span><strong id="metric-heading">000°</strong></div><div><span>BUCKET LOAD</span><strong id="metric-load">0.00 m³</strong></div><div><span>SIM TIME</span><strong id="metric-time">00:00</strong></div></div>
         <p class="notice">All readings and movement are simulated. This is a simplified 2D demo, not a CAT machine model.</p>
       </aside>
@@ -67,15 +95,32 @@ function createGame(): void {
   });
   game.events.once("ready", () => scene?.configure(siteData, state, actors));
   animationFrame = window.setInterval(() => tick(performance.now()), 50);
+  frameStream = new FrameStream(makeFrame, 200, error => {
+    setFrameStatus("FRAME REJECTED BY SHARED SCHEMA", "error");
+    showBanner(error instanceof Error ? error.message : "The simulator generated an invalid frame.", true);
+  });
+  unsubscribeFrames = frameStream.subscribe(frame => {
+    latestFrame = frame;
+    setFrameStatus(`FRAME ${frame.sequence} VALIDATED · 5 HZ`, "live");
+    onFrame(frame);
+  });
+  frameStream.start();
 }
 
 function bindControls(): void {
   root.querySelector<HTMLButtonElement>("#engine-control")!.onclick = () => { state.engine_running = !state.engine_running; if (!state.engine_running) state.speed_mps = 0; updateReadings(); };
   root.querySelector<HTMLButtonElement>("#belt-control")!.onclick = () => { state.seatbelt_fastened = !state.seatbelt_fastened; updateReadings(); };
   root.querySelector<HTMLButtonElement>("#brake-control")!.onclick = () => { state.parking_brake_engaged = !state.parking_brake_engaged; if (state.parking_brake_engaged) state.speed_mps = 0; updateReadings(); };
-  root.querySelector<HTMLButtonElement>("#pause-control")!.onclick = () => { paused = !paused; previousTick = performance.now(); updateReadings(); };
+  root.querySelector<HTMLButtonElement>("#pause-control")!.onclick = () => {
+    paused = !paused; previousTick = performance.now();
+    if (paused) frameStream?.pause(); else frameStream?.resume();
+    updateReadings();
+  };
   root.querySelector<HTMLButtonElement>("#reset-control")!.onclick = resetSimulation;
+  root.querySelector<HTMLButtonElement>("#hazard-control")!.onclick = toggleHazard;
   root.querySelector<HTMLButtonElement>("#work-control")!.onclick = pickupOrDeposit;
+  root.querySelector<HTMLButtonElement>("#clear-overrides")!.onclick = clearOverrides;
+  renderOverrides();
   window.addEventListener("keydown", keyHandler);
   window.addEventListener("keyup", keyHandler);
   window.addEventListener("blur", releaseKeys);
@@ -115,10 +160,11 @@ function moveActors(): void {
   const t = state.elapsed_s;
   const worker = actors.find(actor => actor.actor_id === "WORKER001");
   const vehicle = actors.find(actor => actor.actor_id === "VEHICLE001");
-  const workerX = 44 + Math.sin(t * 0.1) * 7, workerY = 52 + Math.cos(t * 0.1) * 6;
+  const workerX = hazardStaged ? Phaser.Math.Clamp(state.x_m + 3, 1, siteData.width_m - 1) : 44 + Math.sin(t * 0.1) * 7;
+  const workerY = hazardStaged ? state.y_m : 52 + Math.cos(t * 0.1) * 6;
   const vehicleX = 72 + Math.cos(t * 0.065) * 8, vehicleY = 34 + Math.sin(t * 0.065) * 7;
-  if (worker) Object.assign(worker, { position: { x_m: workerX, y_m: workerY }, heading_deg: normalize(t * 6), speed_kmh: 1.1 });
-  else actors.push({ actor_id: "WORKER001", kind: "worker", position: { x_m: workerX, y_m: workerY }, heading_deg: normalize(t * 6), radius_m: 0.45, speed_kmh: 1.1 });
+  if (worker) Object.assign(worker, { position: { x_m: workerX, y_m: workerY }, heading_deg: normalize(t * 6), speed_kmh: hazardStaged ? 0 : 1.1 });
+  else actors.push({ actor_id: "WORKER001", kind: "worker", position: { x_m: workerX, y_m: workerY }, heading_deg: normalize(t * 6), radius_m: 0.45, speed_kmh: hazardStaged ? 0 : 1.1 });
   if (vehicle) Object.assign(vehicle, { position: { x_m: vehicleX, y_m: vehicleY }, heading_deg: normalize(t * 3.5), speed_kmh: 4.5 });
   else actors.push({ actor_id: "VEHICLE001", kind: "vehicle", position: { x_m: vehicleX, y_m: vehicleY }, heading_deg: normalize(t * 3.5), radius_m: 1.2, speed_kmh: 4.5 });
 }
@@ -128,23 +174,130 @@ function pickupOrDeposit(): void {
   const pickup = siteData.destinations.find(destination => destination.destination_id === "DEST_A");
   const deposit = siteData.destinations.find(destination => destination.destination_id === "DEST_B");
   if (!pickup || !deposit) { showBanner("The site fixture is missing the preset A → B destinations.", true); return; }
-  const atPickup = distance(state, pickup.position) <= pickup.radius_m + 1;
-  const atDeposit = distance(state, deposit.position) <= deposit.radius_m + 1;
+  const tip = bucketTip();
+  const atPickup = distance(tip, pickup.position) <= pickup.radius_m;
+  const atDeposit = distance(tip, deposit.position) <= deposit.radius_m;
   if (state.bucket_load_m3 <= 0 && atPickup) {
-    state.bucket_load_m3 = 0.5; state.boom_angle_deg = 50; state.stick_angle_deg = 0; state.bucket_angle_deg = -10;
+    state.bucket_load_m3 = 0.5;
     showBanner("Bucket loaded with 0.50 m³ of simulated material. Move to Deposit and unload.");
   } else if (state.bucket_load_m3 > 0 && atDeposit) {
-    state.deposited_m3 += state.bucket_load_m3; state.load_cycles += 1; state.bucket_load_m3 = 0;
-    showBanner(`Deposit added · ${state.deposited_m3.toFixed(2)} / 5.00 m³ for the local demo job.`);
+    const event: WorkEvent = {
+      event_id: makeEventId(), task_id: taskData.task_id, kind: "material_deposited",
+      destination_id: deposit.destination_id, quantity_m3: state.bucket_load_m3,
+      simulation_time_s: state.elapsed_s,
+    };
+    if (!outbox.add(event)) { showBanner("Work-event buffer is full. Keep the bucket loaded until the pending events are acknowledged.", true); return; }
+    state.load_cycles += 1; state.bucket_load_m3 = 0;
+    showBanner(`Deposit staged · ${event.quantity_m3.toFixed(2)} m³ repeats in each frame until acknowledged.`);
   } else if (state.bucket_load_m3 > 0) showBanner("Move the excavator to the Deposit area before unloading.", true);
   else showBanner("Move the excavator into the Material pickup area to load the bucket.", true);
   updateReadings();
 }
 
+function makeFrame(sequence: number): WorldFrame {
+  const tip = bucketTip();
+  const derived = {
+    rpm: state.engine_running ? 1200 + Math.round(Math.abs(state.speed_mps) * 200) : 0,
+    throttle_percent: state.engine_running ? Math.min(100, 30 + Math.abs(state.speed_mps) * 12) : 0,
+    fuel_percent: Math.max(0, 78 - state.fuel_used_l * 0.025),
+    engine_temperature_c: state.engine_running ? 80 + Math.min(18, state.load_cycles * 0.2) : 75,
+    hydraulic_pressure_psi: state.engine_running ? 1800 + Math.round(state.bucket_load_m3 * 500) : 0,
+    hydraulic_temperature_c: state.engine_running ? 55 + Math.min(18, state.bucket_load_m3 * 12) : 48,
+    load_percent: Math.min(100, 14 + state.bucket_load_m3 * 60 + Math.abs(state.speed_mps) * 6),
+  };
+  const telemetry: Telemetry = {
+    machine_id: machineData.machine_id, operator_id: operatorData.operator_id, machine_model: "CAT 325",
+    position: { x_m: state.x_m, y_m: state.y_m }, heading_deg: state.heading_deg,
+    speed_kmh: Math.abs(state.speed_mps) * 3.6, engine_running: state.engine_running,
+    engine_hours: state.engine_hours, rpm: overrides.rpm ?? derived.rpm,
+    throttle_percent: overrides.throttle_percent ?? derived.throttle_percent,
+    fuel_percent: overrides.fuel_percent ?? derived.fuel_percent,
+    fuel_used_l_session: state.fuel_used_l, engine_temperature_c: overrides.engine_temperature_c ?? derived.engine_temperature_c,
+    hydraulic_pressure_psi: overrides.hydraulic_pressure_psi ?? derived.hydraulic_pressure_psi,
+    hydraulic_temperature_c: overrides.hydraulic_temperature_c ?? derived.hydraulic_temperature_c,
+    load_percent: overrides.load_percent ?? derived.load_percent,
+    idle_time_s_session: state.idle_seconds, load_cycles_session: state.load_cycles,
+    seatbelt_fastened: state.seatbelt_fastened, operator_present: true,
+    parking_brake_engaged: state.parking_brake_engaged,
+    attachment: {
+      type: "bucket", upper_body_heading_deg: state.upper_heading_deg,
+      boom_angle_deg: state.boom_angle_deg, stick_angle_deg: state.stick_angle_deg,
+      bucket_angle_deg: state.bucket_angle_deg, bucket_tip_position: tip,
+      bucket_tip_height_m: Math.max(0, 1 + Math.sin(Phaser.Math.DegToRad(state.boom_angle_deg)) * 3),
+      bucket_load_m3: state.bucket_load_m3, footprint_radius_m: 2.5, arm_safety_radius_m: 1.2,
+    },
+    overridden_fields: (Object.keys(overrideSettings) as OverrideField[]).filter(field => field in overrides),
+  };
+  return {
+    schema_version: "1.0.0", session_id: localSessionId, site_id: siteData.site_id,
+    site_revision: siteData.revision, sequence, timestamp: new Date().toISOString(),
+    simulation_time_s: state.elapsed_s, environment_id: environmentData.environment_id,
+    telemetry, actors: actors.map(actor => ({ ...actor, position: { ...actor.position } })),
+    work_events: outbox.pending(),
+  };
+}
+
+function onFrame(frame: WorldFrame): void {
+  const dot = root.querySelector<HTMLSpanElement>("#frame-dot");
+  dot?.classList.add("live");
+  if (frame.sequence === 0) setFrameStatus(`FRAME ${frame.sequence} VALIDATED · 5 HZ`, "live");
+  updateReadings();
+}
+
+function renderOverrides(): void {
+  const list = root.querySelector<HTMLDivElement>("#override-list"); if (!list) return;
+  list.innerHTML = (Object.entries(overrideSettings) as [OverrideField, OverrideSetting][]).map(([field, config]) => {
+    const active = field in overrides, value = overrides[field] ?? config.value;
+    return `<label class="override-row"><input type="checkbox" data-override="${field}" ${active ? "checked" : ""}><span>${config.label}</span><input type="range" data-value="${field}" min="${config.min}" max="${config.max}" step="${config.step}" value="${value}" ${active ? "" : "disabled"}><output data-output="${field}">${value}</output></label>`;
+  }).join("");
+  list.querySelectorAll<HTMLInputElement>("[data-override]").forEach(checkbox => checkbox.onchange = () => {
+    const field = checkbox.dataset.override as OverrideField;
+    const slider = list.querySelector<HTMLInputElement>(`[data-value="${field}"]`)!;
+    if (checkbox.checked) overrides[field] = Number(slider.value); else delete overrides[field];
+    slider.disabled = !checkbox.checked; updateReadings();
+  });
+  list.querySelectorAll<HTMLInputElement>("[data-value]").forEach(slider => slider.oninput = () => {
+    const field = slider.dataset.value as OverrideField;
+    overrides[field] = Number(slider.value);
+    const output = list.querySelector<HTMLOutputElement>(`[data-output="${field}"]`);
+    if (output) output.value = slider.value;
+    updateReadings();
+  });
+}
+
+function clearOverrides(): void {
+  for (const field of Object.keys(overrides) as OverrideField[]) delete overrides[field];
+  renderOverrides(); updateReadings();
+}
+
+function toggleHazard(): void {
+  hazardStaged = !hazardStaged;
+  moveActors(); scene?.setActors(actors);
+  const button = root.querySelector<HTMLButtonElement>("#hazard-control");
+  if (button) button.textContent = hazardStaged ? "Clear worker proximity" : "Stage worker proximity";
+  showBanner(hazardStaged ? "Proximity scenario staged: the worker is held 3 m from the machine. No safety action changes movement." : "Proximity staging cleared; the worker is back on the preset route.");
+}
+
+function setFrameStatus(label: string, stateClass: "live" | "error"): void {
+  const status = root.querySelector<HTMLElement>("#frame-status"), dot = root.querySelector<HTMLElement>("#frame-dot");
+  if (status) status.textContent = label;
+  if (dot) dot.className = `status-dot ${stateClass}`;
+}
+
+function bucketTip(): Point {
+  const reach = 3 + Math.max(0, Math.cos(Phaser.Math.DegToRad(state.boom_angle_deg))) * 5
+    + Math.max(0, Math.cos(Phaser.Math.DegToRad(state.stick_angle_deg))) * 3;
+  const angle = Phaser.Math.DegToRad(state.upper_heading_deg - 90);
+  return {
+    x_m: Phaser.Math.Clamp(state.x_m + Math.cos(angle) * reach, 0, siteData.width_m),
+    y_m: Phaser.Math.Clamp(state.y_m - Math.sin(angle) * reach, 0, siteData.height_m),
+  };
+}
+
 function updateReadings(): void {
   const setText = (selector: string, value: string) => { const el = root.querySelector<HTMLElement>(selector); if (el) el.textContent = value; };
   setText("#metric-speed", (Math.abs(state.speed_mps) * 3.6).toFixed(1));
-  setText("#metric-rpm", Math.round(state.engine_running ? 1200 + Math.abs(state.speed_mps) * 200 : 0).toLocaleString());
+  setText("#metric-rpm", Math.round(overrides.rpm ?? (state.engine_running ? 1200 + Math.abs(state.speed_mps) * 200 : 0)).toLocaleString());
   setText("#metric-fuel", state.fuel_used_l.toFixed(1)); setText("#metric-cycles", String(state.load_cycles));
   setText("#metric-heading", `${String(Math.round(state.heading_deg)).padStart(3, "0")}°`);
   setText("#metric-position", `MACHINE ${state.x_m.toFixed(1)}, ${state.y_m.toFixed(1)} M`);
@@ -152,24 +305,29 @@ function updateReadings(): void {
   setText("#metric-boom", `${Math.round(state.boom_angle_deg)}°`); setText("#metric-stick", `${Math.round(state.stick_angle_deg)}°`);
   setText("#metric-bucket", `${Math.round(state.bucket_angle_deg)}°`); setText("#metric-swing", `${String(Math.round(state.upper_heading_deg)).padStart(3, "0")}°`);
   setText("#metric-time", `${String(Math.floor(state.elapsed_s / 60)).padStart(2, "0")}:${String(Math.floor(state.elapsed_s % 60)).padStart(2, "0")}`);
-  const progress = Math.min(100, state.deposited_m3 / 5 * 100);
-  const bar = root.querySelector<HTMLSpanElement>("#task-progress"); if (bar) bar.style.width = `${progress}%`;
-  setText("#task-amount", `${state.deposited_m3.toFixed(2)} / 5.00 m³ deposited`);
-  setText("#task-state", progress >= 100 ? "COMPLETE" : state.bucket_load_m3 > 0 ? "LOADED" : state.load_cycles > 0 ? "IN PROGRESS" : "READY");
+  const pendingVolume = outbox.pending().reduce((total, event) => total + event.quantity_m3, 0);
+  setText("#task-amount", `${outbox.size} deposit event${outbox.size === 1 ? "" : "s"} awaiting acknowledgement · ${pendingVolume.toFixed(2)} m³ queued`);
+  setText("#task-state", state.bucket_load_m3 > 0 ? "LOADED" : outbox.size > 0 ? "PENDING ACK" : state.load_cycles > 0 ? "EVENTS ACKED" : "READY");
   setToggle("#engine-control", `ENGINE ${state.engine_running ? "ON" : "OFF"}`, state.engine_running);
   setToggle("#belt-control", `SEATBELT ${state.seatbelt_fastened ? "FASTENED" : "UNFASTENED"}`, state.seatbelt_fastened);
   setToggle("#brake-control", `PARKING BRAKE ${state.parking_brake_engaged ? "ON" : "OFF"}`, state.parking_brake_engaged);
   setText("#pause-control", paused ? "Resume simulation" : "Pause simulation");
   const machine = root.querySelector<HTMLSpanElement>("#machine-state");
   if (machine) { machine.textContent = paused ? "PAUSED" : state.engine_running ? "RUNNING" : "ENGINE OFF"; machine.className = `machine-state ${paused ? "paused" : state.engine_running ? "running" : "off"}`; }
+  const overrideMark = root.querySelector<HTMLElement>("#override-mark");
+  if (overrideMark) overrideMark.textContent = `${Object.keys(overrides).length} OVERRIDDEN`;
 }
 
 function setToggle(selector: string, label: string, active: boolean): void {
   const button = root.querySelector<HTMLButtonElement>(selector); if (button) { button.textContent = label; button.classList.toggle("active", active); }
 }
 function resetSimulation(): void {
-  Object.assign(state, { x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 0, speed_mps: 0, boom_angle_deg: 35, stick_angle_deg: -30, bucket_angle_deg: 15, bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true, parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0, load_cycles: 0, elapsed_s: 0, deposited_m3: 0 });
-  actors.splice(0, actors.length); keys.clear(); paused = false; previousTick = performance.now(); moveActors(); scene?.setActors(actors); scene?.setState(state); updateReadings(); showBanner("Local simulator reset. Session counters and the A → B job are clear.");
+  Object.assign(state, { x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0, boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15, bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true, parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0, load_cycles: 0, elapsed_s: 0, deposited_m3: 0 });
+  localSessionId = makeLocalSessionId(); outbox.clear(); frameStream?.reset(0); latestFrame = null;
+  for (const field of Object.keys(overrides) as OverrideField[]) delete overrides[field];
+  hazardStaged = false; actors.splice(0, actors.length); keys.clear(); paused = false; previousTick = performance.now(); moveActors();
+  scene?.setActors(actors); scene?.setState(state); renderOverrides(); updateReadings();
+  showBanner("New local simulator session started. Session counters, sequence, and pending events were reset.");
 }
 function showBanner(message: string, error = false): void {
   const banner = root.querySelector<HTMLDivElement>("#banner"); if (!banner) return;
@@ -178,10 +336,13 @@ function showBanner(message: string, error = false): void {
 }
 function distance(a: Point, b: Point): number { return Math.hypot(a.x_m - b.x_m, a.y_m - b.y_m); }
 function normalize(degrees: number): number { return (degrees % 360 + 360) % 360; }
+function makeLocalSessionId(): string { return `SIM${crypto.randomUUID().replaceAll("-", "")}`; }
+function makeEventId(): string { return `WORK${crypto.randomUUID().replaceAll("-", "")}`; }
 function escapeHtml(value: string): string { return value.replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[char]!); }
 
 function cleanup(): void {
   if (animationFrame) window.clearInterval(animationFrame);
+  frameStream?.stop(); unsubscribeFrames?.();
   game?.destroy(true); game = null; scene = null;
   window.removeEventListener("keydown", keyHandler); window.removeEventListener("keyup", keyHandler); window.removeEventListener("blur", releaseKeys);
 }

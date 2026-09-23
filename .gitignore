@@ -21,7 +21,7 @@ coverage/
 .npm-cache/
 .uv-cache/
 .cache/
-data/generated/*
+#data/generated/*
 !data/generated/README.md
 ml/artifacts/*
 !ml/artifacts/README.md

@@ -1,0 +1,108 @@
+{
+  "generator_version": "data-001-v1",
+  "generation_seed": 42,
+  "generated_at": "2026-09-23T12:31:20Z",
+  "limits_disclaimer": "This is synthetic data generated for demo purposes. All relationships between variables are hypothetical assumptions, not measured CAT 325 behavior. Synthetic evaluation demonstrates pipeline behavior, not real-world predictive accuracy.",
+  "parameters": {
+    "interval_minutes": 60.0,
+    "timezone": "America/Chicago",
+    "work_schedule": "06:00-18:00 weekdays",
+    "ops_start_date": "2025-05-05",
+    "ops_num_days": 42,
+    "num_tasks": 500,
+    "operators": [
+      {
+        "id": "OP1001",
+        "skill": "Expert"
+      },
+      {
+        "id": "OP2001",
+        "skill": "Intermediate"
+      }
+    ],
+    "machines": [
+      {
+        "id": "EXC001",
+        "model": "CAT 325",
+        "age_years": 2.0,
+        "initial_engine_hours": 1530.2
+      },
+      {
+        "id": "EXC002",
+        "model": "CAT 325",
+        "age_years": 5.0,
+        "initial_engine_hours": 6200.0
+      }
+    ],
+    "temperature_range_c": [
+      -5.0,
+      45.0
+    ],
+    "soil_types": [
+      "Sand",
+      "Loam",
+      "Clay",
+      "Gravel"
+    ],
+    "soil_moisture_range_vwc": [
+      5.0,
+      55.0
+    ],
+    "task_types": [
+      "Earth Excavation",
+      "Trenching",
+      "Material Loading",
+      "Grading",
+      "Demolition"
+    ],
+    "weather_categories": [
+      "Sunny",
+      "Rainy",
+      "Cloudy",
+      "Windy"
+    ],
+    "skill_levels": [
+      "Beginner",
+      "Intermediate",
+      "Expert"
+    ],
+    "split_method": "chronological_block",
+    "split_fractions": {
+      "train": 0.7,
+      "validation": 0.15,
+      "test": 0.15
+    }
+  },
+  "output": {
+    "operations": {
+      "total_rows": 1008,
+      "train_rows": 696,
+      "validation_rows": 144,
+      "test_rows": 168,
+      "sha256": "9d5ef033ed302eff3bfebb8571d63c3f28713ff25fe8e7c9664f896330fbe525"
+    },
+    "tasks": {
+      "total_rows": 500,
+      "train_rows": 342,
+      "validation_rows": 70,
+      "test_rows": 88,
+      "sha256": "808cc740d3620626d92a9cb75d4e604f6e18f9addab7addd73ba610ba0c5e4ea"
+    }
+  },
+  "reference_data": {
+    "operations_sha256": "0cea95256aa5531c2c83f0b5c44c3d925d6c0e37c41569a832bcfc6b5c86ffc9",
+    "tasks_sha256": "d3beda9b17d6e3f185b4fc923b4276d93e1aa0bfba732fcbbb89a13821e6699c",
+    "note": "Reference CSVs are preserved exactly; synthetic data is separate."
+  },
+  "units": {
+    "fuel_used_l": "liters per interval",
+    "idling_time_min": "minutes within interval",
+    "engine_hours": "cumulative operating hours",
+    "air_temperature_c": "degrees Celsius (ambient, not engine)",
+    "soil_moisture_percent_vwc": "volumetric water content percentage",
+    "estimated_minutes": "minutes",
+    "actual_minutes": "minutes",
+    "machine_age_years": "years",
+    "interval_minutes": "minutes"
+  }
+}

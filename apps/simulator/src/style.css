@@ -130,6 +130,39 @@ kbd { min-width: 21px; text-align: center; padding: 3px 5px; color: #dfe3d9; bac
 .viewport-label { font: 600 12px "Segoe UI", system-ui, sans-serif; letter-spacing: .04em; }
 .viewport-label span:first-child { letter-spacing: .1em; }
 .map-tooltip { font-family: "Segoe UI", system-ui, sans-serif; font-size: 13px; }
+.environment-cues { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr) minmax(160px, 1.3fr) auto; align-items: stretch; gap: 8px; margin: 10px 0 13px; }
+.environment-cue { --condition-accent: #81947a; display: flex; min-width: 0; align-items: center; gap: 10px; padding: 9px 11px; border: 1px solid #364137; border-left: 2px solid var(--condition-accent); border-radius: 6px; background: #1a211c; }
+.environment-icon { display: grid; flex: 0 0 25px; width: 25px; height: 25px; place-items: center; color: var(--condition-accent); }
+.environment-icon svg { display: block; width: 21px; height: 21px; }
+.weather-sunny { --condition-accent: #e9c15b; }
+.weather-rainy { --condition-accent: #78b5d0; }
+.weather-cloudy { --condition-accent: #b2b9b3; }
+.weather-windy { --condition-accent: #88c0b4; }
+.weather-unknown { --condition-accent: #a2a89e; }
+.terrain-firm { --condition-accent: #a9b67c; }
+.terrain-mud { --condition-accent: #bf8c68; }
+.terrain-sand { --condition-accent: #dfbe79; }
+.terrain-rock { --condition-accent: #aab2b3; }
+.terrain-unknown { --condition-accent: #879087; }
+.soil-icon { --condition-accent: #7bb9cf; }
+.environment-copy { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.environment-label { overflow: hidden; color: #9ba79a; font: 600 8px "Segoe UI", system-ui, sans-serif; letter-spacing: .075em; text-overflow: ellipsis; white-space: nowrap; }
+.environment-copy strong { overflow: hidden; color: #e8ebe2; font: 650 12px "Segoe UI", system-ui, sans-serif; text-overflow: ellipsis; white-space: nowrap; }
+.environment-copy small { color: #aeb7a9; font: 500 10px "Segoe UI", system-ui, sans-serif; }
+.weather-cue .environment-copy strong { color: var(--condition-accent); }
+.moisture-row { display: flex; align-items: center; gap: 7px; color: #aeb7a9; font: 500 9px "Segoe UI", system-ui, sans-serif; white-space: nowrap; }
+.moisture-track { overflow: hidden; width: 36px; height: 4px; border-radius: 4px; background: #303a35; }
+.moisture-track span { display: block; width: 0; height: 100%; border-radius: inherit; background: #77b9d1; transition: width .25s ease; }
+.environment-freshness { display: flex; align-items: center; align-self: center; gap: 7px; padding: 7px 9px; color: #bdc9b8; border: 1px solid #3c4a3d; border-radius: 20px; background: #19211b; font: 600 8px "Segoe UI", system-ui, sans-serif; letter-spacing: .045em; white-space: nowrap; }
+.freshness-dot { width: 6px; height: 6px; border-radius: 50%; background: #78bd89; }
+.freshness-stale .freshness-dot { background: #e2b95c; }
+.freshness-unavailable .freshness-dot { background: #c9786d; }
+.freshness-stale { color: #e4c77f; border-color: #685832; }
+.freshness-unavailable { color: #e3a19a; border-color: #67413d; }
+@media (max-width: 700px) {
+  .environment-cues { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .environment-freshness { grid-column: 1 / -1; justify-self: start; }
+}
 @media (max-width: 500px) {
   .toggle-button, .secondary, .primary { gap: 6px; padding-inline: 8px; font-size: 10px; }
   .switch-group { grid-template-columns: repeat(3, minmax(0, 1fr)); }

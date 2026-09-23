@@ -46,6 +46,15 @@ const buttonIcons = {
   reset: '<path d="M4 11a8 8 0 1 1 2 6"/><path d="M4 5v6h6"/>',
   work: '<path d="M4 19h16M7 17l3-7 3 2 4-7 2 1-5 9-4-2-2 4"/>',
 } as const;
+const environmentIcons = {
+  sunny: '<circle cx="12" cy="12" r="3.5"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>',
+  rainy: '<path d="M7 15a4 4 0 1 1 .8-7.92A5 5 0 0 1 17.6 9H18a3 3 0 0 1 0 6"/><path d="m9 18-1 2m6-2-1 2m6-2-1 2"/>',
+  cloudy: '<path d="M7 17a4 4 0 1 1 .8-7.92A5 5 0 0 1 17.6 11H18a3 3 0 1 1 0 6z"/>',
+  windy: '<path d="M3 8h12a2 2 0 1 0-2-2M2 12h17a2 2 0 1 1-2 2M4 16h7"/>',
+  unknown: '<circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.3 2.3 0 1 1 3.8 1.7c-1 .8-1.6 1.2-1.6 2.8M12 17h.01"/>',
+  terrain: '<path d="m3 18 6-10 4 6 2-3 6 7z"/><path d="M7 18h13"/>',
+  soil: '<path d="M12 22s7-4.5 7-12a7 7 0 0 0-14 0c0 7.5 7 12 7 12z"/><path d="M9 11c1.5-1 4.5-1 6 0"/>',
+} as const;
 const state: SimState = {
   x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0,
   boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15,
@@ -76,6 +85,12 @@ function renderShell(): void {
       <section class="workspace">
         <div class="section-heading"><h1>CAT 325</h1></div>
         <div class="viewport"><div id="sim-world"></div><div id="map-tooltip" class="map-tooltip" role="tooltip" hidden></div><div class="viewport-label"><span>SITE MAP</span><span id="metric-position">18, 22 M</span></div></div>
+        <div id="environment-cues" class="environment-cues" role="group" aria-label="Site conditions" aria-live="polite">
+          <div class="environment-cue weather-cue"><span id="environment-weather-icon" class="environment-icon weather-sunny" aria-hidden="true"></span><div class="environment-copy"><span class="environment-label">WEATHER</span><strong id="environment-weather">Sunny</strong><small id="environment-temperature">28°C</small></div></div>
+          <div id="environment-terrain-cue" class="environment-cue terrain-cue terrain-firm"><span class="environment-icon terrain-icon" aria-hidden="true">${environmentIconMarkup("terrain")}</span><div class="environment-copy"><span class="environment-label">TERRAIN</span><strong id="environment-terrain">Firm</strong><small>Site surface</small></div></div>
+          <div class="environment-cue soil-cue"><span class="environment-icon soil-icon" aria-hidden="true">${environmentIconMarkup("soil")}</span><div class="environment-copy"><span class="environment-label">SOIL · <span id="environment-soil-source">DEMO INPUT</span></span><strong id="environment-soil">Loam</strong><div class="moisture-row"><span id="environment-moisture">20% VWC</span><span class="moisture-track" aria-hidden="true"><span id="environment-moisture-fill"></span></span></div></div></div>
+          <span id="environment-freshness" class="environment-freshness"><span class="freshness-dot"></span><span>DEMO · FRESH</span></span>
+        </div>
         <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="belt-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="brake-control" class="toggle-button" type="button" aria-pressed="false"></button></div><div class="action-group"><button id="pause-control" class="primary small" type="button" data-icon="pause">${iconMarkup("pause")}<span class="button-label">Pause simulation</span></button><button id="hazard-control" class="secondary small" type="button" aria-pressed="false" data-icon="hazard">${iconMarkup("hazard")}<span class="button-label">Stage worker proximity</span></button><button id="reset-control" class="secondary small" type="button" data-icon="reset">${iconMarkup("reset")}<span class="button-label">Reset session</span></button></div></div>
         <div class="key-legend"><span class="legend-title">KEYS</span>W / S Drive <span>·</span> A / D Steer <span>·</span> Q / E Swing <span>·</span> R / F Boom <span>·</span> T / G Stick <span>·</span> Y / H Bucket <span>·</span> Space Work</div>
         <div class="banner hidden" id="banner" role="status"></div>
@@ -92,6 +107,7 @@ function renderShell(): void {
   </div>`;
   bindControls();
   createGame();
+  updateEnvironmentReadout();
   updateReadings();
 }
 
@@ -322,6 +338,41 @@ function updateReadings(): void {
   if (pauseButton) { setButtonLabel(pauseButton, paused ? "Resume simulation" : "Pause simulation"); setButtonIcon(pauseButton, paused ? "play" : "pause"); }
   const overrideMark = root.querySelector<HTMLElement>("#override-mark");
   if (overrideMark) overrideMark.textContent = `${Object.keys(overrides).length} OVERRIDDEN`;
+}
+
+function updateEnvironmentReadout(): void {
+  const setText = (selector: string, value: string) => { const el = root.querySelector<HTMLElement>(selector); if (el) el.textContent = value; };
+  const weatherKey = environmentData.weather.toLowerCase() as keyof typeof environmentIcons;
+  const weatherIcon = root.querySelector<HTMLElement>("#environment-weather-icon");
+  if (weatherIcon) {
+    weatherIcon.className = `environment-icon weather-icon weather-${weatherKey}`;
+    weatherIcon.innerHTML = environmentIconMarkup(weatherKey);
+  }
+  setText("#environment-weather", environmentData.weather === "Unknown" ? "Unknown conditions" : environmentData.weather);
+  setText("#environment-temperature", environmentData.air_temperature_c === null ? "Temperature unavailable" : `${environmentData.air_temperature_c}°C`);
+
+  const terrainKey = environmentData.terrain.toLowerCase();
+  const terrainCue = root.querySelector<HTMLElement>("#environment-terrain-cue");
+  if (terrainCue) terrainCue.className = `environment-cue terrain-cue terrain-${terrainKey}`;
+  setText("#environment-terrain", terrainKey === "unknown" ? "Unknown" : terrainKey[0]!.toUpperCase() + terrainKey.slice(1));
+
+  setText("#environment-soil", environmentData.soil_type);
+  const moisture = environmentData.soil_moisture_percent_vwc;
+  setText("#environment-moisture", moisture === null ? "Moisture unavailable" : `${moisture}% VWC`);
+  const moistureFill = root.querySelector<HTMLElement>("#environment-moisture-fill");
+  if (moistureFill) moistureFill.style.width = moisture === null ? "0%" : `${Phaser.Math.Clamp(moisture, 0, 100)}%`;
+  setText("#environment-soil-source", environmentData.soil_source === "operator_input" ? "OPERATOR INPUT" : environmentData.soil_source === "demo" ? "DEMO INPUT" : "SOURCE UNKNOWN");
+
+  const freshness = root.querySelector<HTMLElement>("#environment-freshness");
+  if (freshness) {
+    freshness.className = `environment-freshness freshness-${environmentData.weather_status}`;
+    const label = freshness.querySelector<HTMLElement>("span:last-child");
+    if (label) label.textContent = `${environmentData.weather_mode.toUpperCase()} · ${environmentData.weather_status.toUpperCase()}`;
+  }
+}
+
+function environmentIconMarkup(name: keyof typeof environmentIcons): string {
+  return `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${environmentIcons[name]}</svg>`;
 }
 
 function setToggle(selector: string, label: string, active: boolean): void {

@@ -127,6 +127,9 @@ export class SiteScene extends Phaser.Scene {
   private statePoint(): Point {
     const length = 3 + Math.max(0, Math.cos(Phaser.Math.DegToRad(this.state.boom_angle_deg))) * 5 + Math.max(0, Math.cos(Phaser.Math.DegToRad(this.state.stick_angle_deg))) * 3;
     const angle = this.angle(this.state.upper_heading_deg);
-    return { x_m: this.state.x_m + Math.cos(angle) * length, y_m: this.state.y_m - Math.sin(angle) * length };
+    return {
+      x_m: Phaser.Math.Clamp(this.state.x_m + Math.cos(angle) * length, 0, this.site.width_m),
+      y_m: Phaser.Math.Clamp(this.state.y_m - Math.sin(angle) * length, 0, this.site.height_m),
+    };
   }
 }

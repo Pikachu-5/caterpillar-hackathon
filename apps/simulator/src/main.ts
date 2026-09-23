@@ -127,7 +127,8 @@ function bindControls(): void {
 }
 
 function keyHandler(event: KeyboardEvent): void {
-  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+  const target = event.target;
+  if (target instanceof Element && target.closest("button, input, select, textarea, summary, [contenteditable='true'], [role='button']")) return;
   const key = event.key.toLowerCase();
   if (["w", "a", "s", "d", "q", "e", "r", "f", "t", "g", "y", "h", " "].includes(key)) event.preventDefault();
   if (event.type === "keydown" && key === " " && !event.repeat) pickupOrDeposit();
@@ -142,10 +143,16 @@ function tick(now: number): void {
   if (!state.engine_running || state.parking_brake_engaged) state.speed_mps = 0;
   else state.speed_mps = Phaser.Math.Clamp(state.speed_mps + drive * 1.2 * dt - (drive === 0 ? Math.sign(state.speed_mps) * Math.min(Math.abs(state.speed_mps), dt * 0.6) : 0), -3, 3);
   const trackTurn = Number(keys.has("d")) - Number(keys.has("a"));
-  state.heading_deg = normalize(state.heading_deg + trackTurn * dt * (state.speed_mps === 0 ? 35 : 20));
+  if (state.engine_running && !state.parking_brake_engaged) {
+    state.heading_deg = normalize(state.heading_deg + trackTurn * dt * (state.speed_mps === 0 ? 35 : 20));
+  }
   const heading = Phaser.Math.DegToRad(state.heading_deg - 90);
-  state.x_m = Phaser.Math.Clamp(state.x_m + Math.cos(heading) * state.speed_mps * dt, 1, siteData.width_m - 1);
-  state.y_m = Phaser.Math.Clamp(state.y_m - Math.sin(heading) * state.speed_mps * dt, 1, siteData.height_m - 1);
+  const nextX = state.x_m + Math.cos(heading) * state.speed_mps * dt;
+  const nextY = state.y_m - Math.sin(heading) * state.speed_mps * dt;
+  const boundedX = Phaser.Math.Clamp(nextX, 1, siteData.width_m - 1);
+  const boundedY = Phaser.Math.Clamp(nextY, 1, siteData.height_m - 1);
+  if (boundedX !== nextX || boundedY !== nextY) state.speed_mps = 0;
+  state.x_m = boundedX; state.y_m = boundedY;
   state.upper_heading_deg = normalize(state.upper_heading_deg + (Number(keys.has("e")) - Number(keys.has("q"))) * dt * 35);
   state.boom_angle_deg = Phaser.Math.Clamp(state.boom_angle_deg + (Number(keys.has("r")) - Number(keys.has("f"))) * dt * 24, -20, 80);
   state.stick_angle_deg = Phaser.Math.Clamp(state.stick_angle_deg + (Number(keys.has("t")) - Number(keys.has("g"))) * dt * 24, -80, 80);
@@ -325,7 +332,7 @@ function resetSimulation(): void {
   Object.assign(state, { x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0, boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15, bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true, parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0, load_cycles: 0, elapsed_s: 0, deposited_m3: 0 });
   localSessionId = makeLocalSessionId(); outbox.clear(); frameStream?.reset(0); latestFrame = null;
   for (const field of Object.keys(overrides) as OverrideField[]) delete overrides[field];
-  hazardStaged = false; actors.splice(0, actors.length); keys.clear(); paused = false; previousTick = performance.now(); moveActors();
+  hazardStaged = false; actors.splice(0, actors.length); keys.clear(); paused = false; previousTick = performance.now(); frameStream?.resume(); moveActors();
   scene?.setActors(actors); scene?.setState(state); renderOverrides(); updateReadings();
   showBanner("New local simulator session started. Session counters, sequence, and pending events were reset.");
 }

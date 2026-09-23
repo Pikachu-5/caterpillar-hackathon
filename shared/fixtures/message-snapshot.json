@@ -19,7 +19,7 @@
     "site": {
       "schema_version": "1.0.0",
       "site_id": "SITE001",
-      "revision": 1,
+      "revision": 2,
       "name": "Demo construction site",
       "width_m": 100,
       "height_m": 100,
@@ -74,8 +74,8 @@
           "destination_id": "DEST_B",
           "label": "Deposit",
           "position": {
-            "x_m": 25,
-            "y_m": 25
+            "x_m": 38,
+            "y_m": 20
           },
           "radius_m": 3
         }
@@ -104,7 +104,7 @@
       "schema_version": "1.0.0",
       "session_id": "SESSION001",
       "site_id": "SITE001",
-      "site_revision": 1,
+      "site_revision": 2,
       "sequence": 100,
       "timestamp": "2026-09-23T10:00:00Z",
       "simulation_time_s": 20,

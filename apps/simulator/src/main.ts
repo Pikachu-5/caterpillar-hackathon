@@ -41,6 +41,17 @@ const overrideSettings: Record<OverrideField, OverrideSetting> = {
   hydraulic_temperature_c: { label: "Hydraulic temperature", min: -20, max: 130, step: 1, value: 55 },
   load_percent: { label: "Machine load", min: 0, max: 100, step: 1, value: 24 },
 };
+const buttonIcons = {
+  engine: '<path d="M5 9h3l2-2h5l2 2h2v7h-2l-2 2h-5l-2-2H5z"/><path d="M8 9V6m8 3V6m-9 7h3m5 0h2"/>',
+  belt: '<path d="m8 4-2 4 3 2 1 7 6 3 2-3-5-4-1-7z"/><path d="m8 10 6 4"/>',
+  brake: '<circle cx="12" cy="12" r="8"/><path d="M10 17V7h4a3 3 0 0 1 0 6h-4"/>',
+  pause: '<path d="M9 6v12M15 6v12"/>',
+  play: '<path d="m9 6 9 6-9 6z"/>',
+  hazard: '<path d="M12 4 21 20H3z"/><path d="M12 10v4m0 3h.01"/>',
+  reset: '<path d="M4 11a8 8 0 1 1 2 6"/><path d="M4 5v6h6"/>',
+  work: '<path d="M4 19h16M7 17l3-7 3 2 4-7 2 1-5 9-4-2-2 4"/>',
+  logout: '<path d="M10 17l5-5-5-5M15 12H3"/><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>',
+} as const;
 const state: SimState = {
   x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0,
   boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15,
@@ -69,16 +80,16 @@ function renderShell(): void {
     <header class="topbar"><a class="brand" href="#"><span class="cat-badge">CAT</span><span>OPERATOR SIMULATOR</span></a><div class="top-status"><span class="operator-label">CAT 325</span></div></header>
     <main class="cockpit">
       <section class="workspace">
-        <div class="section-heading"><div><p id="site-label" class="eyebrow">${escapeHtml(siteData.name)} · ${siteData.width_m} × ${siteData.height_m} m</p><h1>CAT 325</h1></div></div>
+        <div class="section-heading"><h1>CAT 325</h1></div>
         <div class="viewport"><div id="sim-world"></div><div id="map-tooltip" class="map-tooltip" role="tooltip" hidden></div><div class="viewport-label"><span>SITE MAP</span><span id="metric-position">18, 22 M</span></div></div>
-        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button"></button><button id="belt-control" class="toggle-button"></button><button id="brake-control" class="toggle-button"></button></div><div class="action-group"><button id="session-control" class="primary small">Start simulator session</button><button id="pause-control" class="secondary small" disabled>Pause simulation</button><button id="hazard-control" class="secondary small">Stage worker proximity</button><button id="reset-control" class="secondary small">Reset session</button><button id="logout-control" class="secondary small">Log out</button></div></div>
+        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="belt-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="brake-control" class="toggle-button" type="button" aria-pressed="false"></button></div><div class="action-group"><button id="session-control" class="primary small" type="button" data-icon="engine">${iconMarkup("engine")}<span class="button-label">Start simulator session</span></button><button id="pause-control" class="secondary small" type="button" data-icon="pause" disabled>${iconMarkup("pause")}<span class="button-label">Pause simulation</span></button><button id="hazard-control" class="secondary small" type="button" aria-pressed="false" data-icon="hazard">${iconMarkup("hazard")}<span class="button-label">Stage worker proximity</span></button><button id="reset-control" class="secondary small" type="button" data-icon="reset">${iconMarkup("reset")}<span class="button-label">Reset session</span></button><button id="logout-control" class="secondary small" type="button" data-icon="logout">${iconMarkup("logout")}<span class="button-label">Log out</span></button></div></div>
         <div class="key-legend"><span class="legend-title">KEYS</span>W / S Drive <span>·</span> A / D Steer <span>·</span> Q / E Swing <span>·</span> R / F Boom <span>·</span> T / G Stick <span>·</span> Y / H Bucket <span>·</span> Space Work</div>
         <div class="banner hidden" id="banner" role="status"></div>
       </section>
       <aside class="telemetry-panel">
         <div class="panel-title"><div><h2>Readings</h2></div></div>
         <div class="metric-grid"><div class="metric"><span>GROUND SPEED</span><strong id="metric-speed">0.0</strong><small>km/h</small></div><div class="metric"><span>ENGINE SPEED</span><strong id="metric-rpm">1,200</strong><small>RPM</small></div><div class="metric"><span>FUEL USED</span><strong id="metric-fuel">0.0</strong><small>L this session</small></div><div class="metric"><span>LOAD CYCLES</span><strong id="metric-cycles">0</strong><small>cycles</small></div></div>
-        <div class="task-card"><div class="task-heading"><h3>Active backend task</h3><span id="task-state" class="task-state">NO TASK</span></div><strong id="task-title">No active task selected</strong><p id="task-route">Start a simulator session after an active material-volume task is available.</p><div id="task-amount" class="task-amount">Deposit events will be acknowledged by the backend.</div><button id="work-control" class="primary work-button" disabled>Pickup / deposit material</button></div>
+        <div class="task-card"><div class="task-heading"><h3>Active backend task</h3><span id="task-state" class="task-state">NO TASK</span></div><strong id="task-title">No active task selected</strong><div id="task-amount" class="task-amount">Deposit events will be acknowledged by the backend.</div><button id="work-control" class="primary work-button" type="button" data-icon="work" disabled>${iconMarkup("work")}<span class="button-label">Pickup / deposit material</span></button></div>
         <div class="task-card attachment-card"><div class="task-heading"><h3>Attachment pose</h3></div><div class="pose-grid"><div><span>Boom</span><strong id="metric-boom">35°</strong></div><div><span>Stick</span><strong id="metric-stick">−30°</strong></div><div><span>Bucket</span><strong id="metric-bucket">15°</strong></div><div><span>Upper body</span><strong id="metric-swing">000°</strong></div></div></div>
         <details id="override-card" class="override-card"><summary><span>Telemetry overrides</span><span id="override-mark" class="override-mark">0 OVERRIDDEN</span></summary><p class="hint">Override individual readings; active fields are marked in every schema-validated frame.</p><div id="override-list" class="override-list"></div><button id="clear-overrides" class="text-button" type="button">Clear all overrides</button></details>
         <div class="site-facts"><div><span>HEADING</span><strong id="metric-heading">000°</strong></div><div><span>BUCKET LOAD</span><strong id="metric-load">0.00 m³</strong></div><div><span>SIM TIME</span><strong id="metric-time">00:00</strong></div></div>
@@ -101,12 +112,10 @@ function createGame(): void {
   game.events.once("ready", () => scene?.configure(siteData, state, actors));
   animationFrame = window.setInterval(() => tick(performance.now()), 50);
   frameStream = new FrameStream(makeFrame, 200, error => {
-    setFrameStatus("FRAME REJECTED BY SHARED SCHEMA", "error");
     showBanner(error instanceof Error ? error.message : "The simulator generated an invalid frame.", true);
   });
   unsubscribeFrames = frameStream.subscribe(frame => {
     latestFrame = frame;
-    setFrameStatus(`FRAME ${frame.sequence} VALIDATED · 5 HZ`, "live");
     publisher?.publish(frame);
     onFrame(frame);
   });
@@ -133,7 +142,7 @@ function bindControls(): void {
 }
 
 function renderLogin(message = "Sign in with your operator account to connect this simulator to the backend."): void {
-  root.innerHTML = `<main class="login-shell"><section class="login-card"><div class="brand-mark">CAT<span>OPERATOR SIMULATOR</span></div><p class="eyebrow">AUTHENTICATED SIMULATOR</p><h1>Operator sign in</h1><p class="muted">Use the same operator account as the dashboard.</p><form id="login-form"><label>Username<input name="username" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">Sign in</button><p id="login-message" class="form-message" role="status">${escapeHtml(message)}</p></form></section><aside class="login-art"><div class="site-line"></div><div class="mini-excavator">325</div><span>SIMULATED SITE · AUTHENTICATED FEED</span></aside></main>`;
+  root.innerHTML = `<main class="login-shell"><section class="login-card"><div class="brand-mark">CAT<span>OPERATOR SIMULATOR</span></div><h1>Operator sign in</h1><p class="muted">Use the same operator account as the dashboard.</p><form id="login-form"><label>Username<input name="username" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">Sign in</button><p id="login-message" class="form-message" role="status">${escapeHtml(message)}</p></form></section><aside class="login-art"><div class="site-line"></div><div class="mini-excavator">325</div></aside></main>`;
   root.querySelector<HTMLFormElement>("#login-form")!.onsubmit = async event => {
     event.preventDefault();
     const form = new FormData(event.currentTarget as HTMLFormElement);
@@ -157,11 +166,9 @@ async function loadBackendWorkspace(): Promise<void> {
     const siteId = openSession?.site_id;
     activeTasks = tasks.filter(item => item.machine_id === selected.machine_id && (!siteId || item.site_id === siteId) && item.status === "active");
     taskData = activeTasks.find(item => item.progress_mode === "material_volume" && item.source_destination_id && item.target_destination_id) ?? null;
-    const title = root.querySelector<HTMLElement>("#task-title"), route = root.querySelector<HTMLElement>("#task-route"), button = root.querySelector<HTMLButtonElement>("#work-control");
+    const title = root.querySelector<HTMLElement>("#task-title"), button = root.querySelector<HTMLButtonElement>("#work-control");
     if (title) title.textContent = taskData?.title ?? "No active material-volume task";
-    if (route) route.textContent = taskData ? `Task destination ${taskData.target_destination_id ?? "not set"} · ${taskData.completed_quantity_m3.toFixed(2)} / ${taskData.target_quantity_m3?.toFixed(2) ?? "—"} m³` : "Create and start a material-volume task in the dashboard before recording deposits.";
     if (button) button.disabled = !taskData;
-    setFrameStatus("AUTHENTICATED · READY TO START", "paused");
   } catch (error) {
     if (error instanceof BackendError && error.status === 401) { authState = null; renderLogin("Your sign-in expired. Sign in again to continue."); }
     else showBanner(error instanceof Error ? error.message : "Could not load operator data.", true);
@@ -181,7 +188,7 @@ async function startSimulatorSession(): Promise<void> {
       const ended = await backend.sessionAction(authState.csrf_token, openSession.session_id, "end");
       if (currentSession?.session_id === ended.session_id) currentSession = ended;
     }
-    publisher?.close(); publisher = null; publisherSynchronized = false; pauseLocally("STARTING SIMULATOR SESSION");
+    publisher?.close(); publisher = null; publisherSynchronized = false; pauseLocally();
     const session = await backend.startSession(authState.csrf_token, { machine_id: machineData.machine_id, site_id: openSession?.site_id ?? taskData.site_id ?? siteData.site_id, source: "simulator", scenario_id: null });
     currentSession = session; localSessionId = session.session_id; resetLocalSessionState();
     const snapshot = await backend.snapshot(session.session_id);
@@ -200,10 +207,7 @@ async function startSimulatorSession(): Promise<void> {
       environment: next => { environmentData = next; showBanner("Site environment updated by the backend."); },
       session: update => {
         currentSession = update;
-        if (update.status === "paused") pauseLocally("SESSION PAUSED");
-        else if (update.status === "disconnected") pauseLocally("SESSION DISCONNECTED");
-        else if (update.status === "ended") pauseLocally("SESSION ENDED");
-        else setFrameStatus(paused ? "SESSION ACTIVE · SIMULATION PAUSED" : "SESSION ACTIVE", paused ? "paused" : "live");
+        if (update.status === "paused" || update.status === "disconnected" || update.status === "ended") pauseLocally();
       },
       task: update => {
         const index = activeTasks.findIndex(item => item.task_id === update.task_id);
@@ -216,16 +220,15 @@ async function startSimulatorSession(): Promise<void> {
         updateReadings();
       },
       status: status => {
-        if (status === "live") { setFrameStatus(paused ? "PUBLISHER CONNECTED · SIMULATION PAUSED" : "PUBLISHER CONNECTED · 5 HZ", paused ? "paused" : "live"); }
-        else if (status === "login") { publisherSynchronized = false; pauseLocally("REAUTHENTICATION REQUIRED"); setSessionControls(false); showBanner("The publisher session was rejected. Sign in again to reconnect.", true); }
+        if (status === "login") { publisherSynchronized = false; pauseLocally(); setSessionControls(false); showBanner("The publisher session was rejected. Sign in again to reconnect.", true); }
         else {
           publisherSynchronized = false;
-          pauseLocally(status === "connecting" ? "PUBLISHER CONNECTING" : "PUBLISHER DISCONNECTED");
+          if (status !== "live") pauseLocally();
           setSessionControls(Boolean(currentSession && currentSession.status !== "ended"));
           if (status === "disconnected" && !pauseRequestPending && authState && currentSession && currentSession.status !== "paused" && currentSession.status !== "ended") {
             pauseRequestPending = true;
             void backend.sessionAction(authState.csrf_token, session.session_id, "pause")
-              .then(update => { currentSession = update; setFrameStatus("PUBLISHER DISCONNECTED · SESSION PAUSED", "disconnected"); })
+              .then(update => { currentSession = update; })
               .catch(error => showBanner(error instanceof Error ? `Could not pause the backend session: ${error.message}` : "Could not pause the backend session.", true))
               .finally(() => { pauseRequestPending = false; });
           }
@@ -244,7 +247,6 @@ async function startSimulatorSession(): Promise<void> {
       try { currentSession = await backend.sessionAction(authState.csrf_token, currentSession.session_id, "end"); } catch { /* Leave backend recovery to its session timeout. */ }
     }
     if (currentSession?.status === "ended") setSessionControls(false);
-    setFrameStatus(error instanceof BackendError && error.status === 401 ? "SIGN IN REQUIRED" : "SESSION START FAILED", "error");
   } finally { sessionBusy = false; if (button) button.disabled = false; }
 }
 
@@ -276,11 +278,8 @@ function applySnapshot(snapshot: Snapshot): void {
     actors.splice(0, actors.length, ...frame.actors.map(actor => ({ ...actor, position: { ...actor.position } })));
   }
   frameStream?.reset((frame?.sequence ?? currentSession?.latest_sequence ?? -1) + 1);
-  const siteLabel = root.querySelector<HTMLElement>("#site-label");
-  if (siteLabel) siteLabel.textContent = `${siteData.name} · ${siteData.width_m} × ${siteData.height_m} m`;
-  const title = root.querySelector<HTMLElement>("#task-title"), route = root.querySelector<HTMLElement>("#task-route"), button = root.querySelector<HTMLButtonElement>("#work-control");
+  const title = root.querySelector<HTMLElement>("#task-title"), button = root.querySelector<HTMLButtonElement>("#work-control");
   if (title) title.textContent = taskData?.title ?? "No active material-volume task";
-  if (route) route.textContent = taskData ? `Deposit at ${taskData.target_destination_id} · ${taskData.completed_quantity_m3.toFixed(2)} / ${taskData.target_quantity_m3?.toFixed(2) ?? "—"} m³` : "Start a material-volume task for this machine and site in the dashboard.";
   if (button) button.disabled = !taskData;
   scene?.configure(siteData, state, actors); scene?.setActors(actors); scene?.setState(state);
   setSessionControls(Boolean(currentSession && currentSession.status !== "ended")); updateReadings();
@@ -309,8 +308,8 @@ function resetLocalSessionState(): void {
   renderOverrides(); updateReadings();
 }
 
-function pauseLocally(status: string): void {
-  paused = true; frameStream?.pause(); previousTick = performance.now(); setFrameStatus(status, "disconnected"); updateReadings();
+function pauseLocally(): void {
+  paused = true; frameStream?.pause(); previousTick = performance.now(); updateReadings();
 }
 
 async function logout(): Promise<void> {
@@ -444,9 +443,6 @@ function makeFrame(sequence: number): WorldFrame {
 }
 
 function onFrame(frame: WorldFrame): void {
-  const dot = root.querySelector<HTMLSpanElement>("#frame-dot");
-  dot?.classList.add("live");
-  if (frame.sequence === 0) setFrameStatus(`FRAME ${frame.sequence} VALIDATED · 5 HZ`, "live");
   updateReadings();
 }
 
@@ -480,14 +476,8 @@ function toggleHazard(): void {
   hazardStaged = !hazardStaged;
   moveActors(); scene?.setActors(actors);
   const button = root.querySelector<HTMLButtonElement>("#hazard-control");
-  if (button) button.textContent = hazardStaged ? "Clear worker proximity" : "Stage worker proximity";
+  if (button) { setButtonLabel(button, hazardStaged ? "Clear worker proximity" : "Stage worker proximity"); button.setAttribute("aria-pressed", String(hazardStaged)); }
   showBanner(hazardStaged ? "Proximity scenario staged: the worker is held 3 m from the machine. No safety action changes movement." : "Proximity staging cleared; the worker is back on the preset route.");
-}
-
-function setFrameStatus(label: string, stateClass: "live" | "paused" | "connecting" | "disconnected" | "stale" | "error"): void {
-  const status = root.querySelector<HTMLElement>("#frame-status"), dot = root.querySelector<HTMLElement>("#frame-dot");
-  if (status) status.textContent = label;
-  if (dot) dot.className = `status-dot ${stateClass}`;
 }
 
 function bucketTip(): Point {
@@ -517,9 +507,10 @@ function updateReadings(): void {
   setToggle("#engine-control", `ENGINE ${state.engine_running ? "ON" : "OFF"}`, state.engine_running);
   setToggle("#belt-control", `SEATBELT ${state.seatbelt_fastened ? "FASTENED" : "UNFASTENED"}`, state.seatbelt_fastened);
   setToggle("#brake-control", `PARKING BRAKE ${state.parking_brake_engaged ? "ON" : "OFF"}`, state.parking_brake_engaged);
-  setText("#pause-control", paused ? "Resume simulation" : "Pause simulation");
-  const machine = root.querySelector<HTMLSpanElement>("#machine-state");
-  if (machine) { machine.textContent = paused ? "PAUSED" : state.engine_running ? "RUNNING" : "ENGINE OFF"; machine.className = `machine-state ${paused ? "paused" : state.engine_running ? "running" : "off"}`; }
+  const pauseButton = root.querySelector<HTMLButtonElement>("#pause-control");
+  if (pauseButton) { setButtonLabel(pauseButton, paused ? "Resume simulation" : "Pause simulation"); setButtonIcon(pauseButton, paused ? "play" : "pause"); }
+  const hazardButton = root.querySelector<HTMLButtonElement>("#hazard-control");
+  if (hazardButton) { setButtonLabel(hazardButton, hazardStaged ? "Clear worker proximity" : "Stage worker proximity"); hazardButton.setAttribute("aria-pressed", String(hazardStaged)); }
   const overrideMark = root.querySelector<HTMLElement>("#override-mark");
   if (overrideMark) overrideMark.textContent = `${Object.keys(overrides).length} OVERRIDDEN`;
 }
@@ -536,7 +527,25 @@ async function toggleSessionPause(): Promise<void> {
 }
 
 function setToggle(selector: string, label: string, active: boolean): void {
-  const button = root.querySelector<HTMLButtonElement>(selector); if (button) { button.textContent = label; button.classList.toggle("active", active); }
+  const button = root.querySelector<HTMLButtonElement>(selector); if (!button) return;
+  const icon = selector === "#engine-control" ? "engine" : selector === "#belt-control" ? "belt" : "brake";
+  setButtonLabel(button, label); setButtonIcon(button, icon);
+  button.classList.toggle("active", active); button.setAttribute("aria-pressed", String(active));
+}
+function setButtonLabel(button: HTMLButtonElement, label: string): void {
+  const text = button.querySelector<HTMLElement>(".button-label");
+  if (text) text.textContent = label;
+  else button.textContent = label;
+  button.setAttribute("aria-label", label);
+}
+function setButtonIcon(button: HTMLButtonElement, name: keyof typeof buttonIcons): void {
+  if (button.dataset.icon === name && button.querySelector(".button-icon")) return;
+  button.querySelector(".button-icon")?.remove();
+  button.insertAdjacentHTML("afterbegin", iconMarkup(name));
+  button.dataset.icon = name;
+}
+function iconMarkup(name: keyof typeof buttonIcons): string {
+  return `<svg class="button-icon" aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${buttonIcons[name]}</svg>`;
 }
 async function resetSimulation(): Promise<void> {
   if (currentSession && authState) {

@@ -577,7 +577,6 @@ async function toggleSessionPause(): Promise<void> {
     updateReadings();
   } catch (error) { showBanner(error instanceof Error ? error.message : "Session action failed.", true); }
 }
-
 function setToggle(selector: string, label: string, active: boolean): void {
   const button = root.querySelector<HTMLButtonElement>(selector); if (!button) return;
   const icon = selector === "#engine-control" ? "engine" : selector === "#belt-control" ? "belt" : "brake";

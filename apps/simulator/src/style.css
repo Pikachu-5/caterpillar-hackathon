@@ -169,3 +169,40 @@ kbd { min-width: 21px; text-align: center; padding: 3px 5px; color: #dfe3d9; bac
   .action-group > button { flex: 1 1 145px; }
   .button-icon { width: 16px; height: 16px; flex-basis: 16px; }
 }
+
+/* Balanced map and right-rail layout */
+.cockpit { align-items: stretch; }
+.workspace { display: flex; min-height: 0; flex-direction: column; padding: 16px; border: 1px solid #303a31; border-radius: 8px; background: #171e19; }
+.workspace > .viewport { flex: 1 1 auto; height: auto; min-height: 520px; }
+.environment-cues { grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 12px 0 0; }
+.telemetry-panel { display: flex; min-width: 0; flex-direction: column; align-self: stretch; gap: 12px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.readings-card, .controls-card, .task-card, .override-card, .site-facts { margin: 0; padding: 16px; border: 1px solid #374137; border-radius: 8px; background: #1a211c; box-shadow: 0 10px 24px #0002; }
+.panel-title { margin-bottom: 14px; }
+.panel-title h2 { font-size: 21px; }
+.metric { min-height: 88px; padding: 14px; }
+.metric span { font-size: 10px; }
+.metric strong { font-size: 30px; }
+.metric small { font-size: 11px; }
+.controls-card { display: flex; flex-direction: column; gap: 12px; }
+.controls-card .action-group { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.controls-card .action-group > button { min-width: 0; padding-inline: 8px; }
+.controls-card .switch-group { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.controls-card .toggle-button { min-width: 0; }
+.task-card, .override-card { background: #1a211c; }
+.site-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.site-facts strong { font-size: 12px; }
+.key-legend { margin-top: 12px; }
+@media (max-width: 1100px) {
+  .cockpit { display: flex; flex-direction: column; }
+  .workspace { min-height: auto; }
+  .workspace > .viewport { flex: none; height: min(70vh, 760px); min-height: 500px; }
+  .telemetry-panel { width: 100%; }
+}
+@media (max-width: 700px) {
+  .workspace { padding: 10px; }
+  .workspace > .viewport { height: 62vh; min-height: 340px; max-height: 640px; }
+  .environment-cues { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .soil-cue { grid-column: 1 / -1; }
+  .metric strong { font-size: 26px; }
+  .controls-card .action-group > button { flex-direction: column; gap: 4px; font-size: 10px; }
+}

@@ -1,0 +1,501 @@
+task_id,task_type,weather,operator_skill,machine_age_years,estimated_minutes,actual_minutes,provenance,air_temperature_c,soil_type,soil_moisture_percent_vwc,machine_id,operator_id,started_at,generator_version,generation_seed
+T0488,Grading,Rainy,Expert,1.9,39.0,49.0,synthetic,31.1,Gravel,44.7,EXC001,OP2001,2025-05-05T10:29:00Z,data-001-v1,42
+T0387,Material Loading,Rainy,Expert,3.9,32.0,32.0,synthetic,23.0,Loam,66.3,EXC001,OP2001,2025-05-05T11:19:00Z,data-001-v1,42
+T0310,Trenching,Windy,Expert,5.9,42.0,47.0,synthetic,42.2,Gravel,30.7,EXC002,OP1001,2025-05-05T11:31:00Z,data-001-v1,42
+T0593,Demolition,Windy,Expert,2.9,78.0,89.0,synthetic,23.8,Sand,23.4,EXC001,OP1001,2025-05-05T12:24:00Z,data-001-v1,42
+T0238,Trenching,Windy,Beginner,2.4,45.0,62.0,synthetic,35.2,Loam,53.3,EXC001,OP1001,2025-05-05T12:25:00Z,data-001-v1,42
+T0447,Grading,Sunny,Intermediate,1.8,40.0,39.0,synthetic,25.6,Sand,26.4,EXC001,OP2001,2025-05-05T12:54:00Z,data-001-v1,42
+T0483,Grading,Rainy,Expert,3.8,32.0,43.0,synthetic,34.3,Clay,21.9,EXC001,OP2001,2025-05-05T13:00:00Z,data-001-v1,42
+T0135,Earth Excavation,Windy,Beginner,3.6,59.0,103.0,synthetic,22.3,Gravel,10.0,EXC001,OP1001,2025-05-05T15:02:00Z,data-001-v1,42
+T0291,Trenching,Rainy,Expert,3.0,45.0,54.0,synthetic,15.2,Clay,67.1,EXC001,OP2001,2025-05-05T15:22:00Z,data-001-v1,42
+T0203,Earth Excavation,Windy,Expert,2.9,57.0,67.0,synthetic,7.4,Clay,5.0,EXC001,OP2001,2025-05-05T16:26:00Z,data-001-v1,42
+T0533,Demolition,Windy,Beginner,1.9,86.0,140.0,synthetic,43.4,Loam,45.7,EXC001,OP1001,2025-05-06T06:29:00Z,data-001-v1,42
+T0112,Earth Excavation,Rainy,Beginner,4.5,50.0,102.0,synthetic,36.1,Loam,50.0,EXC002,OP2001,2025-05-06T07:52:00Z,data-001-v1,42
+T0159,Earth Excavation,Cloudy,Intermediate,4.9,62.0,79.0,synthetic,21.1,Clay,11.0,EXC002,OP1001,2025-05-06T08:35:00Z,data-001-v1,42
+T0313,Material Loading,Sunny,Beginner,5.7,30.0,30.0,synthetic,32.1,Loam,53.4,EXC002,OP1001,2025-05-06T09:11:00Z,data-001-v1,42
+T0512,Demolition,Sunny,Beginner,2.6,82.0,114.0,synthetic,19.1,Loam,31.5,EXC001,OP1001,2025-05-06T09:11:00Z,data-001-v1,42
+T0371,Material Loading,Windy,Intermediate,1.6,30.0,45.0,synthetic,33.6,Sand,33.5,EXC001,OP1001,2025-05-06T09:38:00Z,data-001-v1,42
+T0178,Earth Excavation,Sunny,Expert,5.8,55.0,56.0,synthetic,33.0,Clay,32.1,EXC002,OP1001,2025-05-06T11:15:00Z,data-001-v1,42
+T0299,Trenching,Cloudy,Expert,3.8,41.0,48.0,synthetic,21.1,Clay,21.7,EXC001,OP2001,2025-05-06T11:40:00Z,data-001-v1,42
+T0156,Earth Excavation,Cloudy,Intermediate,1.9,68.0,77.0,synthetic,18.7,Loam,35.7,EXC001,OP2001,2025-05-06T13:35:00Z,data-001-v1,42
+T0120,Earth Excavation,Cloudy,Beginner,3.3,58.0,89.0,synthetic,25.2,Sand,41.3,EXC001,OP2001,2025-05-06T13:56:00Z,data-001-v1,42
+T0485,Grading,Rainy,Expert,4.7,31.0,40.0,synthetic,23.9,Loam,48.0,EXC002,OP1001,2025-05-06T16:43:00Z,data-001-v1,42
+T0574,Demolition,Sunny,Expert,3.9,84.0,87.0,synthetic,23.8,Sand,52.8,EXC001,OP2001,2025-05-06T17:16:00Z,data-001-v1,42
+T0108,Earth Excavation,Sunny,Beginner,3.7,65.0,68.0,synthetic,29.1,Loam,47.9,EXC001,OP1001,2025-05-07T06:12:00Z,data-001-v1,42
+T0151,Earth Excavation,Rainy,Intermediate,2.8,57.0,108.0,synthetic,18.1,Clay,21.9,EXC001,OP2001,2025-05-07T08:00:00Z,data-001-v1,42
+T0441,Grading,Sunny,Intermediate,4.8,34.0,35.0,synthetic,25.5,Sand,18.4,EXC002,OP1001,2025-05-07T08:12:00Z,data-001-v1,42
+T0308,Trenching,Windy,Expert,2.6,49.0,47.0,synthetic,14.0,Loam,31.2,EXC001,OP1001,2025-05-07T09:44:00Z,data-001-v1,42
+T0396,Material Loading,Cloudy,Expert,4.7,32.0,37.0,synthetic,24.7,Clay,45.4,EXC002,OP1001,2025-05-07T11:34:00Z,data-001-v1,42
+T0139,Earth Excavation,Sunny,Intermediate,6.5,61.0,72.0,synthetic,17.1,Clay,22.9,EXC002,OP2001,2025-05-07T12:09:00Z,data-001-v1,42
+T0546,Demolition,Rainy,Intermediate,6.9,89.0,112.0,synthetic,30.8,Gravel,52.4,EXC002,OP2001,2025-05-07T12:16:00Z,data-001-v1,42
+T0589,Demolition,Cloudy,Expert,3.9,96.0,121.0,synthetic,34.1,Clay,14.9,EXC001,OP2001,2025-05-07T12:38:00Z,data-001-v1,42
+T0451,Grading,Rainy,Intermediate,6.0,31.0,49.0,synthetic,22.4,Loam,69.5,EXC002,OP1001,2025-05-07T13:55:00Z,data-001-v1,42
+T0174,Earth Excavation,Sunny,Expert,3.5,57.0,61.0,synthetic,30.0,Clay,5.8,EXC001,OP2001,2025-05-07T16:04:00Z,data-001-v1,42
+T0597,Demolition,Windy,Expert,6.1,104.0,72.0,synthetic,34.7,Loam,19.0,EXC002,OP1001,2025-05-07T17:28:00Z,data-001-v1,42
+T0349,Material Loading,Sunny,Intermediate,1.9,33.0,32.0,synthetic,25.4,Loam,13.5,EXC001,OP2001,2025-05-07T17:53:00Z,data-001-v1,42
+T0230,Trenching,Cloudy,Beginner,5.4,44.0,58.0,synthetic,27.2,Loam,18.7,EXC002,OP1001,2025-05-08T07:01:00Z,data-001-v1,42
+T0372,Material Loading,Windy,Intermediate,2.8,28.0,39.0,synthetic,22.6,Loam,52.2,EXC001,OP1001,2025-05-08T07:02:00Z,data-001-v1,42
+T0263,Trenching,Cloudy,Intermediate,2.5,42.0,43.0,synthetic,18.5,Loam,40.6,EXC001,OP2001,2025-05-08T07:45:00Z,data-001-v1,42
+T0111,Earth Excavation,Rainy,Beginner,2.3,60.0,81.0,synthetic,25.1,Gravel,64.3,EXC001,OP1001,2025-05-08T07:55:00Z,data-001-v1,42
+T0219,Trenching,Rainy,Beginner,1.8,49.0,67.0,synthetic,27.2,Clay,31.9,EXC001,OP1001,2025-05-08T08:48:00Z,data-001-v1,42
+T0246,Trenching,Sunny,Intermediate,3.8,52.0,52.0,synthetic,15.6,Sand,21.2,EXC001,OP1001,2025-05-08T09:29:00Z,data-001-v1,42
+T0493,Grading,Cloudy,Expert,2.2,32.0,31.0,synthetic,28.4,Sand,14.3,EXC001,OP1001,2025-05-08T09:54:00Z,data-001-v1,42
+T0157,Earth Excavation,Cloudy,Intermediate,6.2,63.0,56.0,synthetic,26.7,Sand,7.6,EXC002,OP1001,2025-05-08T12:54:00Z,data-001-v1,42
+T0234,Trenching,Cloudy,Beginner,5.2,44.0,59.0,synthetic,22.6,Loam,38.6,EXC002,OP2001,2025-05-08T14:47:00Z,data-001-v1,42
+T0424,Grading,Rainy,Beginner,1.6,36.0,62.0,synthetic,19.9,Clay,34.0,EXC001,OP1001,2025-05-08T16:40:00Z,data-001-v1,42
+T0486,Grading,Rainy,Expert,4.7,35.0,35.0,synthetic,21.9,Loam,47.6,EXC002,OP1001,2025-05-09T06:04:00Z,data-001-v1,42
+T0379,Material Loading,Sunny,Expert,2.0,29.0,27.0,synthetic,35.7,Clay,23.2,EXC001,OP1001,2025-05-09T06:36:00Z,data-001-v1,42
+T0378,Material Loading,Sunny,Expert,1.9,33.0,32.0,synthetic,16.0,Loam,51.5,EXC001,OP2001,2025-05-09T07:32:00Z,data-001-v1,42
+T0140,Earth Excavation,Sunny,Intermediate,6.5,61.0,66.0,synthetic,18.5,Clay,30.5,EXC002,OP2001,2025-05-09T08:01:00Z,data-001-v1,42
+T0330,Material Loading,Cloudy,Beginner,1.6,32.0,48.0,synthetic,22.8,Clay,17.3,EXC001,OP1001,2025-05-09T08:48:00Z,data-001-v1,42
+T0374,Material Loading,Windy,Intermediate,5.1,32.0,40.0,synthetic,30.1,Clay,15.5,EXC002,OP1001,2025-05-09T11:50:00Z,data-001-v1,42
+T0463,Grading,Cloudy,Intermediate,5.5,39.0,42.0,synthetic,22.1,Loam,39.0,EXC002,OP1001,2025-05-09T12:05:00Z,data-001-v1,42
+T0577,Demolition,Rainy,Expert,6.5,92.0,121.0,synthetic,13.3,Clay,31.1,EXC002,OP1001,2025-05-09T13:29:00Z,data-001-v1,42
+T0368,Material Loading,Cloudy,Intermediate,1.8,27.0,36.0,synthetic,22.1,Gravel,51.6,EXC001,OP1001,2025-05-09T13:31:00Z,data-001-v1,42
+T0147,Earth Excavation,Rainy,Intermediate,4.8,63.0,76.0,synthetic,27.6,Clay,35.9,EXC002,OP2001,2025-05-09T15:09:00Z,data-001-v1,42
+T0292,Trenching,Rainy,Expert,2.1,44.0,51.0,synthetic,36.7,Gravel,61.6,EXC001,OP2001,2025-05-09T15:39:00Z,data-001-v1,42
+T0105,Earth Excavation,Sunny,Beginner,4.7,59.0,43.0,synthetic,7.2,Clay,35.1,EXC002,OP2001,2025-05-10T06:11:00Z,data-001-v1,42
+T0237,Trenching,Windy,Beginner,2.8,42.0,35.0,synthetic,29.4,Loam,48.4,EXC001,OP2001,2025-05-10T06:24:00Z,data-001-v1,42
+T0529,Demolition,Windy,Beginner,6.2,80.0,121.0,synthetic,23.1,Sand,31.2,EXC002,OP2001,2025-05-10T06:52:00Z,data-001-v1,42
+T0594,Demolition,Windy,Expert,5.5,90.0,88.0,synthetic,23.1,Loam,12.3,EXC002,OP1001,2025-05-10T06:55:00Z,data-001-v1,42
+T0115,Earth Excavation,Rainy,Beginner,4.0,58.0,92.0,synthetic,29.2,Loam,35.4,EXC001,OP1001,2025-05-10T07:08:00Z,data-001-v1,42
+T0199,Earth Excavation,Cloudy,Expert,3.8,62.0,82.0,synthetic,37.6,Loam,41.7,EXC001,OP1001,2025-05-10T09:00:00Z,data-001-v1,42
+T0437,Grading,Windy,Beginner,1.7,35.0,38.0,synthetic,13.5,Sand,54.5,EXC001,OP2001,2025-05-10T12:43:00Z,data-001-v1,42
+T0520,Demolition,Rainy,Beginner,4.7,92.0,147.0,synthetic,24.4,Sand,37.1,EXC002,OP2001,2025-05-10T15:43:00Z,data-001-v1,42
+T0325,Material Loading,Rainy,Beginner,3.7,26.0,37.0,synthetic,20.5,Loam,49.7,EXC001,OP1001,2025-05-10T17:08:00Z,data-001-v1,42
+T0393,Material Loading,Cloudy,Expert,5.6,31.0,36.0,synthetic,10.1,Clay,33.1,EXC002,OP2001,2025-05-10T17:14:00Z,data-001-v1,42
+T0103,Earth Excavation,Sunny,Beginner,3.9,62.0,49.0,synthetic,23.8,Gravel,11.5,EXC001,OP1001,2025-05-10T17:31:00Z,data-001-v1,42
+T0582,Demolition,Rainy,Expert,3.6,86.0,136.0,synthetic,22.6,Clay,54.9,EXC001,OP1001,2025-05-10T17:34:00Z,data-001-v1,42
+T0525,Demolition,Cloudy,Beginner,6.2,84.0,127.0,synthetic,31.3,Gravel,31.1,EXC002,OP1001,2025-05-11T07:18:00Z,data-001-v1,42
+T0477,Grading,Sunny,Expert,4.9,33.0,35.0,synthetic,12.5,Loam,8.3,EXC002,OP1001,2025-05-11T11:20:00Z,data-001-v1,42
+T0309,Trenching,Windy,Expert,1.5,41.0,36.0,synthetic,29.3,Sand,36.7,EXC001,OP1001,2025-05-11T11:57:00Z,data-001-v1,42
+T0273,Trenching,Windy,Intermediate,5.6,44.0,60.0,synthetic,27.5,Loam,46.3,EXC002,OP1001,2025-05-11T12:07:00Z,data-001-v1,42
+T0471,Grading,Windy,Intermediate,3.9,35.0,38.0,synthetic,29.8,Sand,15.2,EXC001,OP1001,2025-05-11T13:35:00Z,data-001-v1,42
+T0591,Demolition,Cloudy,Expert,2.4,87.0,59.0,synthetic,27.7,Gravel,40.8,EXC001,OP2001,2025-05-11T13:39:00Z,data-001-v1,42
+T0320,Material Loading,Sunny,Beginner,4.6,30.0,32.0,synthetic,24.3,Sand,11.3,EXC002,OP1001,2025-05-11T14:54:00Z,data-001-v1,42
+T0445,Grading,Sunny,Intermediate,3.2,36.0,43.0,synthetic,38.2,Clay,11.5,EXC001,OP2001,2025-05-11T15:09:00Z,data-001-v1,42
+T0458,Grading,Cloudy,Intermediate,1.8,33.0,39.0,synthetic,18.7,Loam,49.4,EXC001,OP2001,2025-05-11T16:11:00Z,data-001-v1,42
+T0327,Material Loading,Rainy,Beginner,6.5,29.0,62.0,synthetic,27.4,Clay,65.8,EXC002,OP1001,2025-05-11T16:12:00Z,data-001-v1,42
+T0460,Grading,Cloudy,Intermediate,6.2,40.0,37.0,synthetic,24.1,Gravel,30.6,EXC002,OP1001,2025-05-11T16:55:00Z,data-001-v1,42
+T0524,Demolition,Cloudy,Beginner,6.3,94.0,114.0,synthetic,14.2,Loam,34.1,EXC002,OP1001,2025-05-11T17:11:00Z,data-001-v1,42
+T0303,Trenching,Cloudy,Expert,6.0,41.0,56.0,synthetic,25.6,Clay,14.8,EXC002,OP2001,2025-05-12T06:12:00Z,data-001-v1,42
+T0168,Earth Excavation,Windy,Intermediate,5.6,59.0,83.0,synthetic,30.9,Sand,18.0,EXC002,OP2001,2025-05-12T06:25:00Z,data-001-v1,42
+T0397,Material Loading,Cloudy,Expert,3.2,30.0,26.0,synthetic,35.5,Loam,12.2,EXC001,OP1001,2025-05-12T07:03:00Z,data-001-v1,42
+T0403,Material Loading,Windy,Expert,5.0,30.0,28.0,synthetic,22.7,Sand,27.1,EXC002,OP1001,2025-05-12T07:07:00Z,data-001-v1,42
+T0568,Demolition,Windy,Intermediate,2.2,87.0,119.0,synthetic,27.6,Clay,48.5,EXC001,OP1001,2025-05-12T07:52:00Z,data-001-v1,42
+T0289,Trenching,Rainy,Expert,6.9,46.0,46.0,synthetic,28.3,Loam,62.5,EXC002,OP2001,2025-05-12T08:01:00Z,data-001-v1,42
+T0184,Earth Excavation,Rainy,Expert,6.7,63.0,89.0,synthetic,25.8,Gravel,39.3,EXC002,OP1001,2025-05-12T08:31:00Z,data-001-v1,42
+T0261,Trenching,Rainy,Intermediate,2.3,40.0,51.0,synthetic,10.8,Loam,62.2,EXC001,OP1001,2025-05-12T08:49:00Z,data-001-v1,42
+T0434,Grading,Windy,Beginner,2.7,29.0,57.0,synthetic,25.8,Loam,51.0,EXC001,OP1001,2025-05-12T10:44:00Z,data-001-v1,42
+T0453,Grading,Rainy,Intermediate,2.2,35.0,40.0,synthetic,24.3,Loam,20.6,EXC001,OP2001,2025-05-12T10:51:00Z,data-001-v1,42
+T0569,Demolition,Sunny,Expert,5.9,86.0,111.0,synthetic,34.4,Clay,38.1,EXC002,OP1001,2025-05-12T11:10:00Z,data-001-v1,42
+T0185,Earth Excavation,Rainy,Expert,1.7,56.0,59.0,synthetic,28.9,Loam,37.2,EXC001,OP2001,2025-05-12T13:02:00Z,data-001-v1,42
+T0351,Material Loading,Sunny,Intermediate,5.2,26.0,41.0,synthetic,16.2,Loam,21.5,EXC002,OP2001,2025-05-12T13:02:00Z,data-001-v1,42
+T0559,Demolition,Cloudy,Intermediate,3.9,94.0,106.0,synthetic,27.5,Sand,49.4,EXC001,OP1001,2025-05-12T16:25:00Z,data-001-v1,42
+T0192,Earth Excavation,Cloudy,Expert,1.5,57.0,69.0,synthetic,21.5,Clay,47.2,EXC001,OP1001,2025-05-12T16:28:00Z,data-001-v1,42
+T0497,Grading,Windy,Expert,1.9,33.0,34.0,synthetic,25.7,Sand,53.8,EXC001,OP2001,2025-05-12T16:31:00Z,data-001-v1,42
+T0557,Demolition,Cloudy,Intermediate,5.4,91.0,114.0,synthetic,27.3,Loam,5.4,EXC002,OP1001,2025-05-12T16:46:00Z,data-001-v1,42
+T0281,Trenching,Sunny,Expert,3.7,44.0,36.0,synthetic,13.3,Loam,10.5,EXC001,OP2001,2025-05-12T16:58:00Z,data-001-v1,42
+T0361,Material Loading,Cloudy,Intermediate,6.2,32.0,26.0,synthetic,32.4,Gravel,10.8,EXC002,OP2001,2025-05-13T06:34:00Z,data-001-v1,42
+T0136,Earth Excavation,Windy,Beginner,6.7,64.0,80.0,synthetic,30.5,Sand,11.4,EXC002,OP1001,2025-05-13T06:42:00Z,data-001-v1,42
+T0507,Demolition,Sunny,Beginner,6.5,92.0,129.0,synthetic,29.0,Sand,34.7,EXC002,OP1001,2025-05-13T07:58:00Z,data-001-v1,42
+T0318,Material Loading,Sunny,Beginner,6.1,27.0,41.0,synthetic,1.4,Gravel,28.3,EXC002,OP1001,2025-05-13T08:14:00Z,data-001-v1,42
+T0499,Grading,Windy,Expert,2.7,36.0,31.0,synthetic,28.3,Gravel,12.2,EXC001,OP1001,2025-05-13T09:59:00Z,data-001-v1,42
+T0222,Trenching,Rainy,Beginner,5.1,47.0,84.0,synthetic,21.7,Gravel,38.4,EXC002,OP2001,2025-05-13T10:02:00Z,data-001-v1,42
+T0350,Material Loading,Sunny,Intermediate,4.0,32.0,42.0,synthetic,11.2,Clay,40.9,EXC001,OP1001,2025-05-13T10:29:00Z,data-001-v1,42
+T0365,Material Loading,Cloudy,Intermediate,5.2,29.0,39.0,synthetic,23.8,Clay,14.6,EXC002,OP2001,2025-05-13T11:29:00Z,data-001-v1,42
+T0249,Trenching,Sunny,Intermediate,5.6,38.0,49.0,synthetic,30.5,Loam,21.3,EXC002,OP1001,2025-05-13T11:39:00Z,data-001-v1,42
+T0247,Trenching,Sunny,Intermediate,4.9,44.0,52.0,synthetic,23.3,Gravel,51.6,EXC002,OP2001,2025-05-13T12:56:00Z,data-001-v1,42
+T0134,Earth Excavation,Windy,Beginner,5.9,62.0,82.0,synthetic,19.5,Sand,5.2,EXC002,OP1001,2025-05-13T12:59:00Z,data-001-v1,42
+T0521,Demolition,Cloudy,Beginner,1.5,91.0,78.0,synthetic,21.7,Clay,7.0,EXC001,OP2001,2025-05-13T13:30:00Z,data-001-v1,42
+T0154,Earth Excavation,Rainy,Intermediate,6.4,64.0,69.0,synthetic,13.8,Gravel,49.1,EXC002,OP1001,2025-05-13T15:45:00Z,data-001-v1,42
+T0307,Trenching,Windy,Expert,1.9,44.0,42.0,synthetic,27.6,Loam,22.4,EXC001,OP2001,2025-05-13T17:04:00Z,data-001-v1,42
+T0373,Material Loading,Windy,Intermediate,4.8,32.0,52.0,synthetic,24.4,Gravel,49.0,EXC002,OP2001,2025-05-13T17:51:00Z,data-001-v1,42
+T0433,Grading,Windy,Beginner,2.0,33.0,55.0,synthetic,18.7,Loam,24.4,EXC001,OP1001,2025-05-13T17:55:00Z,data-001-v1,42
+T0518,Demolition,Rainy,Beginner,6.5,90.0,193.0,synthetic,24.8,Gravel,65.3,EXC002,OP2001,2025-05-14T06:33:00Z,data-001-v1,42
+T0366,Material Loading,Cloudy,Intermediate,5.1,33.0,39.0,synthetic,23.8,Gravel,30.3,EXC002,OP2001,2025-05-14T07:23:00Z,data-001-v1,42
+T0158,Earth Excavation,Cloudy,Intermediate,2.1,58.0,88.0,synthetic,35.9,Clay,54.1,EXC001,OP1001,2025-05-14T07:46:00Z,data-001-v1,42
+T0587,Demolition,Cloudy,Expert,3.4,86.0,74.0,synthetic,31.8,Clay,47.7,EXC001,OP2001,2025-05-14T08:01:00Z,data-001-v1,42
+T0454,Grading,Rainy,Intermediate,6.0,32.0,51.0,synthetic,29.5,Gravel,25.0,EXC002,OP1001,2025-05-14T08:24:00Z,data-001-v1,42
+T0556,Demolition,Cloudy,Intermediate,2.8,90.0,117.0,synthetic,25.7,Clay,33.7,EXC001,OP2001,2025-05-14T10:46:00Z,data-001-v1,42
+T0319,Material Loading,Sunny,Beginner,3.3,29.0,42.0,synthetic,31.3,Clay,48.0,EXC001,OP1001,2025-05-14T10:47:00Z,data-001-v1,42
+T0567,Demolition,Windy,Intermediate,5.5,86.0,110.0,synthetic,25.5,Sand,38.2,EXC002,OP2001,2025-05-14T11:03:00Z,data-001-v1,42
+T0331,Material Loading,Cloudy,Beginner,3.1,26.0,39.0,synthetic,9.3,Clay,7.1,EXC001,OP1001,2025-05-14T12:32:00Z,data-001-v1,42
+T0160,Earth Excavation,Cloudy,Intermediate,6.4,58.0,74.0,synthetic,27.1,Clay,54.3,EXC002,OP2001,2025-05-14T15:52:00Z,data-001-v1,42
+T0145,Earth Excavation,Sunny,Intermediate,6.4,57.0,61.0,synthetic,33.9,Loam,14.3,EXC002,OP1001,2025-05-14T16:51:00Z,data-001-v1,42
+T0571,Demolition,Sunny,Expert,5.9,90.0,81.0,synthetic,14.8,Loam,19.2,EXC002,OP1001,2025-05-14T16:56:00Z,data-001-v1,42
+T0113,Earth Excavation,Rainy,Beginner,6.4,59.0,94.0,synthetic,43.8,Loam,35.6,EXC002,OP2001,2025-05-15T07:38:00Z,data-001-v1,42
+T0355,Material Loading,Rainy,Intermediate,6.7,30.0,42.0,synthetic,25.9,Loam,40.9,EXC002,OP2001,2025-05-15T08:14:00Z,data-001-v1,42
+T0375,Material Loading,Windy,Intermediate,5.1,29.0,45.0,synthetic,25.1,Gravel,12.0,EXC002,OP1001,2025-05-15T08:22:00Z,data-001-v1,42
+T0532,Demolition,Windy,Beginner,5.1,93.0,108.0,synthetic,16.7,Loam,16.6,EXC002,OP2001,2025-05-15T09:24:00Z,data-001-v1,42
+T0528,Demolition,Cloudy,Beginner,5.8,87.0,113.0,synthetic,20.3,Loam,12.8,EXC002,OP1001,2025-05-15T10:40:00Z,data-001-v1,42
+T0522,Demolition,Cloudy,Beginner,5.3,95.0,116.0,synthetic,20.1,Loam,52.7,EXC002,OP2001,2025-05-15T11:19:00Z,data-001-v1,42
+T0123,Earth Excavation,Cloudy,Beginner,5.6,58.0,73.0,synthetic,23.7,Sand,34.7,EXC002,OP2001,2025-05-15T11:55:00Z,data-001-v1,42
+T0496,Grading,Cloudy,Expert,3.1,40.0,52.0,synthetic,28.0,Sand,24.1,EXC001,OP1001,2025-05-15T12:01:00Z,data-001-v1,42
+T0179,Earth Excavation,Sunny,Expert,2.1,64.0,53.0,synthetic,17.6,Gravel,38.3,EXC001,OP2001,2025-05-15T12:52:00Z,data-001-v1,42
+T0323,Material Loading,Rainy,Beginner,5.5,32.0,52.0,synthetic,28.6,Clay,42.9,EXC002,OP1001,2025-05-15T13:16:00Z,data-001-v1,42
+T0435,Grading,Windy,Beginner,1.7,36.0,45.0,synthetic,30.9,Gravel,53.0,EXC001,OP1001,2025-05-15T14:53:00Z,data-001-v1,42
+T0564,Demolition,Windy,Intermediate,6.8,81.0,115.0,synthetic,31.0,Sand,10.4,EXC002,OP2001,2025-05-15T15:19:00Z,data-001-v1,42
+T0280,Trenching,Windy,Intermediate,2.4,45.0,51.0,synthetic,37.3,Sand,52.3,EXC001,OP1001,2025-05-15T16:05:00Z,data-001-v1,42
+T0504,Grading,Windy,Expert,3.0,32.0,37.0,synthetic,22.7,Clay,45.4,EXC001,OP2001,2025-05-16T06:03:00Z,data-001-v1,42
+T0193,Earth Excavation,Cloudy,Expert,3.4,60.0,72.0,synthetic,10.9,Gravel,10.4,EXC001,OP2001,2025-05-16T08:05:00Z,data-001-v1,42
+T0572,Demolition,Sunny,Expert,2.1,94.0,90.0,synthetic,20.4,Loam,32.3,EXC001,OP2001,2025-05-16T08:19:00Z,data-001-v1,42
+T0519,Demolition,Rainy,Beginner,6.2,100.0,82.0,synthetic,32.2,Clay,33.5,EXC002,OP2001,2025-05-16T08:47:00Z,data-001-v1,42
+T0382,Material Loading,Sunny,Expert,2.2,30.0,41.0,synthetic,31.3,Sand,45.9,EXC001,OP1001,2025-05-16T08:51:00Z,data-001-v1,42
+T0256,Trenching,Rainy,Intermediate,3.8,46.0,67.0,synthetic,21.4,Clay,55.0,EXC001,OP1001,2025-05-16T10:01:00Z,data-001-v1,42
+T0595,Demolition,Windy,Expert,6.3,83.0,105.0,synthetic,36.5,Loam,22.6,EXC002,OP2001,2025-05-16T10:08:00Z,data-001-v1,42
+T0376,Material Loading,Windy,Intermediate,3.8,30.0,28.0,synthetic,13.1,Sand,34.5,EXC001,OP1001,2025-05-16T10:53:00Z,data-001-v1,42
+T0555,Demolition,Cloudy,Intermediate,3.8,91.0,98.0,synthetic,33.5,Loam,8.5,EXC001,OP2001,2025-05-16T12:38:00Z,data-001-v1,42
+T0357,Material Loading,Rainy,Intermediate,3.1,32.0,35.0,synthetic,22.8,Loam,45.5,EXC001,OP2001,2025-05-16T13:15:00Z,data-001-v1,42
+T0340,Material Loading,Windy,Beginner,6.5,33.0,46.0,synthetic,14.5,Loam,49.9,EXC002,OP1001,2025-05-16T14:51:00Z,data-001-v1,42
+T0428,Grading,Cloudy,Beginner,6.2,36.0,46.0,synthetic,24.9,Sand,22.5,EXC002,OP2001,2025-05-16T17:23:00Z,data-001-v1,42
+T0286,Trenching,Sunny,Expert,5.2,50.0,43.0,synthetic,25.4,Sand,53.9,EXC002,OP2001,2025-05-17T06:03:00Z,data-001-v1,42
+T0581,Demolition,Rainy,Expert,5.4,78.0,105.0,synthetic,27.4,Gravel,53.4,EXC002,OP1001,2025-05-17T07:18:00Z,data-001-v1,42
+T0217,Trenching,Sunny,Beginner,3.2,41.0,63.0,synthetic,25.5,Loam,38.7,EXC001,OP1001,2025-05-17T09:05:00Z,data-001-v1,42
+T0253,Trenching,Sunny,Intermediate,3.5,38.0,52.0,synthetic,22.2,Clay,27.9,EXC001,OP2001,2025-05-17T09:59:00Z,data-001-v1,42
+T0354,Material Loading,Rainy,Intermediate,6.2,27.0,37.0,synthetic,24.4,Sand,67.1,EXC002,OP2001,2025-05-17T11:13:00Z,data-001-v1,42
+T0480,Grading,Sunny,Expert,2.6,37.0,30.0,synthetic,19.7,Loam,24.6,EXC001,OP2001,2025-05-17T11:38:00Z,data-001-v1,42
+T0300,Trenching,Cloudy,Expert,3.0,50.0,40.0,synthetic,29.6,Clay,14.2,EXC001,OP2001,2025-05-17T12:07:00Z,data-001-v1,42
+T0257,Trenching,Rainy,Intermediate,6.5,43.0,53.0,synthetic,28.2,Loam,55.7,EXC002,OP2001,2025-05-17T13:20:00Z,data-001-v1,42
+T0535,Demolition,Windy,Beginner,2.7,93.0,66.0,synthetic,17.8,Sand,28.8,EXC001,OP2001,2025-05-17T13:26:00Z,data-001-v1,42
+T0284,Trenching,Sunny,Expert,3.1,44.0,43.0,synthetic,23.5,Clay,44.3,EXC001,OP1001,2025-05-17T13:27:00Z,data-001-v1,42
+T0182,Earth Excavation,Rainy,Expert,6.9,66.0,68.0,synthetic,28.1,Gravel,53.3,EXC002,OP2001,2025-05-17T13:30:00Z,data-001-v1,42
+T0543,Demolition,Sunny,Intermediate,3.4,99.0,103.0,synthetic,20.9,Gravel,50.8,EXC001,OP2001,2025-05-17T14:58:00Z,data-001-v1,42
+T0402,Material Loading,Windy,Expert,5.0,32.0,41.0,synthetic,21.6,Loam,28.4,EXC002,OP2001,2025-05-17T15:37:00Z,data-001-v1,42
+T0431,Grading,Cloudy,Beginner,2.1,36.0,50.0,synthetic,23.7,Loam,48.3,EXC001,OP1001,2025-05-17T15:54:00Z,data-001-v1,42
+T0425,Grading,Cloudy,Beginner,3.6,31.0,48.0,synthetic,37.2,Clay,51.1,EXC001,OP1001,2025-05-17T16:09:00Z,data-001-v1,42
+T0114,Earth Excavation,Rainy,Beginner,3.8,63.0,81.0,synthetic,36.4,Sand,35.3,EXC001,OP2001,2025-05-17T16:59:00Z,data-001-v1,42
+T0152,Earth Excavation,Rainy,Intermediate,4.6,57.0,77.0,synthetic,32.2,Clay,50.7,EXC002,OP1001,2025-05-17T17:03:00Z,data-001-v1,42
+T0359,Material Loading,Rainy,Intermediate,5.0,25.0,39.0,synthetic,30.7,Clay,26.0,EXC002,OP1001,2025-05-18T06:23:00Z,data-001-v1,42
+T0288,Trenching,Sunny,Expert,2.1,46.0,37.0,synthetic,25.9,Loam,43.4,EXC001,OP1001,2025-05-18T07:01:00Z,data-001-v1,42
+T0250,Trenching,Sunny,Intermediate,6.6,42.0,47.0,synthetic,32.5,Loam,39.0,EXC002,OP1001,2025-05-18T07:12:00Z,data-001-v1,42
+T0598,Demolition,Windy,Expert,6.3,98.0,100.0,synthetic,19.1,Clay,54.6,EXC002,OP2001,2025-05-18T07:33:00Z,data-001-v1,42
+T0101,Earth Excavation,Sunny,Beginner,5.9,60.0,75.0,synthetic,19.7,Sand,37.4,EXC002,OP2001,2025-05-18T09:26:00Z,data-001-v1,42
+T0236,Trenching,Windy,Beginner,2.0,48.0,88.0,synthetic,12.1,Clay,41.3,EXC001,OP1001,2025-05-18T11:21:00Z,data-001-v1,42
+T0277,Trenching,Windy,Intermediate,2.1,50.0,57.0,synthetic,44.1,Loam,47.6,EXC001,OP2001,2025-05-18T12:06:00Z,data-001-v1,42
+T0410,Grading,Sunny,Beginner,1.8,37.0,48.0,synthetic,27.6,Clay,11.7,EXC001,OP2001,2025-05-18T13:09:00Z,data-001-v1,42
+T0466,Grading,Windy,Intermediate,4.8,36.0,39.0,synthetic,9.3,Sand,50.2,EXC002,OP1001,2025-05-18T13:47:00Z,data-001-v1,42
+T0561,Demolition,Windy,Intermediate,3.1,74.0,109.0,synthetic,28.3,Sand,17.9,EXC001,OP1001,2025-05-18T14:20:00Z,data-001-v1,42
+T0296,Trenching,Rainy,Expert,6.2,46.0,53.0,synthetic,26.9,Loam,43.3,EXC002,OP2001,2025-05-18T15:28:00Z,data-001-v1,42
+T0279,Trenching,Windy,Intermediate,2.8,40.0,60.0,synthetic,26.1,Clay,7.6,EXC001,OP2001,2025-05-18T15:33:00Z,data-001-v1,42
+T0328,Material Loading,Rainy,Beginner,2.5,31.0,53.0,synthetic,31.6,Gravel,35.2,EXC001,OP1001,2025-05-18T16:46:00Z,data-001-v1,42
+T0149,Earth Excavation,Rainy,Intermediate,5.2,57.0,57.0,synthetic,18.9,Sand,60.2,EXC002,OP2001,2025-05-18T17:45:00Z,data-001-v1,42
+T0329,Material Loading,Cloudy,Beginner,2.1,32.0,47.0,synthetic,37.1,Loam,44.9,EXC001,OP1001,2025-05-19T06:12:00Z,data-001-v1,42
+T0538,Demolition,Sunny,Intermediate,3.7,84.0,86.0,synthetic,20.0,Loam,54.2,EXC001,OP1001,2025-05-19T06:33:00Z,data-001-v1,42
+T0207,Earth Excavation,Windy,Expert,5.3,55.0,55.0,synthetic,33.4,Sand,36.3,EXC002,OP1001,2025-05-19T08:08:00Z,data-001-v1,42
+T0195,Earth Excavation,Cloudy,Expert,5.0,63.0,79.0,synthetic,37.7,Clay,13.6,EXC002,OP2001,2025-05-19T09:07:00Z,data-001-v1,42
+T0334,Material Loading,Cloudy,Beginner,2.1,29.0,24.0,synthetic,34.7,Clay,42.0,EXC001,OP2001,2025-05-19T09:54:00Z,data-001-v1,42
+T0412,Grading,Sunny,Beginner,6.9,39.0,42.0,synthetic,4.6,Sand,27.9,EXC002,OP1001,2025-05-19T12:04:00Z,data-001-v1,42
+T0283,Trenching,Sunny,Expert,2.4,46.0,42.0,synthetic,22.0,Clay,36.6,EXC001,OP1001,2025-05-19T13:01:00Z,data-001-v1,42
+T0514,Demolition,Rainy,Beginner,2.8,94.0,108.0,synthetic,34.1,Loam,64.0,EXC001,OP2001,2025-05-19T15:25:00Z,data-001-v1,42
+T0161,Earth Excavation,Cloudy,Intermediate,6.7,59.0,79.0,synthetic,3.2,Gravel,15.5,EXC002,OP2001,2025-05-19T16:37:00Z,data-001-v1,42
+T0172,Earth Excavation,Windy,Intermediate,6.1,61.0,82.0,synthetic,12.9,Loam,30.9,EXC002,OP1001,2025-05-19T17:39:00Z,data-001-v1,42
+T0517,Demolition,Rainy,Beginner,3.8,86.0,144.0,synthetic,22.7,Clay,54.8,EXC001,OP2001,2025-05-19T17:59:00Z,data-001-v1,42
+T0221,Trenching,Rainy,Beginner,3.8,46.0,67.0,synthetic,21.0,Loam,23.7,EXC001,OP2001,2025-05-20T07:02:00Z,data-001-v1,42
+T0380,Material Loading,Sunny,Expert,2.0,31.0,28.0,synthetic,28.1,Clay,34.4,EXC001,OP1001,2025-05-20T07:48:00Z,data-001-v1,42
+T0444,Grading,Sunny,Intermediate,2.9,39.0,37.0,synthetic,30.8,Loam,11.5,EXC001,OP2001,2025-05-20T07:55:00Z,data-001-v1,42
+T0462,Grading,Cloudy,Intermediate,5.6,34.0,43.0,synthetic,12.1,Clay,46.0,EXC002,OP1001,2025-05-20T09:11:00Z,data-001-v1,42
+T0473,Grading,Sunny,Expert,2.5,36.0,34.0,synthetic,19.5,Loam,12.2,EXC001,OP1001,2025-05-20T10:12:00Z,data-001-v1,42
+T0360,Material Loading,Rainy,Intermediate,3.0,32.0,34.0,synthetic,10.6,Sand,33.4,EXC001,OP2001,2025-05-20T10:31:00Z,data-001-v1,42
+T0186,Earth Excavation,Rainy,Expert,5.7,56.0,73.0,synthetic,32.9,Gravel,55.8,EXC002,OP1001,2025-05-20T12:55:00Z,data-001-v1,42
+T0552,Demolition,Rainy,Intermediate,4.6,95.0,125.0,synthetic,33.8,Sand,62.8,EXC002,OP2001,2025-05-20T13:07:00Z,data-001-v1,42
+T0274,Trenching,Windy,Intermediate,6.7,50.0,71.0,synthetic,17.1,Clay,35.5,EXC002,OP1001,2025-05-20T15:42:00Z,data-001-v1,42
+T0345,Material Loading,Sunny,Intermediate,5.8,30.0,35.0,synthetic,34.3,Gravel,9.3,EXC002,OP1001,2025-05-21T07:31:00Z,data-001-v1,42
+T0271,Trenching,Cloudy,Intermediate,6.9,51.0,52.0,synthetic,25.6,Gravel,22.9,EXC002,OP1001,2025-05-21T08:32:00Z,data-001-v1,42
+T0194,Earth Excavation,Cloudy,Expert,2.1,57.0,63.0,synthetic,25.7,Sand,49.2,EXC001,OP1001,2025-05-21T09:21:00Z,data-001-v1,42
+T0548,Demolition,Rainy,Intermediate,5.2,91.0,127.0,synthetic,35.8,Loam,27.4,EXC002,OP2001,2025-05-21T09:35:00Z,data-001-v1,42
+T0464,Grading,Cloudy,Intermediate,5.7,37.0,39.0,synthetic,32.5,Sand,41.5,EXC002,OP2001,2025-05-21T12:12:00Z,data-001-v1,42
+T0153,Earth Excavation,Rainy,Intermediate,2.7,65.0,79.0,synthetic,24.2,Loam,60.3,EXC001,OP1001,2025-05-21T12:22:00Z,data-001-v1,42
+T0489,Grading,Cloudy,Expert,3.3,34.0,31.0,synthetic,23.1,Loam,44.9,EXC001,OP2001,2025-05-21T12:24:00Z,data-001-v1,42
+T0450,Grading,Rainy,Intermediate,4.6,35.0,45.0,synthetic,18.0,Gravel,45.9,EXC002,OP1001,2025-05-21T14:08:00Z,data-001-v1,42
+T0211,Trenching,Sunny,Beginner,6.1,42.0,62.0,synthetic,23.9,Loam,36.2,EXC002,OP2001,2025-05-21T15:09:00Z,data-001-v1,42
+T0201,Earth Excavation,Windy,Expert,2.2,63.0,54.0,synthetic,36.9,Loam,12.5,EXC001,OP2001,2025-05-21T16:02:00Z,data-001-v1,42
+T0553,Demolition,Cloudy,Intermediate,2.2,90.0,109.0,synthetic,20.9,Loam,23.8,EXC001,OP2001,2025-05-21T16:30:00Z,data-001-v1,42
+T0170,Earth Excavation,Windy,Intermediate,1.7,59.0,73.0,synthetic,31.0,Loam,32.0,EXC001,OP2001,2025-05-22T06:50:00Z,data-001-v1,42
+T0418,Grading,Rainy,Beginner,3.7,29.0,56.0,synthetic,30.9,Loam,31.4,EXC001,OP1001,2025-05-22T07:15:00Z,data-001-v1,42
+T0176,Earth Excavation,Sunny,Expert,2.6,67.0,60.0,synthetic,26.3,Clay,22.5,EXC001,OP2001,2025-05-22T07:35:00Z,data-001-v1,42
+T0232,Trenching,Cloudy,Beginner,1.6,42.0,31.0,synthetic,35.4,Clay,51.6,EXC001,OP1001,2025-05-22T13:22:00Z,data-001-v1,42
+T0122,Earth Excavation,Cloudy,Beginner,6.5,63.0,81.0,synthetic,16.8,Sand,7.1,EXC002,OP2001,2025-05-22T14:39:00Z,data-001-v1,42
+T0449,Grading,Rainy,Intermediate,3.3,38.0,45.0,synthetic,27.4,Clay,61.9,EXC001,OP2001,2025-05-22T14:47:00Z,data-001-v1,42
+T0362,Material Loading,Cloudy,Intermediate,5.5,35.0,37.0,synthetic,42.7,Loam,31.8,EXC002,OP1001,2025-05-22T15:27:00Z,data-001-v1,42
+T0223,Trenching,Rainy,Beginner,2.3,49.0,78.0,synthetic,20.8,Clay,29.1,EXC001,OP1001,2025-05-22T16:38:00Z,data-001-v1,42
+T0439,Grading,Windy,Beginner,6.4,35.0,57.0,synthetic,32.7,Clay,34.9,EXC002,OP2001,2025-05-23T06:09:00Z,data-001-v1,42
+T0275,Trenching,Windy,Intermediate,1.8,52.0,56.0,synthetic,24.8,Clay,39.4,EXC001,OP2001,2025-05-23T07:48:00Z,data-001-v1,42
+T0545,Demolition,Rainy,Intermediate,4.9,85.0,92.0,synthetic,27.6,Loam,57.4,EXC002,OP2001,2025-05-23T07:58:00Z,data-001-v1,42
+T0198,Earth Excavation,Cloudy,Expert,5.3,65.0,53.0,synthetic,32.0,Clay,46.4,EXC002,OP2001,2025-05-23T07:59:00Z,data-001-v1,42
+T0563,Demolition,Windy,Intermediate,3.3,83.0,87.0,synthetic,26.4,Loam,39.9,EXC001,OP2001,2025-05-23T08:20:00Z,data-001-v1,42
+T0306,Trenching,Windy,Expert,3.9,47.0,56.0,synthetic,23.9,Loam,10.2,EXC001,OP2001,2025-05-23T08:37:00Z,data-001-v1,42
+T0143,Earth Excavation,Sunny,Intermediate,2.6,62.0,59.0,synthetic,21.4,Loam,36.4,EXC001,OP2001,2025-05-23T10:24:00Z,data-001-v1,42
+T0364,Material Loading,Cloudy,Intermediate,2.3,33.0,34.0,synthetic,14.3,Sand,44.5,EXC001,OP2001,2025-05-23T12:11:00Z,data-001-v1,42
+T0118,Earth Excavation,Rainy,Beginner,3.3,65.0,97.0,synthetic,16.8,Clay,63.5,EXC001,OP2001,2025-05-23T12:58:00Z,data-001-v1,42
+T0369,Material Loading,Windy,Intermediate,5.6,31.0,42.0,synthetic,27.7,Gravel,48.4,EXC002,OP2001,2025-05-23T13:39:00Z,data-001-v1,42
+T0214,Trenching,Sunny,Beginner,4.0,45.0,67.0,synthetic,26.2,Loam,33.7,EXC001,OP1001,2025-05-23T16:37:00Z,data-001-v1,42
+T0317,Material Loading,Sunny,Beginner,5.9,34.0,43.0,synthetic,22.6,Sand,17.9,EXC002,OP1001,2025-05-23T16:52:00Z,data-001-v1,42
+T0265,Trenching,Cloudy,Intermediate,6.8,47.0,53.0,synthetic,21.0,Loam,11.2,EXC002,OP1001,2025-05-23T17:12:00Z,data-001-v1,42
+T0446,Grading,Sunny,Intermediate,6.8,35.0,45.0,synthetic,31.9,Loam,26.4,EXC002,OP1001,2025-05-23T17:37:00Z,data-001-v1,42
+T0177,Earth Excavation,Sunny,Expert,5.5,66.0,53.0,synthetic,31.4,Loam,6.3,EXC002,OP2001,2025-05-24T07:24:00Z,data-001-v1,42
+T0173,Earth Excavation,Sunny,Expert,3.6,60.0,61.0,synthetic,12.7,Gravel,20.2,EXC001,OP1001,2025-05-24T07:35:00Z,data-001-v1,42
+T0411,Grading,Sunny,Beginner,6.6,34.0,49.0,synthetic,35.1,Sand,17.0,EXC002,OP1001,2025-05-24T08:39:00Z,data-001-v1,42
+T0337,Material Loading,Windy,Beginner,3.4,31.0,28.0,synthetic,32.1,Loam,54.5,EXC001,OP2001,2025-05-24T10:08:00Z,data-001-v1,42
+T0513,Demolition,Rainy,Beginner,4.5,79.0,126.0,synthetic,25.6,Sand,37.7,EXC002,OP1001,2025-05-24T11:51:00Z,data-001-v1,42
+T0130,Earth Excavation,Windy,Beginner,5.8,56.0,81.0,synthetic,24.7,Loam,14.3,EXC002,OP1001,2025-05-24T12:40:00Z,data-001-v1,42
+T0166,Earth Excavation,Windy,Intermediate,6.4,67.0,72.0,synthetic,13.5,Loam,24.7,EXC002,OP2001,2025-05-24T14:07:00Z,data-001-v1,42
+T0429,Grading,Cloudy,Beginner,6.0,38.0,52.0,synthetic,28.5,Clay,50.6,EXC002,OP2001,2025-05-24T14:33:00Z,data-001-v1,42
+T0381,Material Loading,Sunny,Expert,4.6,27.0,28.0,synthetic,9.2,Loam,11.2,EXC002,OP1001,2025-05-24T15:11:00Z,data-001-v1,42
+T0575,Demolition,Sunny,Expert,5.4,106.0,83.0,synthetic,25.8,Sand,11.8,EXC002,OP2001,2025-05-24T15:50:00Z,data-001-v1,42
+T0117,Earth Excavation,Rainy,Beginner,5.1,55.0,76.0,synthetic,30.6,Loam,59.9,EXC002,OP2001,2025-05-24T17:43:00Z,data-001-v1,42
+T0347,Material Loading,Sunny,Intermediate,3.3,30.0,29.0,synthetic,31.8,Sand,17.2,EXC001,OP2001,2025-05-25T06:02:00Z,data-001-v1,42
+T0227,Trenching,Cloudy,Beginner,2.1,43.0,62.0,synthetic,34.3,Loam,18.7,EXC001,OP1001,2025-05-25T07:14:00Z,data-001-v1,42
+T0494,Grading,Cloudy,Expert,6.6,34.0,32.0,synthetic,29.5,Clay,24.4,EXC002,OP2001,2025-05-25T10:07:00Z,data-001-v1,42
+T0388,Material Loading,Rainy,Expert,6.1,27.0,37.0,synthetic,38.0,Gravel,22.5,EXC002,OP2001,2025-05-25T11:23:00Z,data-001-v1,42
+T0148,Earth Excavation,Rainy,Intermediate,2.7,58.0,69.0,synthetic,31.2,Loam,58.7,EXC001,OP1001,2025-05-25T12:06:00Z,data-001-v1,42
+T0188,Earth Excavation,Rainy,Expert,6.3,60.0,69.0,synthetic,33.7,Loam,21.7,EXC002,OP2001,2025-05-25T12:23:00Z,data-001-v1,42
+T0264,Trenching,Cloudy,Intermediate,3.2,47.0,54.0,synthetic,34.1,Gravel,32.6,EXC001,OP2001,2025-05-25T12:29:00Z,data-001-v1,42
+T0416,Grading,Sunny,Beginner,2.4,33.0,49.0,synthetic,36.4,Gravel,51.8,EXC001,OP1001,2025-05-25T12:56:00Z,data-001-v1,42
+T0133,Earth Excavation,Windy,Beginner,6.7,62.0,94.0,synthetic,13.6,Clay,9.7,EXC002,OP2001,2025-05-25T14:27:00Z,data-001-v1,42
+T0530,Demolition,Windy,Beginner,3.1,79.0,150.0,synthetic,31.3,Loam,45.3,EXC001,OP2001,2025-05-25T15:32:00Z,data-001-v1,42
+T0255,Trenching,Rainy,Intermediate,5.4,40.0,60.0,synthetic,14.9,Loam,34.0,EXC002,OP1001,2025-05-25T15:45:00Z,data-001-v1,42
+T0272,Trenching,Windy,Intermediate,2.1,44.0,54.0,synthetic,27.3,Sand,23.9,EXC001,OP1001,2025-05-25T17:27:00Z,data-001-v1,42
+T0346,Material Loading,Sunny,Intermediate,4.0,29.0,32.0,synthetic,13.6,Sand,25.6,EXC001,OP1001,2025-05-25T17:47:00Z,data-001-v1,42
+T0600,Demolition,Windy,Expert,2.3,90.0,85.0,synthetic,31.4,Loam,44.0,EXC001,OP2001,2025-05-26T06:01:00Z,data-001-v1,42
+T0492,Grading,Cloudy,Expert,2.7,37.0,37.0,synthetic,17.3,Loam,27.2,EXC001,OP2001,2025-05-26T07:40:00Z,data-001-v1,42
+T0500,Grading,Windy,Expert,6.7,38.0,38.0,synthetic,35.2,Sand,51.6,EXC002,OP2001,2025-05-26T09:14:00Z,data-001-v1,42
+T0187,Earth Excavation,Rainy,Expert,5.9,58.0,85.0,synthetic,35.9,Loam,33.9,EXC002,OP2001,2025-05-26T09:26:00Z,data-001-v1,42
+T0162,Earth Excavation,Cloudy,Intermediate,5.3,64.0,86.0,synthetic,29.3,Gravel,18.7,EXC002,OP1001,2025-05-26T10:15:00Z,data-001-v1,42
+T0584,Demolition,Rainy,Expert,3.7,91.0,82.0,synthetic,19.6,Loam,24.9,EXC001,OP2001,2025-05-26T12:00:00Z,data-001-v1,42
+T0344,Material Loading,Windy,Beginner,6.4,31.0,42.0,synthetic,23.6,Loam,35.1,EXC002,OP1001,2025-05-26T14:18:00Z,data-001-v1,42
+T0226,Trenching,Rainy,Beginner,4.9,44.0,83.0,synthetic,20.2,Clay,28.9,EXC002,OP1001,2025-05-26T15:18:00Z,data-001-v1,42
+T0438,Grading,Windy,Beginner,2.2,38.0,47.0,synthetic,15.8,Clay,27.8,EXC001,OP2001,2025-05-26T15:45:00Z,data-001-v1,42
+T0508,Demolition,Sunny,Beginner,4.8,81.0,111.0,synthetic,19.0,Clay,42.3,EXC002,OP2001,2025-05-26T16:00:00Z,data-001-v1,42
+T0335,Material Loading,Cloudy,Beginner,3.2,27.0,40.0,synthetic,18.5,Sand,52.3,EXC001,OP1001,2025-05-26T16:18:00Z,data-001-v1,42
+T0475,Grading,Sunny,Expert,3.5,40.0,36.0,synthetic,16.6,Loam,15.2,EXC001,OP2001,2025-05-27T06:59:00Z,data-001-v1,42
+T0138,Earth Excavation,Sunny,Intermediate,4.6,65.0,60.0,synthetic,29.5,Loam,30.1,EXC002,OP1001,2025-05-27T07:06:00Z,data-001-v1,42
+T0163,Earth Excavation,Cloudy,Intermediate,2.7,60.0,62.0,synthetic,22.7,Sand,26.0,EXC001,OP2001,2025-05-27T07:52:00Z,data-001-v1,42
+T0183,Earth Excavation,Rainy,Expert,2.8,69.0,71.0,synthetic,35.5,Gravel,44.3,EXC001,OP1001,2025-05-27T10:00:00Z,data-001-v1,42
+T0352,Material Loading,Sunny,Intermediate,3.1,26.0,40.0,synthetic,31.4,Loam,11.3,EXC001,OP2001,2025-05-27T11:23:00Z,data-001-v1,42
+T0322,Material Loading,Rainy,Beginner,3.3,32.0,49.0,synthetic,24.5,Clay,50.8,EXC001,OP2001,2025-05-27T15:13:00Z,data-001-v1,42
+T0592,Demolition,Cloudy,Expert,5.1,92.0,72.0,synthetic,13.9,Loam,27.3,EXC002,OP2001,2025-05-27T15:16:00Z,data-001-v1,42
+T0206,Earth Excavation,Windy,Expert,4.0,62.0,55.0,synthetic,17.0,Sand,35.6,EXC001,OP2001,2025-05-27T17:44:00Z,data-001-v1,42
+T0260,Trenching,Rainy,Intermediate,4.5,43.0,55.0,synthetic,27.0,Clay,23.3,EXC002,OP1001,2025-05-28T06:17:00Z,data-001-v1,42
+T0132,Earth Excavation,Windy,Beginner,3.0,61.0,107.0,synthetic,34.6,Gravel,47.4,EXC001,OP2001,2025-05-28T06:52:00Z,data-001-v1,42
+T0550,Demolition,Rainy,Intermediate,4.7,84.0,124.0,synthetic,35.6,Clay,40.3,EXC002,OP2001,2025-05-28T07:07:00Z,data-001-v1,42
+T0452,Grading,Rainy,Intermediate,3.5,31.0,46.0,synthetic,24.7,Sand,65.2,EXC001,OP2001,2025-05-28T07:26:00Z,data-001-v1,42
+T0142,Earth Excavation,Sunny,Intermediate,6.2,62.0,79.0,synthetic,8.1,Loam,48.8,EXC002,OP1001,2025-05-28T07:34:00Z,data-001-v1,42
+T0536,Demolition,Windy,Beginner,2.9,86.0,150.0,synthetic,25.7,Clay,35.8,EXC001,OP1001,2025-05-28T07:58:00Z,data-001-v1,42
+T0498,Grading,Windy,Expert,1.8,34.0,37.0,synthetic,29.7,Sand,7.0,EXC001,OP2001,2025-05-28T11:12:00Z,data-001-v1,42
+T0531,Demolition,Windy,Beginner,5.1,80.0,121.0,synthetic,31.3,Loam,41.1,EXC002,OP1001,2025-05-28T11:23:00Z,data-001-v1,42
+T0422,Grading,Rainy,Beginner,5.1,35.0,48.0,synthetic,29.3,Sand,28.4,EXC002,OP1001,2025-05-28T11:37:00Z,data-001-v1,42
+T0204,Earth Excavation,Windy,Expert,2.6,64.0,75.0,synthetic,35.1,Clay,26.7,EXC001,OP1001,2025-05-28T11:58:00Z,data-001-v1,42
+T0129,Earth Excavation,Windy,Beginner,6.3,58.0,91.0,synthetic,25.1,Sand,54.0,EXC002,OP1001,2025-05-28T12:12:00Z,data-001-v1,42
+T0146,Earth Excavation,Rainy,Intermediate,4.9,62.0,63.0,synthetic,12.7,Loam,42.7,EXC002,OP1001,2025-05-28T13:33:00Z,data-001-v1,42
+T0547,Demolition,Rainy,Intermediate,5.2,79.0,109.0,synthetic,27.8,Sand,44.9,EXC002,OP1001,2025-05-28T15:57:00Z,data-001-v1,42
+T0560,Demolition,Cloudy,Intermediate,2.4,97.0,88.0,synthetic,34.7,Loam,8.2,EXC001,OP1001,2025-05-28T17:08:00Z,data-001-v1,42
+T0392,Material Loading,Rainy,Expert,2.5,27.0,35.0,synthetic,24.2,Loam,47.4,EXC001,OP1001,2025-05-28T17:21:00Z,data-001-v1,42
+T0539,Demolition,Sunny,Intermediate,4.9,98.0,95.0,synthetic,36.3,Loam,11.3,EXC002,OP2001,2025-05-29T09:35:00Z,data-001-v1,42
+T0342,Material Loading,Windy,Beginner,5.3,33.0,39.0,synthetic,32.2,Loam,9.4,EXC002,OP1001,2025-05-29T09:49:00Z,data-001-v1,42
+T0268,Trenching,Cloudy,Intermediate,1.9,44.0,47.0,synthetic,33.7,Sand,45.1,EXC001,OP1001,2025-05-29T10:13:00Z,data-001-v1,42
+T0353,Material Loading,Rainy,Intermediate,6.4,33.0,42.0,synthetic,18.9,Sand,56.1,EXC002,OP2001,2025-05-29T11:00:00Z,data-001-v1,42
+T0326,Material Loading,Rainy,Beginner,6.2,24.0,54.0,synthetic,19.0,Clay,24.9,EXC002,OP1001,2025-05-29T13:11:00Z,data-001-v1,42
+T0304,Trenching,Cloudy,Expert,2.2,44.0,40.0,synthetic,35.8,Sand,34.7,EXC001,OP1001,2025-05-29T15:07:00Z,data-001-v1,42
+T0386,Material Loading,Rainy,Expert,3.8,30.0,27.0,synthetic,20.6,Sand,48.6,EXC001,OP2001,2025-05-29T15:13:00Z,data-001-v1,42
+T0367,Material Loading,Cloudy,Intermediate,6.9,31.0,38.0,synthetic,26.0,Sand,51.6,EXC002,OP2001,2025-05-29T15:22:00Z,data-001-v1,42
+T0414,Grading,Sunny,Beginner,1.8,38.0,45.0,synthetic,22.1,Sand,45.0,EXC001,OP2001,2025-05-29T17:24:00Z,data-001-v1,42
+T0457,Grading,Cloudy,Intermediate,1.6,31.0,47.0,synthetic,30.9,Clay,26.3,EXC001,OP2001,2025-05-29T17:35:00Z,data-001-v1,42
+T0278,Trenching,Windy,Intermediate,6.9,48.0,58.0,synthetic,18.2,Gravel,51.3,EXC002,OP2001,2025-05-30T07:10:00Z,data-001-v1,42
+T0506,Demolition,Sunny,Beginner,6.6,106.0,121.0,synthetic,22.8,Loam,36.4,EXC002,OP1001,2025-05-30T08:56:00Z,data-001-v1,42
+T0404,Material Loading,Windy,Expert,4.6,27.0,30.0,synthetic,34.5,Loam,37.6,EXC002,OP2001,2025-05-30T10:05:00Z,data-001-v1,42
+T0316,Material Loading,Sunny,Beginner,1.8,26.0,32.0,synthetic,29.1,Gravel,17.9,EXC001,OP1001,2025-05-30T11:15:00Z,data-001-v1,42
+T0202,Earth Excavation,Windy,Expert,2.0,63.0,68.0,synthetic,17.0,Sand,23.8,EXC001,OP2001,2025-05-30T11:46:00Z,data-001-v1,42
+T0384,Material Loading,Sunny,Expert,6.5,31.0,22.0,synthetic,21.0,Sand,37.6,EXC002,OP2001,2025-05-30T12:06:00Z,data-001-v1,42
+T0213,Trenching,Sunny,Beginner,3.7,43.0,60.0,synthetic,13.5,Loam,48.6,EXC001,OP2001,2025-05-30T13:21:00Z,data-001-v1,42
+T0370,Material Loading,Windy,Intermediate,3.7,30.0,34.0,synthetic,27.9,Sand,14.9,EXC001,OP1001,2025-05-30T14:36:00Z,data-001-v1,42
+T0467,Grading,Windy,Intermediate,6.5,37.0,40.0,synthetic,28.2,Sand,14.1,EXC002,OP2001,2025-05-30T17:07:00Z,data-001-v1,42
+T0487,Grading,Rainy,Expert,2.7,35.0,43.0,synthetic,22.9,Clay,61.8,EXC001,OP2001,2025-05-30T17:26:00Z,data-001-v1,42
+T0541,Demolition,Sunny,Intermediate,3.8,83.0,104.0,synthetic,26.2,Clay,21.2,EXC001,OP2001,2025-05-30T17:30:00Z,data-001-v1,42
+T0269,Trenching,Cloudy,Intermediate,3.5,40.0,55.0,synthetic,18.5,Clay,32.8,EXC001,OP2001,2025-05-31T08:10:00Z,data-001-v1,42
+T0395,Material Loading,Cloudy,Expert,5.3,35.0,32.0,synthetic,19.0,Clay,10.0,EXC002,OP1001,2025-05-31T09:09:00Z,data-001-v1,42
+T0215,Trenching,Sunny,Beginner,2.0,46.0,56.0,synthetic,19.0,Gravel,39.1,EXC001,OP2001,2025-05-31T09:23:00Z,data-001-v1,42
+T0107,Earth Excavation,Sunny,Beginner,2.1,61.0,45.0,synthetic,26.3,Loam,5.8,EXC001,OP2001,2025-05-31T10:40:00Z,data-001-v1,42
+T0554,Demolition,Cloudy,Intermediate,6.7,97.0,100.0,synthetic,18.9,Loam,27.3,EXC002,OP2001,2025-05-31T12:38:00Z,data-001-v1,42
+T0241,Trenching,Windy,Beginner,4.9,48.0,80.0,synthetic,26.3,Loam,7.3,EXC002,OP1001,2025-05-31T12:51:00Z,data-001-v1,42
+T0209,Trenching,Sunny,Beginner,6.5,42.0,62.0,synthetic,31.6,Loam,22.0,EXC002,OP2001,2025-05-31T13:23:00Z,data-001-v1,42
+T0417,Grading,Rainy,Beginner,5.5,38.0,54.0,synthetic,13.4,Gravel,37.4,EXC002,OP2001,2025-05-31T14:15:00Z,data-001-v1,42
+T0534,Demolition,Windy,Beginner,2.5,92.0,122.0,synthetic,22.2,Loam,9.8,EXC001,OP1001,2025-05-31T14:54:00Z,data-001-v1,42
+T0455,Grading,Rainy,Intermediate,1.6,39.0,40.0,synthetic,26.4,Gravel,46.9,EXC001,OP2001,2025-05-31T15:56:00Z,data-001-v1,42
+T0472,Grading,Windy,Intermediate,2.2,35.0,46.0,synthetic,27.0,Clay,49.5,EXC001,OP1001,2025-05-31T16:11:00Z,data-001-v1,42
+T0196,Earth Excavation,Cloudy,Expert,1.8,63.0,66.0,synthetic,23.3,Gravel,11.8,EXC001,OP2001,2025-05-31T16:27:00Z,data-001-v1,42
+T0590,Demolition,Cloudy,Expert,5.0,74.0,91.0,synthetic,29.9,Loam,21.0,EXC002,OP2001,2025-05-31T17:14:00Z,data-001-v1,42
+T0116,Earth Excavation,Rainy,Beginner,2.9,69.0,78.0,synthetic,17.4,Loam,23.7,EXC001,OP2001,2025-05-31T17:16:00Z,data-001-v1,42
+T0208,Earth Excavation,Windy,Expert,5.2,53.0,68.0,synthetic,15.0,Gravel,44.3,EXC002,OP1001,2025-06-01T06:02:00Z,data-001-v1,42
+T0398,Material Loading,Cloudy,Expert,4.9,29.0,25.0,synthetic,20.3,Sand,38.5,EXC002,OP1001,2025-06-01T07:23:00Z,data-001-v1,42
+T0267,Trenching,Cloudy,Intermediate,6.8,41.0,50.0,synthetic,24.1,Loam,48.7,EXC002,OP1001,2025-06-01T07:32:00Z,data-001-v1,42
+T0407,Material Loading,Windy,Expert,3.8,28.0,42.0,synthetic,12.8,Clay,20.3,EXC001,OP1001,2025-06-01T08:06:00Z,data-001-v1,42
+T0341,Material Loading,Windy,Beginner,3.1,35.0,28.0,synthetic,25.3,Clay,27.2,EXC001,OP1001,2025-06-01T08:37:00Z,data-001-v1,42
+T0573,Demolition,Sunny,Expert,6.1,95.0,93.0,synthetic,37.2,Loam,26.9,EXC002,OP2001,2025-06-01T10:12:00Z,data-001-v1,42
+T0314,Material Loading,Sunny,Beginner,4.5,27.0,42.0,synthetic,11.7,Loam,44.1,EXC002,OP1001,2025-06-01T10:35:00Z,data-001-v1,42
+T0551,Demolition,Rainy,Intermediate,4.6,88.0,121.0,synthetic,32.7,Loam,23.9,EXC002,OP1001,2025-06-01T10:46:00Z,data-001-v1,42
+T0126,Earth Excavation,Cloudy,Beginner,6.0,59.0,66.0,synthetic,29.6,Loam,33.0,EXC002,OP2001,2025-06-01T12:25:00Z,data-001-v1,42
+T0419,Grading,Rainy,Beginner,2.8,34.0,55.0,synthetic,22.1,Gravel,54.9,EXC001,OP1001,2025-06-01T12:48:00Z,data-001-v1,42
+T0312,Trenching,Windy,Expert,5.0,42.0,53.0,synthetic,26.1,Sand,53.5,EXC002,OP2001,2025-06-01T13:16:00Z,data-001-v1,42
+T0516,Demolition,Rainy,Beginner,2.6,97.0,111.0,synthetic,25.9,Sand,23.2,EXC001,OP1001,2025-06-01T13:44:00Z,data-001-v1,42
+T0212,Trenching,Sunny,Beginner,6.5,40.0,57.0,synthetic,31.9,Sand,42.6,EXC002,OP1001,2025-06-01T16:49:00Z,data-001-v1,42
+T0585,Demolition,Cloudy,Expert,5.6,93.0,86.0,synthetic,16.4,Loam,28.4,EXC002,OP2001,2025-06-01T17:16:00Z,data-001-v1,42
+T0210,Trenching,Sunny,Beginner,2.8,45.0,59.0,synthetic,29.5,Clay,22.0,EXC001,OP2001,2025-06-01T17:42:00Z,data-001-v1,42
+T0468,Grading,Windy,Intermediate,4.7,35.0,40.0,synthetic,35.3,Loam,39.1,EXC002,OP2001,2025-06-02T06:12:00Z,data-001-v1,42
+T0175,Earth Excavation,Sunny,Expert,2.2,65.0,78.0,synthetic,9.7,Clay,37.2,EXC001,OP1001,2025-06-02T07:40:00Z,data-001-v1,42
+T0509,Demolition,Sunny,Beginner,2.4,88.0,78.0,synthetic,29.8,Clay,25.3,EXC001,OP2001,2025-06-02T08:16:00Z,data-001-v1,42
+T0423,Grading,Rainy,Beginner,5.8,34.0,53.0,synthetic,40.2,Loam,66.4,EXC002,OP1001,2025-06-02T08:17:00Z,data-001-v1,42
+T0482,Grading,Rainy,Expert,3.6,31.0,35.0,synthetic,34.2,Loam,57.5,EXC001,OP1001,2025-06-02T09:13:00Z,data-001-v1,42
+T0119,Earth Excavation,Cloudy,Beginner,1.7,55.0,68.0,synthetic,18.3,Loam,48.6,EXC001,OP1001,2025-06-02T09:37:00Z,data-001-v1,42
+T0294,Trenching,Rainy,Expert,3.4,43.0,52.0,synthetic,31.7,Loam,40.4,EXC001,OP2001,2025-06-02T10:57:00Z,data-001-v1,42
+T0583,Demolition,Rainy,Expert,4.5,90.0,90.0,synthetic,26.2,Loam,29.8,EXC002,OP1001,2025-06-02T11:13:00Z,data-001-v1,42
+T0383,Material Loading,Sunny,Expert,1.7,28.0,32.0,synthetic,30.3,Gravel,39.2,EXC001,OP2001,2025-06-02T11:35:00Z,data-001-v1,42
+T0244,Trenching,Windy,Beginner,5.5,46.0,71.0,synthetic,23.3,Loam,13.6,EXC002,OP1001,2025-06-02T11:58:00Z,data-001-v1,42
+T0200,Earth Excavation,Windy,Expert,1.9,63.0,65.0,synthetic,32.2,Sand,45.6,EXC001,OP1001,2025-06-02T13:33:00Z,data-001-v1,42
+T0276,Trenching,Windy,Intermediate,6.7,49.0,79.0,synthetic,13.4,Clay,27.5,EXC002,OP1001,2025-06-02T15:47:00Z,data-001-v1,42
+T0540,Demolition,Sunny,Intermediate,6.0,99.0,75.0,synthetic,24.1,Sand,33.8,EXC002,OP2001,2025-06-02T16:43:00Z,data-001-v1,42
+T0542,Demolition,Sunny,Intermediate,4.6,108.0,106.0,synthetic,26.0,Sand,45.2,EXC002,OP2001,2025-06-02T16:53:00Z,data-001-v1,42
+T0297,Trenching,Cloudy,Expert,6.7,43.0,54.0,synthetic,19.2,Clay,19.6,EXC002,OP2001,2025-06-02T17:25:00Z,data-001-v1,42
+T0229,Trenching,Cloudy,Beginner,5.4,40.0,75.0,synthetic,19.6,Clay,47.0,EXC002,OP1001,2025-06-02T17:53:00Z,data-001-v1,42
+T0479,Grading,Sunny,Expert,5.7,35.0,33.0,synthetic,11.1,Gravel,53.0,EXC002,OP1001,2025-06-03T06:18:00Z,data-001-v1,42
+T0218,Trenching,Rainy,Beginner,5.6,43.0,33.0,synthetic,30.5,Clay,50.8,EXC002,OP1001,2025-06-03T08:45:00Z,data-001-v1,42
+T0102,Earth Excavation,Sunny,Beginner,2.3,61.0,89.0,synthetic,19.3,Clay,28.6,EXC001,OP1001,2025-06-03T11:54:00Z,data-001-v1,42
+T0235,Trenching,Cloudy,Beginner,1.7,50.0,60.0,synthetic,30.8,Loam,42.9,EXC001,OP2001,2025-06-03T12:10:00Z,data-001-v1,42
+T0503,Grading,Windy,Expert,6.8,33.0,42.0,synthetic,34.6,Clay,22.3,EXC002,OP2001,2025-06-03T13:46:00Z,data-001-v1,42
+T0338,Material Loading,Windy,Beginner,5.2,32.0,42.0,synthetic,26.1,Sand,38.0,EXC002,OP2001,2025-06-03T14:02:00Z,data-001-v1,42
+T0580,Demolition,Rainy,Expert,3.3,89.0,124.0,synthetic,23.9,Loam,61.6,EXC001,OP1001,2025-06-03T14:23:00Z,data-001-v1,42
+T0408,Material Loading,Windy,Expert,4.7,31.0,26.0,synthetic,39.6,Loam,5.5,EXC002,OP2001,2025-06-03T16:21:00Z,data-001-v1,42
+T0243,Trenching,Windy,Beginner,5.0,45.0,74.0,synthetic,32.6,Clay,21.3,EXC002,OP1001,2025-06-03T17:17:00Z,data-001-v1,42
+T0127,Earth Excavation,Cloudy,Beginner,3.2,59.0,87.0,synthetic,32.5,Clay,38.2,EXC001,OP1001,2025-06-03T17:28:00Z,data-001-v1,42
+T0510,Demolition,Sunny,Beginner,4.6,91.0,116.0,synthetic,21.0,Loam,20.6,EXC002,OP2001,2025-06-03T17:48:00Z,data-001-v1,42
+T0394,Material Loading,Cloudy,Expert,3.6,31.0,33.0,synthetic,20.1,Gravel,47.4,EXC001,OP1001,2025-06-04T06:33:00Z,data-001-v1,42
+T0356,Material Loading,Rainy,Intermediate,2.5,29.0,38.0,synthetic,20.9,Clay,66.8,EXC001,OP2001,2025-06-04T06:58:00Z,data-001-v1,42
+T0131,Earth Excavation,Windy,Beginner,4.8,59.0,52.0,synthetic,20.6,Loam,18.6,EXC002,OP2001,2025-06-04T07:11:00Z,data-001-v1,42
+T0180,Earth Excavation,Sunny,Expert,3.0,62.0,59.0,synthetic,13.7,Sand,48.6,EXC001,OP1001,2025-06-04T07:43:00Z,data-001-v1,42
+T0197,Earth Excavation,Cloudy,Expert,6.1,59.0,65.0,synthetic,30.6,Loam,12.9,EXC002,OP1001,2025-06-04T08:52:00Z,data-001-v1,42
+T0406,Material Loading,Windy,Expert,5.7,32.0,30.0,synthetic,33.1,Loam,29.7,EXC002,OP1001,2025-06-04T09:03:00Z,data-001-v1,42
+T0242,Trenching,Windy,Beginner,2.2,43.0,61.0,synthetic,14.3,Loam,54.6,EXC001,OP2001,2025-06-04T09:08:00Z,data-001-v1,42
+T0515,Demolition,Rainy,Beginner,5.5,86.0,137.0,synthetic,28.9,Clay,38.7,EXC002,OP1001,2025-06-04T09:08:00Z,data-001-v1,42
+T0405,Material Loading,Windy,Expert,2.0,29.0,25.0,synthetic,16.1,Loam,37.4,EXC001,OP1001,2025-06-04T13:29:00Z,data-001-v1,42
+T0109,Earth Excavation,Sunny,Beginner,2.5,55.0,51.0,synthetic,15.8,Sand,16.6,EXC001,OP1001,2025-06-04T14:29:00Z,data-001-v1,42
+T0333,Material Loading,Cloudy,Beginner,4.6,29.0,37.0,synthetic,26.3,Sand,23.9,EXC002,OP2001,2025-06-04T15:26:00Z,data-001-v1,42
+T0343,Material Loading,Windy,Beginner,6.6,29.0,47.0,synthetic,28.8,Gravel,17.4,EXC002,OP1001,2025-06-04T17:20:00Z,data-001-v1,42
+T0470,Grading,Windy,Intermediate,1.8,39.0,37.0,synthetic,19.4,Gravel,7.1,EXC001,OP2001,2025-06-05T06:47:00Z,data-001-v1,42
+T0290,Trenching,Rainy,Expert,5.3,44.0,48.0,synthetic,9.4,Loam,28.7,EXC002,OP2001,2025-06-05T09:08:00Z,data-001-v1,42
+T0282,Trenching,Sunny,Expert,5.7,41.0,44.0,synthetic,24.4,Gravel,50.0,EXC002,OP2001,2025-06-05T10:15:00Z,data-001-v1,42
+T0205,Earth Excavation,Windy,Expert,6.0,59.0,54.0,synthetic,30.6,Loam,34.8,EXC002,OP1001,2025-06-05T12:47:00Z,data-001-v1,42
+T0558,Demolition,Cloudy,Intermediate,3.9,93.0,102.0,synthetic,31.8,Loam,53.9,EXC001,OP1001,2025-06-05T15:10:00Z,data-001-v1,42
+T0527,Demolition,Cloudy,Beginner,4.8,93.0,100.0,synthetic,29.2,Loam,9.6,EXC002,OP2001,2025-06-05T15:58:00Z,data-001-v1,42
+T0137,Earth Excavation,Sunny,Intermediate,1.9,55.0,56.0,synthetic,27.3,Sand,18.2,EXC001,OP2001,2025-06-05T16:21:00Z,data-001-v1,42
+T0125,Earth Excavation,Cloudy,Beginner,2.3,66.0,77.0,synthetic,28.4,Clay,27.7,EXC001,OP1001,2025-06-06T06:19:00Z,data-001-v1,42
+T0570,Demolition,Sunny,Expert,2.8,87.0,92.0,synthetic,29.7,Gravel,37.1,EXC001,OP1001,2025-06-06T06:53:00Z,data-001-v1,42
+T0465,Grading,Windy,Intermediate,6.8,35.0,50.0,synthetic,27.8,Clay,8.4,EXC002,OP1001,2025-06-06T07:01:00Z,data-001-v1,42
+T0191,Earth Excavation,Cloudy,Expert,6.4,61.0,62.0,synthetic,27.2,Loam,53.9,EXC002,OP1001,2025-06-06T09:30:00Z,data-001-v1,42
+T0442,Grading,Sunny,Intermediate,5.7,30.0,37.0,synthetic,30.8,Sand,33.8,EXC002,OP2001,2025-06-06T10:41:00Z,data-001-v1,42
+T0430,Grading,Cloudy,Beginner,4.5,35.0,48.0,synthetic,30.4,Loam,20.6,EXC002,OP2001,2025-06-06T11:38:00Z,data-001-v1,42
+T0566,Demolition,Windy,Intermediate,6.9,92.0,107.0,synthetic,28.3,Loam,20.9,EXC002,OP2001,2025-06-06T12:38:00Z,data-001-v1,42
+T0285,Trenching,Sunny,Expert,6.2,43.0,41.0,synthetic,15.9,Sand,8.9,EXC002,OP1001,2025-06-06T12:52:00Z,data-001-v1,42
+T0391,Material Loading,Rainy,Expert,7.0,30.0,36.0,synthetic,36.0,Loam,42.8,EXC002,OP1001,2025-06-06T14:00:00Z,data-001-v1,42
+T0104,Earth Excavation,Sunny,Beginner,4.6,68.0,79.0,synthetic,17.3,Clay,44.9,EXC002,OP2001,2025-06-06T14:35:00Z,data-001-v1,42
+T0426,Grading,Cloudy,Beginner,5.0,39.0,52.0,synthetic,34.3,Clay,31.5,EXC002,OP1001,2025-06-06T15:06:00Z,data-001-v1,42
+T0171,Earth Excavation,Windy,Intermediate,3.5,62.0,67.0,synthetic,39.2,Sand,47.7,EXC001,OP1001,2025-06-06T15:36:00Z,data-001-v1,42
+T0469,Grading,Windy,Intermediate,4.9,33.0,57.0,synthetic,30.0,Clay,22.5,EXC002,OP2001,2025-06-07T07:30:00Z,data-001-v1,42
+T0544,Demolition,Sunny,Intermediate,2.4,81.0,92.0,synthetic,36.1,Sand,45.4,EXC001,OP2001,2025-06-07T08:40:00Z,data-001-v1,42
+T0432,Grading,Cloudy,Beginner,6.6,37.0,31.0,synthetic,28.9,Loam,35.5,EXC002,OP1001,2025-06-07T08:51:00Z,data-001-v1,42
+T0270,Trenching,Cloudy,Intermediate,5.3,45.0,57.0,synthetic,33.1,Clay,37.8,EXC002,OP2001,2025-06-07T09:17:00Z,data-001-v1,42
+T0302,Trenching,Cloudy,Expert,4.6,40.0,44.0,synthetic,26.3,Loam,44.2,EXC002,OP2001,2025-06-07T09:17:00Z,data-001-v1,42
+T0440,Grading,Windy,Beginner,2.2,33.0,53.0,synthetic,36.9,Loam,45.2,EXC001,OP1001,2025-06-07T10:06:00Z,data-001-v1,42
+T0124,Earth Excavation,Cloudy,Beginner,6.5,58.0,41.0,synthetic,36.7,Clay,46.4,EXC002,OP1001,2025-06-07T10:29:00Z,data-001-v1,42
+T0481,Grading,Rainy,Expert,5.6,38.0,33.0,synthetic,27.8,Sand,40.2,EXC002,OP1001,2025-06-07T12:47:00Z,data-001-v1,42
+T0399,Material Loading,Cloudy,Expert,5.7,27.0,28.0,synthetic,23.3,Clay,6.5,EXC002,OP2001,2025-06-07T13:17:00Z,data-001-v1,42
+T0420,Grading,Rainy,Beginner,3.7,35.0,56.0,synthetic,18.0,Clay,22.5,EXC001,OP2001,2025-06-07T14:16:00Z,data-001-v1,42
+T0233,Trenching,Cloudy,Beginner,5.0,49.0,36.0,synthetic,26.0,Gravel,47.4,EXC002,OP1001,2025-06-07T15:56:00Z,data-001-v1,42
+T0413,Grading,Sunny,Beginner,2.4,34.0,56.0,synthetic,30.1,Clay,18.0,EXC001,OP1001,2025-06-07T16:14:00Z,data-001-v1,42
+T0448,Grading,Sunny,Intermediate,2.0,34.0,40.0,synthetic,23.3,Loam,26.5,EXC001,OP1001,2025-06-08T06:04:00Z,data-001-v1,42
+T0596,Demolition,Windy,Expert,2.7,91.0,77.0,synthetic,26.5,Loam,39.9,EXC001,OP2001,2025-06-08T06:12:00Z,data-001-v1,42
+T0491,Grading,Cloudy,Expert,6.1,31.0,33.0,synthetic,19.3,Gravel,27.1,EXC002,OP2001,2025-06-08T07:16:00Z,data-001-v1,42
+T0576,Demolition,Sunny,Expert,3.1,88.0,79.0,synthetic,32.1,Loam,23.0,EXC001,OP1001,2025-06-08T08:55:00Z,data-001-v1,42
+T0599,Demolition,Windy,Expert,3.9,96.0,81.0,synthetic,34.7,Loam,10.9,EXC001,OP2001,2025-06-08T09:43:00Z,data-001-v1,42
+T0169,Earth Excavation,Windy,Intermediate,6.7,63.0,65.0,synthetic,37.8,Gravel,11.0,EXC002,OP1001,2025-06-08T12:00:00Z,data-001-v1,42
+T0523,Demolition,Cloudy,Beginner,5.4,95.0,151.0,synthetic,30.6,Loam,8.1,EXC002,OP2001,2025-06-08T12:37:00Z,data-001-v1,42
+T0298,Trenching,Cloudy,Expert,6.2,47.0,53.0,synthetic,16.5,Loam,51.1,EXC002,OP1001,2025-06-08T14:04:00Z,data-001-v1,42
+T0220,Trenching,Rainy,Beginner,4.7,48.0,73.0,synthetic,32.5,Clay,29.2,EXC002,OP2001,2025-06-08T15:13:00Z,data-001-v1,42
+T0321,Material Loading,Rainy,Beginner,5.4,34.0,43.0,synthetic,8.5,Sand,35.8,EXC002,OP1001,2025-06-08T16:34:00Z,data-001-v1,42
+T0144,Earth Excavation,Sunny,Intermediate,6.1,57.0,75.0,synthetic,35.5,Loam,50.0,EXC002,OP2001,2025-06-09T06:50:00Z,data-001-v1,42
+T0228,Trenching,Cloudy,Beginner,5.8,49.0,69.0,synthetic,26.0,Clay,33.0,EXC002,OP1001,2025-06-09T07:01:00Z,data-001-v1,42
+T0252,Trenching,Sunny,Intermediate,3.1,45.0,57.0,synthetic,24.3,Loam,20.9,EXC001,OP2001,2025-06-09T07:40:00Z,data-001-v1,42
+T0436,Grading,Windy,Beginner,3.1,36.0,61.0,synthetic,33.4,Loam,43.9,EXC001,OP1001,2025-06-09T07:42:00Z,data-001-v1,42
+T0332,Material Loading,Cloudy,Beginner,3.1,32.0,49.0,synthetic,22.4,Clay,45.9,EXC001,OP2001,2025-06-09T09:25:00Z,data-001-v1,42
+T0377,Material Loading,Sunny,Expert,5.8,32.0,36.0,synthetic,18.0,Clay,15.6,EXC002,OP1001,2025-06-09T09:29:00Z,data-001-v1,42
+T0427,Grading,Cloudy,Beginner,5.3,33.0,57.0,synthetic,20.5,Gravel,13.9,EXC002,OP2001,2025-06-09T11:56:00Z,data-001-v1,42
+T0415,Grading,Sunny,Beginner,6.5,33.0,47.0,synthetic,27.8,Sand,35.8,EXC002,OP1001,2025-06-09T12:08:00Z,data-001-v1,42
+T0459,Grading,Cloudy,Intermediate,4.7,34.0,43.0,synthetic,18.9,Clay,32.5,EXC002,OP1001,2025-06-09T12:21:00Z,data-001-v1,42
+T0231,Trenching,Cloudy,Beginner,3.3,44.0,72.0,synthetic,16.0,Clay,43.3,EXC001,OP1001,2025-06-09T15:39:00Z,data-001-v1,42
+T0511,Demolition,Sunny,Beginner,5.4,79.0,126.0,synthetic,27.8,Loam,5.8,EXC002,OP2001,2025-06-10T06:10:00Z,data-001-v1,42
+T0389,Material Loading,Rainy,Expert,6.0,26.0,38.0,synthetic,21.4,Loam,26.6,EXC002,OP2001,2025-06-10T06:42:00Z,data-001-v1,42
+T0262,Trenching,Rainy,Intermediate,4.0,44.0,50.0,synthetic,30.8,Gravel,49.0,EXC001,OP1001,2025-06-10T07:40:00Z,data-001-v1,42
+T0315,Material Loading,Sunny,Beginner,5.3,28.0,38.0,synthetic,19.6,Sand,51.9,EXC002,OP2001,2025-06-10T09:22:00Z,data-001-v1,42
+T0461,Grading,Cloudy,Intermediate,3.5,34.0,41.0,synthetic,23.3,Loam,17.8,EXC001,OP2001,2025-06-10T09:28:00Z,data-001-v1,42
+T0495,Grading,Cloudy,Expert,3.0,31.0,28.0,synthetic,29.2,Gravel,52.1,EXC001,OP2001,2025-06-10T10:02:00Z,data-001-v1,42
+T0110,Earth Excavation,Rainy,Beginner,1.8,59.0,78.0,synthetic,35.4,Loam,67.4,EXC001,OP1001,2025-06-10T10:11:00Z,data-001-v1,42
+T0478,Grading,Sunny,Expert,1.7,36.0,32.0,synthetic,40.9,Clay,31.6,EXC001,OP2001,2025-06-10T12:02:00Z,data-001-v1,42
+T0385,Material Loading,Rainy,Expert,4.8,33.0,42.0,synthetic,23.9,Gravel,36.3,EXC002,OP1001,2025-06-10T12:07:00Z,data-001-v1,42
+T0476,Grading,Sunny,Expert,6.7,35.0,37.0,synthetic,24.0,Loam,35.0,EXC002,OP2001,2025-06-10T13:05:00Z,data-001-v1,42
+T0586,Demolition,Cloudy,Expert,6.9,100.0,87.0,synthetic,35.3,Sand,47.1,EXC002,OP2001,2025-06-10T16:31:00Z,data-001-v1,42
+T0549,Demolition,Rainy,Intermediate,5.6,81.0,131.0,synthetic,21.2,Loam,46.8,EXC002,OP2001,2025-06-10T17:08:00Z,data-001-v1,42
+T0251,Trenching,Sunny,Intermediate,1.6,48.0,49.0,synthetic,13.3,Gravel,47.7,EXC001,OP2001,2025-06-10T17:49:00Z,data-001-v1,42
+T0189,Earth Excavation,Rainy,Expert,5.9,59.0,80.0,synthetic,25.7,Clay,56.8,EXC002,OP1001,2025-06-11T08:07:00Z,data-001-v1,42
+T0578,Demolition,Rainy,Expert,3.8,89.0,120.0,synthetic,20.6,Clay,32.2,EXC001,OP2001,2025-06-11T08:37:00Z,data-001-v1,42
+T0248,Trenching,Sunny,Intermediate,2.2,44.0,56.0,synthetic,29.0,Gravel,33.3,EXC001,OP1001,2025-06-11T08:58:00Z,data-001-v1,42
+T0401,Material Loading,Windy,Expert,5.5,29.0,38.0,synthetic,32.0,Loam,8.8,EXC002,OP2001,2025-06-11T11:33:00Z,data-001-v1,42
+T0128,Earth Excavation,Windy,Beginner,6.0,53.0,103.0,synthetic,29.1,Clay,15.2,EXC002,OP2001,2025-06-11T12:52:00Z,data-001-v1,42
+T0562,Demolition,Windy,Intermediate,6.1,95.0,117.0,synthetic,36.7,Clay,44.2,EXC002,OP1001,2025-06-11T12:58:00Z,data-001-v1,42
+T0324,Material Loading,Rainy,Beginner,2.8,33.0,23.0,synthetic,24.6,Loam,61.9,EXC001,OP1001,2025-06-11T13:26:00Z,data-001-v1,42
+T0390,Material Loading,Rainy,Expert,2.7,34.0,45.0,synthetic,27.2,Clay,32.5,EXC001,OP2001,2025-06-11T14:46:00Z,data-001-v1,42
+T0224,Trenching,Rainy,Beginner,5.6,41.0,84.0,synthetic,10.6,Clay,47.4,EXC002,OP2001,2025-06-12T06:08:00Z,data-001-v1,42
+T0164,Earth Excavation,Windy,Intermediate,3.7,56.0,66.0,synthetic,28.6,Sand,10.2,EXC001,OP1001,2025-06-12T07:38:00Z,data-001-v1,42
+T0167,Earth Excavation,Windy,Intermediate,2.4,61.0,73.0,synthetic,23.9,Loam,12.4,EXC001,OP1001,2025-06-12T07:41:00Z,data-001-v1,42
+T0266,Trenching,Cloudy,Intermediate,2.3,44.0,55.0,synthetic,21.2,Loam,11.6,EXC001,OP1001,2025-06-12T07:57:00Z,data-001-v1,42
+T0141,Earth Excavation,Sunny,Intermediate,2.6,50.0,58.0,synthetic,36.4,Sand,14.5,EXC001,OP1001,2025-06-12T08:08:00Z,data-001-v1,42
+T0339,Material Loading,Windy,Beginner,5.9,36.0,45.0,synthetic,30.4,Loam,5.4,EXC002,OP1001,2025-06-12T09:11:00Z,data-001-v1,42
+T0190,Earth Excavation,Rainy,Expert,5.8,63.0,59.0,synthetic,28.8,Loam,48.1,EXC002,OP1001,2025-06-12T10:40:00Z,data-001-v1,42
+T0565,Demolition,Windy,Intermediate,3.1,88.0,114.0,synthetic,32.9,Loam,52.7,EXC001,OP1001,2025-06-12T10:48:00Z,data-001-v1,42
+T0588,Demolition,Cloudy,Expert,6.5,93.0,75.0,synthetic,22.2,Loam,39.9,EXC002,OP1001,2025-06-12T11:01:00Z,data-001-v1,42
+T0106,Earth Excavation,Sunny,Beginner,5.5,68.0,84.0,synthetic,23.7,Clay,43.4,EXC002,OP2001,2025-06-12T12:09:00Z,data-001-v1,42
+T0505,Demolition,Sunny,Beginner,3.2,101.0,126.0,synthetic,25.7,Sand,50.4,EXC001,OP1001,2025-06-12T12:57:00Z,data-001-v1,42
+T0254,Trenching,Rainy,Intermediate,3.3,46.0,45.0,synthetic,29.8,Sand,51.3,EXC001,OP2001,2025-06-12T14:09:00Z,data-001-v1,42
+T0259,Trenching,Rainy,Intermediate,6.7,50.0,62.0,synthetic,29.1,Loam,20.4,EXC002,OP2001,2025-06-12T16:31:00Z,data-001-v1,42
+T0474,Grading,Sunny,Expert,5.9,35.0,39.0,synthetic,17.9,Sand,19.1,EXC002,OP2001,2025-06-12T17:52:00Z,data-001-v1,42
+T0311,Trenching,Windy,Expert,6.0,49.0,45.0,synthetic,16.5,Loam,14.0,EXC002,OP1001,2025-06-13T06:23:00Z,data-001-v1,42
+T0155,Earth Excavation,Cloudy,Intermediate,2.9,53.0,61.0,synthetic,19.6,Loam,39.1,EXC001,OP1001,2025-06-13T06:24:00Z,data-001-v1,42
+T0400,Material Loading,Cloudy,Expert,2.9,27.0,27.0,synthetic,26.7,Sand,24.6,EXC001,OP2001,2025-06-13T07:55:00Z,data-001-v1,42
+T0293,Trenching,Rainy,Expert,3.8,45.0,42.0,synthetic,31.2,Loam,46.6,EXC001,OP1001,2025-06-13T08:33:00Z,data-001-v1,42
+T0245,Trenching,Sunny,Intermediate,5.1,48.0,40.0,synthetic,23.8,Loam,23.8,EXC002,OP1001,2025-06-13T08:54:00Z,data-001-v1,42
+T0181,Earth Excavation,Sunny,Expert,2.1,55.0,40.0,synthetic,23.3,Sand,5.1,EXC001,OP2001,2025-06-13T09:19:00Z,data-001-v1,42
+T0225,Trenching,Rainy,Beginner,5.4,47.0,68.0,synthetic,26.5,Sand,53.7,EXC002,OP1001,2025-06-13T10:11:00Z,data-001-v1,42
+T0502,Grading,Windy,Expert,3.2,37.0,37.0,synthetic,14.0,Clay,27.0,EXC001,OP2001,2025-06-13T10:25:00Z,data-001-v1,42
+T0295,Trenching,Rainy,Expert,2.3,46.0,44.0,synthetic,34.2,Loam,50.9,EXC001,OP1001,2025-06-13T11:34:00Z,data-001-v1,42
+T0579,Demolition,Rainy,Expert,4.9,96.0,77.0,synthetic,25.6,Loam,51.8,EXC002,OP2001,2025-06-13T12:26:00Z,data-001-v1,42
+T0537,Demolition,Sunny,Intermediate,2.4,100.0,104.0,synthetic,33.2,Loam,44.6,EXC001,OP2001,2025-06-13T12:32:00Z,data-001-v1,42
+T0121,Earth Excavation,Cloudy,Beginner,4.7,69.0,81.0,synthetic,26.1,Sand,42.8,EXC002,OP1001,2025-06-13T12:45:00Z,data-001-v1,42
+T0501,Grading,Windy,Expert,3.0,34.0,41.0,synthetic,25.7,Clay,39.5,EXC001,OP1001,2025-06-13T16:08:00Z,data-001-v1,42
+T0456,Grading,Rainy,Intermediate,3.4,32.0,46.0,synthetic,17.8,Clay,48.5,EXC001,OP1001,2025-06-13T16:20:00Z,data-001-v1,42
+T0443,Grading,Sunny,Intermediate,5.8,34.0,36.0,synthetic,14.6,Loam,10.5,EXC002,OP1001,2025-06-14T07:18:00Z,data-001-v1,42
+T0348,Material Loading,Sunny,Intermediate,3.7,31.0,33.0,synthetic,19.9,Loam,39.5,EXC001,OP1001,2025-06-14T07:51:00Z,data-001-v1,42
+T0239,Trenching,Windy,Beginner,6.6,48.0,39.0,synthetic,22.6,Sand,32.1,EXC002,OP1001,2025-06-14T08:05:00Z,data-001-v1,42
+T0490,Grading,Cloudy,Expert,1.5,37.0,27.0,synthetic,40.5,Sand,46.5,EXC001,OP2001,2025-06-14T11:00:00Z,data-001-v1,42
+T0409,Grading,Sunny,Beginner,3.5,31.0,42.0,synthetic,31.0,Clay,44.2,EXC001,OP2001,2025-06-14T14:54:00Z,data-001-v1,42
+T0358,Material Loading,Rainy,Intermediate,6.2,25.0,36.0,synthetic,24.0,Loam,64.5,EXC002,OP2001,2025-06-14T14:58:00Z,data-001-v1,42
+T0150,Earth Excavation,Rainy,Intermediate,4.5,57.0,73.0,synthetic,37.6,Loam,50.7,EXC002,OP1001,2025-06-14T15:58:00Z,data-001-v1,42
+T0363,Material Loading,Cloudy,Intermediate,1.9,28.0,30.0,synthetic,32.8,Sand,36.3,EXC001,OP2001,2025-06-15T06:10:00Z,data-001-v1,42
+T0305,Trenching,Windy,Expert,2.2,45.0,56.0,synthetic,28.8,Clay,8.7,EXC001,OP2001,2025-06-15T06:37:00Z,data-001-v1,42
+T0165,Earth Excavation,Windy,Intermediate,5.3,57.0,74.0,synthetic,31.0,Sand,53.7,EXC002,OP1001,2025-06-15T07:06:00Z,data-001-v1,42
+T0258,Trenching,Rainy,Intermediate,2.3,44.0,63.0,synthetic,18.1,Loam,30.1,EXC001,OP2001,2025-06-15T10:26:00Z,data-001-v1,42
+T0421,Grading,Rainy,Beginner,5.8,32.0,46.0,synthetic,8.4,Sand,65.6,EXC002,OP1001,2025-06-15T10:55:00Z,data-001-v1,42
+T0336,Material Loading,Cloudy,Beginner,3.0,31.0,43.0,synthetic,34.2,Sand,26.4,EXC001,OP1001,2025-06-15T11:46:00Z,data-001-v1,42
+T0301,Trenching,Cloudy,Expert,7.0,46.0,43.0,synthetic,28.0,Loam,14.5,EXC002,OP2001,2025-06-15T13:22:00Z,data-001-v1,42
+T0216,Trenching,Sunny,Beginner,2.8,50.0,64.0,synthetic,8.0,Loam,49.1,EXC001,OP1001,2025-06-15T13:37:00Z,data-001-v1,42
+T0287,Trenching,Sunny,Expert,3.7,44.0,49.0,synthetic,15.5,Gravel,17.8,EXC001,OP2001,2025-06-15T13:53:00Z,data-001-v1,42
+T0526,Demolition,Cloudy,Beginner,2.6,105.0,127.0,synthetic,13.1,Loam,24.7,EXC001,OP2001,2025-06-15T14:22:00Z,data-001-v1,42
+T0484,Grading,Rainy,Expert,7.0,35.0,42.0,synthetic,29.7,Clay,21.2,EXC002,OP2001,2025-06-15T15:41:00Z,data-001-v1,42
+T0240,Trenching,Windy,Beginner,5.1,40.0,66.0,synthetic,26.2,Clay,23.0,EXC002,OP2001,2025-06-15T17:17:00Z,data-001-v1,42

@@ -1,0 +1,30 @@
+{
+  "operations": {
+    "train": {
+      "start_row": 0,
+      "end_row": 696
+    },
+    "validation": {
+      "start_row": 696,
+      "end_row": 840
+    },
+    "test": {
+      "start_row": 840,
+      "end_row": 1008
+    }
+  },
+  "tasks": {
+    "train": {
+      "start_row": 0,
+      "end_row": 342
+    },
+    "validation": {
+      "start_row": 342,
+      "end_row": 412
+    },
+    "test": {
+      "start_row": 412,
+      "end_row": 500
+    }
+  }
+}

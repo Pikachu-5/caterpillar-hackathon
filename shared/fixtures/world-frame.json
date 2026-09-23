@@ -2,7 +2,7 @@
   "schema_version": "1.0.0",
   "session_id": "SESSION001",
   "site_id": "SITE001",
-  "site_revision": 1,
+  "site_revision": 2,
   "sequence": 100,
   "timestamp": "2026-09-23T10:00:00Z",
   "simulation_time_s": 20,
@@ -12,8 +12,8 @@
     "operator_id": "OP1001",
     "machine_model": "CAT 325",
     "position": {
-      "x_m": 20,
-      "y_m": 25
+      "x_m": 33,
+      "y_m": 20
     },
     "heading_deg": 90,
     "speed_kmh": 0,
@@ -39,8 +39,8 @@
       "stick_angle_deg": -30,
       "bucket_angle_deg": 15,
       "bucket_tip_position": {
-        "x_m": 25,
-        "y_m": 25
+        "x_m": 38,
+        "y_m": 20
       },
       "bucket_tip_height_m": 1,
       "bucket_load_m3": 0,

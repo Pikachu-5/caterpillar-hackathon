@@ -14,6 +14,8 @@ Producers send exactly 1.0.0. Objects are closed to catch misspelled fields. Unk
 
 Fixtures are small contract examples, not training records, safety guidance, fitted predictions or implementations. Different standalone fixtures are independent; a seatbelt alert fixture need not correspond to the normal telemetry fixture. The snapshot fixture is internally consistent. Historical fixtures preserve one original record each and explicitly identify provided_sample provenance. Original full samples are data/reference/ CSVs.
 
+The shared demo site is revision 2: its `DEST_B` deposit point moved from (25 m, 25 m) to (38 m, 20 m). The world-frame and snapshot fixtures use the matching site revision, place the bucket tip at the deposit point, and retain the existing `DEST_B` work event. Producers and consumers must keep the site and frame revisions paired; a snapshot supplies both. This revises demo-site content only, so `schema_version` remains 1.0.0 and generated declarations do not change.
+
 ## Semantic validation beyond schema
 
 JSON Schema checks shape/ranges only. Implementers must additionally validate authenticated ownership, matching site/revision/environment, unique actor/event/destination IDs, zone geometry and bounds, monotonic sequence/time, counter monotonicity, task state/revisions, progress consistency and relational references. Exact checks are listed in docs/realtime.md and docs/integration.md.

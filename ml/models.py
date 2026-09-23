@@ -105,6 +105,51 @@ def _per_category_mae(
     return result
 
 
+def _validated_split_block(
+    *,
+    table_name: str,
+    split_name: str,
+    table_rows: int,
+    splits: dict[str, Any],
+) -> tuple[int, int]:
+    table_splits = splits.get(table_name)
+    if not isinstance(table_splits, dict):
+        raise TypeError(f"splits.json missing '{table_name}' split definitions")
+    required = ("train", "validation", "test")
+    missing = [name for name in required if name not in table_splits]
+    if missing:
+        raise ValueError(f"splits.json missing {table_name} split names: {missing}")
+
+    bounds: dict[str, tuple[int, int]] = {}
+    for name in required:
+        split = table_splits[name]
+        if not isinstance(split, dict):
+            raise TypeError(f"splits.json {table_name}/{name} must be an object")
+        start_raw = split.get("start_row")
+        end_raw = split.get("end_row")
+        if not isinstance(start_raw, int) or not isinstance(end_raw, int):
+            raise TypeError(f"splits.json {table_name}/{name} bounds must be integers")
+        if not (0 <= start_raw <= end_raw <= table_rows):
+            raise ValueError(
+                f"splits.json {table_name}/{name} range [{start_raw}, {end_raw}] "
+                f"out of bounds for {table_rows} rows"
+            )
+        bounds[name] = (start_raw, end_raw)
+
+    train_start, train_end = bounds["train"]
+    validation_start, validation_end = bounds["validation"]
+    test_start, test_end = bounds["test"]
+    if train_start != 0:
+        raise ValueError(f"splits.json {table_name}/train must start at row 0")
+    if validation_start != train_end:
+        raise ValueError(f"splits.json {table_name}/validation must start at train end_row")
+    if test_start != validation_end:
+        raise ValueError(f"splits.json {table_name}/test must start at validation end_row")
+    if test_end != table_rows:
+        raise ValueError(f"splits.json {table_name}/test end_row must equal table row count")
+    return bounds[split_name]
+
+
 def train_and_evaluate(
     generated_dir: Path,
     artifact_dir: Path,
@@ -131,8 +176,13 @@ def train_and_evaluate(
             raise ValueError(f"{filename} SHA256 does not match generated manifest")
 
     def block(table: pd.DataFrame, table_name: str, name: str) -> pd.DataFrame:
-        bounds = splits[table_name][name]
-        return table.iloc[int(bounds["start_row"]) : int(bounds["end_row"])].reset_index(drop=True)
+        start_row, end_row = _validated_split_block(
+            table_name=table_name,
+            split_name=name,
+            table_rows=len(table),
+            splits=splits,
+        )
+        return table.iloc[start_row:end_row].reset_index(drop=True)
 
     train = block(tasks, "tasks", "train")
     validation = block(tasks, "tasks", "validation")
@@ -143,6 +193,8 @@ def train_and_evaluate(
             raise ValueError(f"The generated tasks {name} split is empty")
         if not (frame["provenance"] == "synthetic").all():
             raise ValueError("ETA fitting and evaluation accept synthetic records only")
+    if operations_train.empty:
+        raise ValueError("The generated operations train split is empty")
     if not (operations_train["provenance"] == "synthetic").all():
         raise ValueError("Usage baseline fitting accepts synthetic records only")
 

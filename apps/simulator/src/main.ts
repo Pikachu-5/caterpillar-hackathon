@@ -181,8 +181,8 @@ async function startSimulatorSession(): Promise<void> {
     if (openSession) {
       const ended = await backend.sessionAction(authState.csrf_token, openSession.session_id, "end");
       if (currentSession?.session_id === ended.session_id) currentSession = ended;
-      publisher?.close(); publisher = null; pauseLocally("ENDING PREVIOUS SESSION");
     }
+    publisher?.close(); publisher = null; publisherSynchronized = false; pauseLocally("STARTING SIMULATOR SESSION");
     const session = await backend.startSession(authState.csrf_token, { machine_id: machineData.machine_id, site_id: openSession?.site_id ?? taskData.site_id ?? siteData.site_id, source: "simulator", scenario_id: null });
     currentSession = session; localSessionId = session.session_id; resetLocalSessionState();
     const snapshot = await backend.snapshot(session.session_id);
@@ -241,6 +241,9 @@ async function startSimulatorSession(): Promise<void> {
   } catch (error) {
     if (error instanceof BackendError && error.status === 401) { authState = null; publisher?.close(); renderLogin("Your sign-in expired. Sign in again to continue."); }
     else showBanner(error instanceof Error ? error.message : "Could not start simulator session.", true);
+    if (authState && currentSession?.status === "active" && !publisher) {
+      try { currentSession = await backend.sessionAction(authState.csrf_token, currentSession.session_id, "end"); } catch { /* Leave backend recovery to its session timeout. */ }
+    }
     if (currentSession?.status === "ended") setSessionControls(false);
     setFrameStatus(error instanceof BackendError && error.status === 401 ? "SIGN IN REQUIRED" : "SESSION START FAILED", "error");
   } finally { sessionBusy = false; if (button) button.disabled = false; }

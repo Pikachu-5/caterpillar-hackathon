@@ -41,8 +41,29 @@ def _load_schema(schema_dir: Path, filename: str) -> dict[str, Any]:
         return json.load(f)
 
 
+def _get_format_checker() -> jsonschema.FormatChecker | None:
+    """Get a jsonschema FormatChecker with date-time validation enabled."""
+    if jsonschema is None:
+        return None
+    checker = jsonschema.FormatChecker()
+    if "date-time" not in checker.checkers:
+        from datetime import datetime
+
+        @checker.checks("date-time")
+        def _check_datetime(val: Any) -> bool:
+            if not isinstance(val, str):
+                return True
+            try:
+                datetime.fromisoformat(val)
+                return True
+            except (ValueError, TypeError):
+                return False
+
+    return checker
+
+
 def _create_validator(schema: dict[str, Any], schema_dir: Path) -> jsonschema.Draft202012Validator:
-    """Create a JSON Schema validator with local $ref resolution."""
+    """Create a JSON Schema validator with local $ref resolution and format checking."""
     # Build a schema store for all schemas in the directory
     store: dict[str, dict[str, Any]] = {}
     for schema_file in schema_dir.glob("*.schema.json"):
@@ -53,6 +74,8 @@ def _create_validator(schema: dict[str, Any], schema_dir: Path) -> jsonschema.Dr
         # Also index by filename for relative $ref
         store[schema_file.name] = s
 
+    format_checker = _get_format_checker()
+
     # Create a registry for jsonschema >= 4.18
     try:
         from referencing import Registry, Resource
@@ -62,7 +85,9 @@ def _create_validator(schema: dict[str, Any], schema_dir: Path) -> jsonschema.Dr
         for uri, s in store.items():
             resources.append((uri, Resource.from_contents(s, default_specification=DRAFT202012)))
         registry = Registry().with_resources(resources)
-        return jsonschema.Draft202012Validator(schema, registry=registry)
+        return jsonschema.Draft202012Validator(
+            schema, registry=registry, format_checker=format_checker
+        )
     except ImportError:
         # Fallback for older jsonschema without referencing
         resolver = jsonschema.RefResolver(
@@ -70,7 +95,9 @@ def _create_validator(schema: dict[str, Any], schema_dir: Path) -> jsonschema.Dr
             referrer=schema,
             store=store,
         )
-        return jsonschema.Draft202012Validator(schema, resolver=resolver)
+        return jsonschema.Draft202012Validator(
+            schema, resolver=resolver, format_checker=format_checker
+        )
 
 
 class ValidationReport:
@@ -147,7 +174,7 @@ def validate_schema(
 ) -> None:
     """Validate each record against its JSON schema."""
     if jsonschema is None:
-        report.warn("jsonschema not installed; skipping schema validation")
+        report.error("jsonschema is required for schema validation but is not installed")
         return
 
     validator = _create_validator(schema, schema_dir)
@@ -344,35 +371,104 @@ def validate_splits(generated_dir: Path, report: ValidationReport) -> None:
     """Verify the splits index is consistent with the data files."""
     splits_file = generated_dir / "splits.json"
     if not splits_file.exists():
-        report.warn("splits.json not found; skipping split validation")
+        report.error(f"Required artifact splits.json not found at {splits_file}")
         return
 
-    with open(splits_file) as f:
-        splits = json.load(f)
+    try:
+        with open(splits_file) as f:
+            splits = json.load(f)
+    except (json.JSONDecodeError, OSError) as e:
+        report.error(f"Failed to parse splits.json: {e}")
+        return
 
     for table in ("operations", "tasks"):
         csv_file = generated_dir / f"{table}.csv"
         if not csv_file.exists():
-            report.warn(f"{table}.csv not found; skipping split validation for {table}")
+            report.error(f"Required artifact {table}.csv not found at {csv_file}")
             continue
 
         records = _read_csv_records(csv_file)
-        total_from_splits = 0
-        for split_name in ("train", "validation", "test"):
-            if split_name not in splits.get(table, {}):
-                report.error(f"splits.json: missing {table}/{split_name}")
-                continue
-            s = splits[table][split_name]
-            split_size = s["end_row"] - s["start_row"]
-            total_from_splits += split_size
+        total_rows = len(records)
 
-        if total_from_splits == len(records):
-            report.passed(f"splits/{table}: split sizes sum to total rows ({len(records)})")
+        table_splits = splits.get(table)
+        if not isinstance(table_splits, dict):
+            report.error(f"splits.json: '{table}' section missing or not an object")
+            continue
+
+        required_splits = ("train", "validation", "test")
+        missing_splits = [s for s in required_splits if s not in table_splits]
+        if missing_splits:
+            report.error(f"splits/{table}: missing split names: {missing_splits}")
+            continue
+
+        # Validate types and bounds
+        valid_ranges = True
+        for s_name in required_splits:
+            s = table_splits[s_name]
+            if not isinstance(s, dict):
+                report.error(f"splits/{table}/{s_name}: expected dict, got {type(s)}")
+                valid_ranges = False
+                continue
+
+            start_row = s.get("start_row")
+            end_row = s.get("end_row")
+
+            if not (isinstance(start_row, int) and not isinstance(start_row, bool)) or not (
+                isinstance(end_row, int) and not isinstance(end_row, bool)
+            ):
+                report.error(
+                    f"splits/{table}/{s_name}: start_row and end_row must be integers "
+                    f"(got start_row={start_row}, end_row={end_row})"
+                )
+                valid_ranges = False
+                continue
+
+            if not (0 <= start_row <= end_row <= total_rows):
+                report.error(
+                    f"splits/{table}/{s_name}: range [{start_row}, {end_row}] out of "
+                    f"bounds for {total_rows} rows"
+                )
+                valid_ranges = False
+
+        if not valid_ranges:
+            continue
+
+        train_s = table_splits["train"]
+        val_s = table_splits["validation"]
+        test_s = table_splits["test"]
+
+        # 1. train begins at row 0
+        if train_s["start_row"] != 0:
+            report.error(f"splits/{table}: train must begin at row 0, got {train_s['start_row']}")
         else:
+            report.passed(f"splits/{table}: train begins at row 0")
+
+        # 2. validation begins exactly where train ends
+        if val_s["start_row"] != train_s["end_row"]:
             report.error(
-                f"splits/{table}: split sizes sum to {total_from_splits} "
-                f"but CSV has {len(records)} rows"
+                f"splits/{table}: validation start_row ({val_s['start_row']}) does "
+                f"not match train end_row ({train_s['end_row']})"
             )
+        else:
+            report.passed(f"splits/{table}: validation begins exactly where train ends")
+
+        # 3. test begins exactly where validation ends
+        if test_s["start_row"] != val_s["end_row"]:
+            report.error(
+                f"splits/{table}: test start_row ({test_s['start_row']}) does not "
+                f"match validation end_row ({val_s['end_row']})"
+            )
+        else:
+            report.passed(f"splits/{table}: test begins exactly where validation ends")
+
+        # 4. final test end equals CSV row count
+        if test_s["end_row"] != total_rows:
+            report.error(
+                f"splits/{table}: test end_row ({test_s['end_row']}) does not match "
+                f"CSV row count ({total_rows})"
+            )
+        else:
+            report.passed(f"splits/{table}: final test end matches CSV row count ({total_rows})")
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -408,14 +504,36 @@ def main(argv: list[str] | None = None) -> None:
     print(f"Schemas: {schema_dir.resolve()}")
     print()
 
+    if jsonschema is None:
+        report.error("jsonschema package is required for validation but is not installed")
+
     # 1. Reference integrity
     print("Checking reference data integrity...")
     validate_reference_integrity(reference_dir, report)
 
-    # 2. Schema validation
+    # 2. Check required generated artifacts
     ops_csv = generated_dir / "operations.csv"
     tasks_csv = generated_dir / "tasks.csv"
+    ops_jsonl = generated_dir / "operations.jsonl"
+    tasks_jsonl = generated_dir / "tasks.jsonl"
+    manifest_json = generated_dir / "manifest.json"
+    splits_json = generated_dir / "splits.json"
 
+    required_files = [
+        ("operations.csv", ops_csv),
+        ("tasks.csv", tasks_csv),
+        ("operations.jsonl", ops_jsonl),
+        ("tasks.jsonl", tasks_jsonl),
+        ("manifest.json", manifest_json),
+        ("splits.json", splits_json),
+    ]
+    for name, path in required_files:
+        if path.exists():
+            report.passed(f"artifact/{name}: file exists")
+        else:
+            report.error(f"artifact/{name}: required file not found at {path}")
+
+    # 3. Schema & semantics validation
     if ops_csv.exists():
         print("Validating operations schema...")
         ops_records = _read_csv_records(ops_csv)
@@ -424,8 +542,16 @@ def main(argv: list[str] | None = None) -> None:
 
         print("Validating operations semantics...")
         validate_operations_semantics(ops_records, report)
-    else:
-        report.warn(f"operations.csv not found at {ops_csv}")
+
+        if ops_jsonl.exists():
+            with open(ops_jsonl) as f:
+                jsonl_count = sum(1 for line in f if line.strip())
+            if jsonl_count == len(ops_records):
+                report.passed(f"operations.jsonl: line count ({jsonl_count}) matches CSV")
+            else:
+                report.error(
+                    f"operations.jsonl: line count ({jsonl_count}) does not match CSV ({len(ops_records)})"
+                )
 
     if tasks_csv.exists():
         print("Validating tasks schema...")
@@ -435,35 +561,43 @@ def main(argv: list[str] | None = None) -> None:
 
         print("Validating tasks semantics...")
         validate_tasks_semantics(tasks_records, report)
-    else:
-        report.warn(f"tasks.csv not found at {tasks_csv}")
 
-    # 3. Splits validation
+        if tasks_jsonl.exists():
+            with open(tasks_jsonl) as f:
+                jsonl_count = sum(1 for line in f if line.strip())
+            if jsonl_count == len(tasks_records):
+                report.passed(f"tasks.jsonl: line count ({jsonl_count}) matches CSV")
+            else:
+                report.error(
+                    f"tasks.jsonl: line count ({jsonl_count}) does not match CSV ({len(tasks_records)})"
+                )
+
+    # 4. Splits validation
     print("Validating splits...")
     validate_splits(generated_dir, report)
 
-    # 4. Manifest check
-    manifest = generated_dir / "manifest.json"
-    if manifest.exists():
-        with open(manifest) as f:
-            m = json.load(f)
-        required_keys = [
-            "generator_version",
-            "generation_seed",
-            "generated_at",
-            "parameters",
-            "output",
-            "reference_data",
-            "units",
-            "limits_disclaimer",
-        ]
-        for key in required_keys:
-            if key in m:
-                report.passed(f"manifest: has required key '{key}'")
-            else:
-                report.error(f"manifest: missing required key '{key}'")
-    else:
-        report.warn(f"manifest.json not found at {manifest}")
+    # 5. Manifest check
+    if manifest_json.exists():
+        try:
+            with open(manifest_json) as f:
+                m = json.load(f)
+            required_keys = [
+                "generator_version",
+                "generation_seed",
+                "generated_at",
+                "parameters",
+                "output",
+                "reference_data",
+                "units",
+                "limits_disclaimer",
+            ]
+            for key in required_keys:
+                if key in m:
+                    report.passed(f"manifest: has required key '{key}'")
+                else:
+                    report.error(f"manifest: missing required key '{key}'")
+        except (json.JSONDecodeError, OSError) as e:
+            report.error(f"Failed to parse manifest.json: {e}")
 
     print(report.summary())
     sys.exit(0 if report.ok() else 1)

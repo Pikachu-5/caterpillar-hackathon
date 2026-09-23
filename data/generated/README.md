@@ -33,5 +33,8 @@ reference data integrity.
 
 ## Determinism
 
-Running the generator with the same `--seed` always produces byte-identical output.
-The manifest records the exact seed and generator version for full reproducibility.
+Running the generator with the same `--seed` produces byte-identical dataset content
+(`operations.csv`, `tasks.csv`, `operations.jsonl`, `tasks.jsonl`, `splits.json`), identical
+data hashes, and identical manifest configuration parameters. The manifest `generated_at`
+field records the actual wall-clock generation time for audit provenance.
+

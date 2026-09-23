@@ -238,12 +238,18 @@ def generate_tasks(cfg: GenerationConfig, rng: np.random.RandomState) -> list[di
         for wt in cfg.weather_categories
     ]
 
-    # Each combo gets at least 1 record, then distribute remaining
-    tasks_per_combo = max(1, cfg.num_tasks // len(combos))
-    extra_tasks = cfg.num_tasks - tasks_per_combo * len(combos)
+    # Enforce minimum combination coverage and exact task count allocation
+    num_required_combos = len(combos)
+    if cfg.num_tasks < num_required_combos:
+        raise ValueError(
+            f"num_tasks ({cfg.num_tasks}) is smaller than minimum required "
+            f"combinations ({num_required_combos}) to maintain full combination coverage"
+        )
+
+    base, remainder = divmod(cfg.num_tasks, num_required_combos)
 
     for combo_idx, (task_type, skill, weather) in enumerate(combos):
-        n = tasks_per_combo + (1 if combo_idx < extra_tasks else 0)
+        n = base + (1 if combo_idx < remainder else 0)
         for _ in range(n):
             task_counter += 1
             task_id = f"T{task_counter:04d}"
@@ -335,19 +341,102 @@ def assign_splits(
     """
     Assign records to train/validation/test splits by chronological groups.
 
-    For operations: split by timestamp blocks (first 70% of timestamps → train, etc.)
-    For tasks: split by generation order (which is deterministic given the seed)
+    Prevents machine run / session leakage across splits:
+    - For operations: grouped by (date, machine_id) — representing a single machine's
+      daily operating shift/run.
+    - For tasks: grouped by calendar date of started_at.
 
-    Never scatters individual rows randomly — entire chronological blocks stay together.
+    Groups are ordered chronologically, then whole groups are assigned to
+    train/validation/test near the configured fractions.
     """
-    n = len(records)
-    train_end = int(n * cfg.train_fraction)
-    val_end = train_end + int(n * cfg.validation_fraction)
+    if not records:
+        return {"train": [], "validation": [], "test": []}
+
+    # 1. Identify logical groups
+    groups_dict: dict[Any, list[dict[str, Any]]] = {}
+    for r in records:
+        if table_name == "operations":
+            group_key = (r["timestamp"][:10], r["machine_id"])
+        else:
+            group_key = r["started_at"][:10]
+        groups_dict.setdefault(group_key, []).append(r)
+
+    # 2. Sort records within groups where appropriate
+    for group_key, group_records in groups_dict.items():
+        if table_name == "operations":
+            group_records.sort(key=lambda x: x["timestamp"])
+        else:
+            group_records.sort(key=lambda x: (x["started_at"], x["task_id"]))
+
+    # 3. Determine each group's chronological position using timestamp semantics
+    def group_chronological_key(item: tuple[Any, list[dict[str, Any]]]) -> tuple[Any, ...]:
+        key, group_records = item
+        if table_name == "operations":
+            start_ts = min(r["timestamp"] for r in group_records)
+            machine_id = group_records[0]["machine_id"]
+            return (start_ts, machine_id)
+        else:
+            start_ts = min(r["started_at"] for r in group_records)
+            return (start_ts, str(key))
+
+    # 4. Order groups chronologically
+    sorted_groups = [g for _, g in sorted(groups_dict.items(), key=group_chronological_key)]
+
+    total_rows = len(records)
+    num_groups = len(sorted_groups)
+
+    # Determine split boundaries across whole groups
+    target_train_rows = total_rows * cfg.train_fraction
+    target_val_rows = total_rows * cfg.validation_fraction
+
+    train_groups: list[list[dict[str, Any]]] = []
+    val_groups: list[list[dict[str, Any]]] = []
+    test_groups: list[list[dict[str, Any]]] = []
+
+    # Reserve groups for later splits if we have enough groups
+    min_val_groups = 1 if num_groups >= 2 else 0
+    min_test_groups = 1 if num_groups >= 3 else 0
+    max_train_idx = num_groups - (min_val_groups + min_test_groups)
+
+    current_train_rows = 0
+    idx = 0
+
+    while idx < max_train_idx:
+        group_rows = len(sorted_groups[idx])
+        if train_groups and (current_train_rows + group_rows > target_train_rows):
+            break
+        train_groups.append(sorted_groups[idx])
+        current_train_rows += group_rows
+        idx += 1
+
+    if not train_groups and idx < max_train_idx:
+        train_groups.append(sorted_groups[idx])
+        current_train_rows += len(sorted_groups[idx])
+        idx += 1
+
+    max_val_idx = num_groups - min_test_groups
+    current_val_rows = 0
+
+    while idx < max_val_idx:
+        group_rows = len(sorted_groups[idx])
+        if val_groups and (current_val_rows + group_rows > target_val_rows):
+            break
+        val_groups.append(sorted_groups[idx])
+        current_val_rows += group_rows
+        idx += 1
+
+    if not val_groups and min_val_groups and idx < max_val_idx:
+        val_groups.append(sorted_groups[idx])
+        idx += 1
+
+    while idx < num_groups:
+        test_groups.append(sorted_groups[idx])
+        idx += 1
 
     return {
-        "train": records[:train_end],
-        "validation": records[train_end:val_end],
-        "test": records[val_end:],
+        "train": [r for g in train_groups for r in g],
+        "validation": [r for g in val_groups for r in g],
+        "test": [r for g in test_groups for r in g],
     }
 
 

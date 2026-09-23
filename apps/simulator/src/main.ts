@@ -15,7 +15,7 @@ type SimState = {
   bucket_angle_deg: number; bucket_load_m3: number; engine_running: boolean;
   seatbelt_fastened: boolean; parking_brake_engaged: boolean; fuel_used_l: number;
   idle_seconds: number; load_cycles: number; elapsed_s: number;
-  deposited_m3: number; engine_hours: number;
+  engine_hours: number;
 };
 type SiteActor = { actor_id: string; kind: "worker" | "vehicle"; position: Point; heading_deg: number; radius_m: number; speed_kmh: number };
 type OverrideField = "rpm" | "throttle_percent" | "fuel_percent" | "engine_temperature_c" | "hydraulic_pressure_psi" | "hydraulic_temperature_c" | "load_percent";
@@ -41,7 +41,7 @@ const state: SimState = {
   boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15,
   bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true,
   parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0,
-  load_cycles: 0, elapsed_s: 0, deposited_m3: 0, engine_hours: 1523.5,
+  load_cycles: 0, elapsed_s: 0, engine_hours: 1523.5,
 };
 const actors: SiteActor[] = [];
 const outbox = new WorkEventOutbox(64);
@@ -329,7 +329,7 @@ function setToggle(selector: string, label: string, active: boolean): void {
   const button = root.querySelector<HTMLButtonElement>(selector); if (button) { button.textContent = label; button.classList.toggle("active", active); }
 }
 function resetSimulation(): void {
-  Object.assign(state, { x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0, boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15, bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true, parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0, load_cycles: 0, elapsed_s: 0, deposited_m3: 0 });
+  Object.assign(state, { x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0, boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15, bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true, parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0, load_cycles: 0, elapsed_s: 0 });
   localSessionId = makeLocalSessionId(); outbox.clear(); frameStream?.reset(0); latestFrame = null;
   for (const field of Object.keys(overrides) as OverrideField[]) delete overrides[field];
   hazardStaged = false; actors.splice(0, actors.length); keys.clear(); paused = false; previousTick = performance.now(); frameStream?.resume(); moveActors();

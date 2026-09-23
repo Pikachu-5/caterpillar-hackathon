@@ -61,23 +61,22 @@ let localSessionId = makeLocalSessionId();
 
 function renderShell(): void {
   root.innerHTML = `<div class="app-shell">
-    <header class="topbar"><a class="brand" href="#"><span class="cat-badge">CAT</span><span>OPERATOR SIMULATOR</span></a><div class="top-status"><span id="frame-dot" class="status-dot live"></span><span id="frame-status">LOCAL FRAME STREAM · 5 HZ</span><span class="divider"></span><span class="operator-label">CAT 325 · TRACKED EXCAVATOR</span></div></header>
+    <header class="topbar"><a class="brand" href="#"><span class="cat-badge">CAT</span><span>OPERATOR SIMULATOR</span></a><div class="top-status"><span class="operator-label">CAT 325</span></div></header>
     <main class="cockpit">
       <section class="workspace">
-        <div class="section-heading"><div><p class="eyebrow">${escapeHtml(siteData.name)} · ${siteData.width_m} × ${siteData.height_m} m</p><h1>CAT 325 <span class="subheading">Site Simulator</span></h1></div><div class="source-chip"><span class="pulse"></span>LOCAL SESSION</div></div>
-        <div class="viewport"><div id="sim-world"></div><div class="viewport-label"><span>LOCAL SITE COORDINATES</span><span id="metric-position">MACHINE 018, 024 M</span><span>ORIGIN SOUTHWEST · +X EAST · +Y NORTH</span></div></div>
+        <div class="section-heading"><div><p class="eyebrow">${escapeHtml(siteData.name)} · ${siteData.width_m} × ${siteData.height_m} m</p><h1>CAT 325</h1></div></div>
+        <div class="viewport"><div id="sim-world"></div><div id="map-tooltip" class="map-tooltip" role="tooltip" hidden></div><div class="viewport-label"><span>SITE MAP</span><span id="metric-position">18, 22 M</span></div></div>
         <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button"></button><button id="belt-control" class="toggle-button"></button><button id="brake-control" class="toggle-button"></button></div><div class="action-group"><button id="pause-control" class="primary small">Pause simulation</button><button id="hazard-control" class="secondary small">Stage worker proximity</button><button id="reset-control" class="secondary small">Reset session</button></div></div>
-        <div class="key-legend"><span class="legend-title">CONTROLS</span><kbd>W</kbd><kbd>S</kbd><span>travel</span><kbd>A</kbd><kbd>D</kbd><span>tracks</span><kbd>Q</kbd><kbd>E</kbd><span>swing</span><kbd>R</kbd><kbd>F</kbd><span>boom</span><kbd>T</kbd><kbd>G</kbd><span>stick</span><kbd>Y</kbd><kbd>H</kbd><span>bucket</span><kbd>Space</kbd><span>pickup / deposit</span></div>
+        <div class="key-legend"><span class="legend-title">KEYS</span>W / S Drive <span>·</span> A / D Steer <span>·</span> Q / E Swing <span>·</span> R / F Boom <span>·</span> T / G Stick <span>·</span> Y / H Bucket <span>·</span> Space Work</div>
         <div class="banner hidden" id="banner" role="status"></div>
       </section>
       <aside class="telemetry-panel">
-        <div class="panel-title"><div><p class="eyebrow">SIMULATED READINGS</p><h2>Machine status</h2></div><span id="machine-state" class="machine-state running">RUNNING</span></div>
+        <div class="panel-title"><div><h2>Readings</h2></div></div>
         <div class="metric-grid"><div class="metric"><span>GROUND SPEED</span><strong id="metric-speed">0.0</strong><small>km/h</small></div><div class="metric"><span>ENGINE SPEED</span><strong id="metric-rpm">1,200</strong><small>RPM</small></div><div class="metric"><span>FUEL USED</span><strong id="metric-fuel">0.0</strong><small>L this session</small></div><div class="metric"><span>LOAD CYCLES</span><strong id="metric-cycles">0</strong><small>cycles</small></div></div>
         <div class="task-card"><div class="task-heading"><h3>Preset job · A → B</h3><span id="task-state" class="task-state">READY</span></div><strong id="task-title">${escapeHtml(taskData.title)}</strong><p id="task-route">Pickup at Material pickup · Deposit at Deposit</p><div id="task-amount" class="task-amount">No deposits pending acknowledgement.</div><button id="work-control" class="primary work-button">Pickup / deposit material</button></div>
-        <div class="task-card attachment-card"><div class="task-heading"><h3>Attachment pose</h3><span class="local-tag">SIMPLIFIED KINEMATICS</span></div><div class="pose-grid"><div><span>BOOM</span><strong id="metric-boom">35°</strong></div><div><span>STICK</span><strong id="metric-stick">−30°</strong></div><div><span>BUCKET</span><strong id="metric-bucket">15°</strong></div><div><span>UPPER BODY</span><strong id="metric-swing">000°</strong></div></div></div>
+        <div class="task-card attachment-card"><div class="task-heading"><h3>Attachment pose</h3></div><div class="pose-grid"><div><span>Boom</span><strong id="metric-boom">35°</strong></div><div><span>Stick</span><strong id="metric-stick">−30°</strong></div><div><span>Bucket</span><strong id="metric-bucket">15°</strong></div><div><span>Upper body</span><strong id="metric-swing">000°</strong></div></div></div>
         <details id="override-card" class="override-card"><summary><span>Telemetry overrides</span><span id="override-mark" class="override-mark">0 OVERRIDDEN</span></summary><p class="hint">Override individual readings; active fields are marked in every schema-validated frame.</p><div id="override-list" class="override-list"></div><button id="clear-overrides" class="text-button" type="button">Clear all overrides</button></details>
         <div class="site-facts"><div><span>HEADING</span><strong id="metric-heading">000°</strong></div><div><span>BUCKET LOAD</span><strong id="metric-load">0.00 m³</strong></div><div><span>SIM TIME</span><strong id="metric-time">00:00</strong></div></div>
-        <p class="notice">All readings and movement are simulated. This is a simplified 2D demo, not a CAT machine model.</p>
       </aside>
     </main>
   </div>`;
@@ -91,7 +90,7 @@ function createGame(): void {
   game = new Phaser.Game({
     type: Phaser.AUTO, parent: "sim-world", backgroundColor: "#202720", width: 960, height: 640,
     scale: { mode: Phaser.Scale.RESIZE, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [scene], render: { antialias: true, pixelArt: false },
+    scene: [scene], render: { antialias: true, pixelArt: false, roundPixels: false },
   });
   game.events.once("ready", () => scene?.configure(siteData, state, actors));
   animationFrame = window.setInterval(() => tick(performance.now()), 50);
@@ -128,11 +127,13 @@ function bindControls(): void {
 
 function keyHandler(event: KeyboardEvent): void {
   const target = event.target;
-  if (target instanceof Element && target.closest("button, input, select, textarea, summary, [contenteditable='true'], [role='button']")) return;
   const key = event.key.toLowerCase();
+  if (event.type === "keyup") { keys.delete(key); return; }
+  if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || (target instanceof HTMLElement && target.isContentEditable)) return;
+  if (key === " " && target instanceof Element && target.closest("button, summary, [role='button']")) return;
   if (["w", "a", "s", "d", "q", "e", "r", "f", "t", "g", "y", "h", " "].includes(key)) event.preventDefault();
   if (event.type === "keydown" && key === " " && !event.repeat) pickupOrDeposit();
-  if (event.type === "keydown") keys.add(key); else keys.delete(key);
+  keys.add(key);
 }
 function releaseKeys(): void { keys.clear(); }
 
@@ -307,7 +308,7 @@ function updateReadings(): void {
   setText("#metric-rpm", Math.round(overrides.rpm ?? (state.engine_running ? 1200 + Math.abs(state.speed_mps) * 200 : 0)).toLocaleString());
   setText("#metric-fuel", state.fuel_used_l.toFixed(1)); setText("#metric-cycles", String(state.load_cycles));
   setText("#metric-heading", `${String(Math.round(state.heading_deg)).padStart(3, "0")}°`);
-  setText("#metric-position", `MACHINE ${state.x_m.toFixed(1)}, ${state.y_m.toFixed(1)} M`);
+  setText("#metric-position", `${state.x_m.toFixed(1)}, ${state.y_m.toFixed(1)} M`);
   setText("#metric-load", `${state.bucket_load_m3.toFixed(2)} m³`);
   setText("#metric-boom", `${Math.round(state.boom_angle_deg)}°`); setText("#metric-stick", `${Math.round(state.stick_angle_deg)}°`);
   setText("#metric-bucket", `${Math.round(state.bucket_angle_deg)}°`); setText("#metric-swing", `${String(Math.round(state.upper_heading_deg)).padStart(3, "0")}°`);

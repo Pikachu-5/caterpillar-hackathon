@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0.0",
+  "message_id": "MSG001",
+  "sent_at": "2026-09-23T10:00:00Z",
+  "type": "world_frame",
+  "data": {
+    "schema_version": "1.0.0",
+    "session_id": "SESSION001",
+    "site_id": "SITE001",
+    "site_revision": 1,
+    "sequence": 100,
+    "timestamp": "2026-09-23T10:00:00Z",
+    "simulation_time_s": 20,
+    "environment_id": "ENV001",
+    "telemetry": {
+      "machine_id": "EXC001",
+      "operator_id": "OP1001",
+      "machine_model": "CAT 325",
+      "position": {
+        "x_m": 20,
+        "y_m": 25
+      },
+      "heading_deg": 90,
+      "speed_kmh": 0,
+      "engine_running": true,
+      "engine_hours": 1523.5,
+      "rpm": 1200,
+      "throttle_percent": 35,
+      "fuel_percent": 70,
+      "fuel_used_l_session": 0.2,
+      "engine_temperature_c": 75,
+      "hydraulic_pressure_psi": 1800,
+      "hydraulic_temperature_c": 60,
+      "load_percent": 30,
+      "idle_time_s_session": 5,
+      "load_cycles_session": 1,
+      "seatbelt_fastened": true,
+      "operator_present": true,
+      "parking_brake_engaged": true,
+      "attachment": {
+        "type": "bucket",
+        "upper_body_heading_deg": 90,
+        "boom_angle_deg": 35,
+        "stick_angle_deg": -30,
+        "bucket_angle_deg": 15,
+        "bucket_tip_position": {
+          "x_m": 25,
+          "y_m": 25
+        },
+        "bucket_tip_height_m": 1,
+        "bucket_load_m3": 0,
+        "footprint_radius_m": 2,
+        "arm_safety_radius_m": 1
+      },
+      "overridden_fields": []
+    },
+    "actors": [
+      {
+        "actor_id": "WORKER001",
+        "kind": "worker",
+        "position": {
+          "x_m": 40,
+          "y_m": 40
+        },
+        "heading_deg": 0,
+        "radius_m": 0.4,
+        "speed_kmh": 3
+      }
+    ],
+    "work_events": [
+      {
+        "event_id": "WORK001",
+        "task_id": "TASK001",
+        "kind": "material_deposited",
+        "destination_id": "DEST_B",
+        "quantity_m3": 0.5,
+        "simulation_time_s": 20
+      }
+    ]
+  }
+}

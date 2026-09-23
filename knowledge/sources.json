@@ -1,0 +1,22 @@
+{
+  "sources": [
+    {
+      "document_id": "CAT325_OMM_2020",
+      "title": "CAT 325 Excavator Operation and Maintenance Manual",
+      "publisher": "Caterpillar",
+      "publication_number": "M0099648-02",
+      "edition": "November 2020",
+      "language": "en-us",
+      "model": "CAT 325",
+      "serial_applicability": "TEL 1-UP",
+      "url": "https://hammerhire.com.au/assets/files/hire-excavators/cat-operator-manual-325-2d.pdf",
+      "host": "Hammer Hire (public rental-company copy)",
+      "pdf_page_count_observed": 388,
+      "access_checked_on": "2026-09-23",
+      "status": "public_url_verified_not_ingested",
+      "sha256": null,
+      "local_filename": null,
+      "license": "Copyrighted Caterpillar publication; public access is not an open redistribution license."
+    }
+  ]
+}

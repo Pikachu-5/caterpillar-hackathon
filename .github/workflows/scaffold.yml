@@ -1,0 +1,31 @@
+name: Scaffold and contracts
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - run: npm run contracts:check
+      - name: Validate Compose configuration without starting services
+        env:
+          POSTGRES_PASSWORD: ci-validation-placeholder
+        run: docker compose config --quiet
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Parse Python project metadata
+        run: python -c "import pathlib,tomllib; [tomllib.loads(p.read_text()) for p in pathlib.Path('.').glob('*/pyproject.toml')]"
+      - name: Validate full OpenAPI specification
+        run: |
+          python -m pip install -r scripts/requirements-validation.txt
+          python scripts/validate-openapi.py

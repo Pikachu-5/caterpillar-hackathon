@@ -1,0 +1,2 @@
+# Optional full OpenAPI validation; no backend runtime is installed by this file.
+openapi-spec-validator==0.9.0

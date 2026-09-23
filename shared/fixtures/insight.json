@@ -1,0 +1,20 @@
+{
+  "insight_id": "INSIGHT001",
+  "operator_id": "OP1001",
+  "session_id": "SESSION001",
+  "kind": "excessive_idling",
+  "summary": "Idle time exceeds the synthetic reference baseline.",
+  "severity": "info",
+  "observed_at": "2026-09-23T10:00:00Z",
+  "evidence": [
+    {
+      "metric": "idle_time_min",
+      "observed_value": 30,
+      "baseline_value": 15,
+      "unit": "min"
+    }
+  ],
+  "method": "statistical",
+  "model_version": "demo-baseline-1",
+  "synthetic_basis": true
+}

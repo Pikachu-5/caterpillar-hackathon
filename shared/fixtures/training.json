@@ -1,0 +1,17 @@
+{
+  "module_id": "TRAIN001",
+  "title": "Seatbelt awareness",
+  "estimated_minutes": 3,
+  "reason": "Recurring seatbelt incidents",
+  "related_incident_ids": [
+    "INC001"
+  ],
+  "content_markdown": "Example payload only. Author verified training content in TRAIN-001.",
+  "questions": [],
+  "status": "not_started",
+  "best_score_percent": null,
+  "completed_at": null,
+  "document_ids": [
+    "CAT325_OMM_2020"
+  ]
+}

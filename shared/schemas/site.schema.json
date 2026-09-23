@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/site.schema.json",
+  "title": "Site",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "site_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "width_m": {
+      "type": "number",
+      "minimum": 1
+    },
+    "height_m": {
+      "type": "number",
+      "minimum": 1
+    },
+    "coordinate_system": {
+      "const": "local_meters_east_north"
+    },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "zone_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "restricted",
+              "work",
+              "pickup",
+              "dropoff",
+              "terrain"
+            ]
+          },
+          "polygon": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "$ref": "common.schema.json#/$defs/point"
+            }
+          },
+          "terrain": {
+            "type": "string",
+            "enum": [
+              "firm",
+              "mud",
+              "sand",
+              "rock",
+              "unknown"
+            ]
+          }
+        },
+        "required": [
+          "zone_id",
+          "name",
+          "kind",
+          "polygon",
+          "terrain"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000
+    },
+    "static_objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "object_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "kind": {
+            "const": "obstacle"
+          },
+          "position": {
+            "$ref": "common.schema.json#/$defs/point"
+          },
+          "radius_m": {
+            "type": "number",
+            "minimum": 0.1
+          }
+        },
+        "required": [
+          "object_id",
+          "kind",
+          "position",
+          "radius_m"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000
+    },
+    "destinations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "destination_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "position": {
+            "$ref": "common.schema.json#/$defs/point"
+          },
+          "radius_m": {
+            "type": "number",
+            "minimum": 0.1
+          }
+        },
+        "required": [
+          "destination_id",
+          "label",
+          "position",
+          "radius_m"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000
+    }
+  },
+  "required": [
+    "schema_version",
+    "site_id",
+    "revision",
+    "name",
+    "width_m",
+    "height_m",
+    "coordinate_system",
+    "zones",
+    "static_objects",
+    "destinations"
+  ],
+  "additionalProperties": false
+}

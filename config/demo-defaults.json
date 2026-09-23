@@ -1,0 +1,30 @@
+{
+  "config_version": "demo-1",
+  "provenance": "synthetic_demo_assumptions_not_oem_limits",
+  "telemetry_hz": 5,
+  "persistence_hz": 1,
+  "stale_after_s": 3,
+  "disconnected_after_s": 10,
+  "safety": {
+    "proximity_warning_clearance_m": 5,
+    "proximity_critical_clearance_m": 2,
+    "speed_warning_kmh": 6,
+    "engine_temperature_warning_c": 100,
+    "hydraulic_temperature_warning_c": 90,
+    "hydraulic_pressure_warning_psi": 5000,
+    "wind_warning_kmh": 40,
+    "precipitation_warning_mm_h": 10,
+    "soil_moisture_advisory_percent_vwc": 45,
+    "clear_duration_s": 2,
+    "threshold_hysteresis_fraction": 0.1
+  },
+  "environment": {
+    "weather": "Sunny",
+    "air_temperature_c": 28,
+    "wind_speed_kmh": 8,
+    "precipitation_mm_h": 0,
+    "soil_type": "Loam",
+    "soil_moisture_percent_vwc": 20,
+    "terrain": "firm"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/world-frame.schema.json",
+  "title": "WorldFrame",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "session_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "site_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "site_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "timestamp": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "simulation_time_s": {
+      "type": "number",
+      "minimum": 0
+    },
+    "environment_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "telemetry": {
+      "$ref": "telemetry.schema.json"
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "actor_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "worker",
+              "vehicle"
+            ]
+          },
+          "position": {
+            "$ref": "common.schema.json#/$defs/point"
+          },
+          "heading_deg": {
+            "$ref": "common.schema.json#/$defs/heading"
+          },
+          "radius_m": {
+            "type": "number",
+            "minimum": 0.1
+          },
+          "speed_kmh": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "actor_id",
+          "kind",
+          "position",
+          "heading_deg",
+          "radius_m",
+          "speed_kmh"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000
+    },
+    "work_events": {
+      "type": "array",
+      "items": {
+        "$ref": "work-event.schema.json"
+      },
+      "maxItems": 10000
+    }
+  },
+  "required": [
+    "schema_version",
+    "session_id",
+    "site_id",
+    "site_revision",
+    "sequence",
+    "timestamp",
+    "simulation_time_s",
+    "environment_id",
+    "telemetry",
+    "actors",
+    "work_events"
+  ],
+  "additionalProperties": false
+}

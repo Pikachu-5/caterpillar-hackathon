@@ -1,0 +1,15 @@
+{
+  "task_id": "TASK001",
+  "estimated_total_minutes": 5,
+  "remaining_minutes": 4.5,
+  "interval_lower_minutes": null,
+  "interval_upper_minutes": null,
+  "interval_coverage": null,
+  "method": "baseline",
+  "model_version": "untrained-fixture",
+  "synthetic_basis": true,
+  "explanation_factors": [
+    "Contract fixture only; not a fitted prediction."
+  ],
+  "computed_at": "2026-09-23T10:00:00Z"
+}

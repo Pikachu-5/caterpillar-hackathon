@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "message_id": "MSG001",
+  "sent_at": "2026-09-23T10:00:00Z",
+  "type": "frame_ack",
+  "data": {
+    "session_id": "SESSION001",
+    "sequence": 100,
+    "accepted_event_ids": [
+      "WORK001"
+    ]
+  }
+}

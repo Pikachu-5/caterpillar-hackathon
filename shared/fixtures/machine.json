@@ -1,0 +1,10 @@
+{
+  "machine_id": "EXC001",
+  "model": "CAT 325",
+  "machine_type": "excavator",
+  "undercarriage": "tracked",
+  "machine_age_years": 2,
+  "manual_document_id": "CAT325_OMM_2020",
+  "manual_serial_prefix": "TEL",
+  "simulated": true
+}

@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/historical-task.schema.json",
+  "title": "HistoricalTask",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "task_type": {
+      "$ref": "common.schema.json#/$defs/task_type"
+    },
+    "weather": {
+      "type": "string",
+      "enum": [
+        "Sunny",
+        "Rainy",
+        "Cloudy",
+        "Windy"
+      ]
+    },
+    "operator_skill": {
+      "$ref": "common.schema.json#/$defs/skill"
+    },
+    "machine_age_years": {
+      "type": "number",
+      "minimum": 0
+    },
+    "estimated_minutes": {
+      "type": "number",
+      "minimum": 0
+    },
+    "actual_minutes": {
+      "type": "number",
+      "minimum": 0
+    },
+    "provenance": {
+      "type": "string",
+      "enum": [
+        "provided_sample",
+        "synthetic"
+      ]
+    },
+    "air_temperature_c": {
+      "type": "number",
+      "minimum": -60,
+      "maximum": 70
+    },
+    "soil_type": {
+      "$ref": "common.schema.json#/$defs/soil_type"
+    },
+    "soil_moisture_percent_vwc": {
+      "$ref": "common.schema.json#/$defs/percent"
+    },
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "operator_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "started_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "generator_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "generation_seed": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "task_id",
+    "task_type",
+    "weather",
+    "operator_skill",
+    "machine_age_years",
+    "estimated_minutes",
+    "actual_minutes",
+    "provenance"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "provenance": {
+            "const": "synthetic"
+          }
+        },
+        "required": [
+          "provenance"
+        ]
+      },
+      "then": {
+        "required": [
+          "generator_version",
+          "generation_seed"
+        ],
+        "properties": {
+          "generator_version": {},
+          "generation_seed": {}
+        }
+      }
+    }
+  ]
+}

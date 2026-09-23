@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/task.schema.json",
+  "title": "Task",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "operator_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "task_type": {
+      "$ref": "common.schema.json#/$defs/task_type"
+    },
+    "scheduled_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "order_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "active",
+        "paused",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "site_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "source_destination_id": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "target_destination_id": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "target_quantity_m3": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0.001
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "completed_quantity_m3": {
+      "type": "number",
+      "minimum": 0
+    },
+    "progress_percent": {
+      "$ref": "common.schema.json#/$defs/percent"
+    },
+    "progress_mode": {
+      "type": "string",
+      "enum": [
+        "material_volume",
+        "manual"
+      ]
+    },
+    "estimated_minutes": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "remaining_minutes": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "actual_minutes": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "updated_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "task_id",
+    "operator_id",
+    "machine_id",
+    "title",
+    "task_type",
+    "scheduled_date",
+    "order_index",
+    "status",
+    "site_id",
+    "source_destination_id",
+    "target_destination_id",
+    "target_quantity_m3",
+    "completed_quantity_m3",
+    "progress_percent",
+    "progress_mode",
+    "estimated_minutes",
+    "remaining_minutes",
+    "actual_minutes",
+    "revision",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false
+}

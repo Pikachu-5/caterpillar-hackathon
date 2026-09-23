@@ -1,0 +1,8 @@
+{
+  "event_id": "WORK001",
+  "task_id": "TASK001",
+  "kind": "material_deposited",
+  "destination_id": "DEST_B",
+  "quantity_m3": 0.5,
+  "simulation_time_s": 20
+}

@@ -1,0 +1,7 @@
+{
+  "name": "@cat-hub/simulator",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Scaffold only: runtime dependencies and entrypoint belong to the first implementation ticket."
+}

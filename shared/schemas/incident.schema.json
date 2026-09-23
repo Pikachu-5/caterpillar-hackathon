@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/incident.schema.json",
+  "title": "Incident",
+  "type": "object",
+  "properties": {
+    "incident_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "operator_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "session_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "alert": {
+      "$ref": "safety-event.schema.json"
+    },
+    "duration_s": {
+      "type": "number",
+      "minimum": 0
+    },
+    "minimum_distance_m": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolution_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "condition_cleared",
+            "session_ended",
+            "source_lost"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "incident_id",
+    "operator_id",
+    "session_id",
+    "alert",
+    "duration_s",
+    "minimum_distance_m",
+    "resolution_reason"
+  ],
+  "additionalProperties": false
+}

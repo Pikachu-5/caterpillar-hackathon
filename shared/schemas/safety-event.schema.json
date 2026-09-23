@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/safety-event.schema.json",
+  "title": "SafetyEvent",
+  "type": "object",
+  "properties": {
+    "alert_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "incident_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "session_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "operator_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "rule_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "rule_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "seatbelt",
+        "proximity",
+        "restricted_zone",
+        "overspeed",
+        "engine_temperature",
+        "hydraulic_temperature",
+        "hydraulic_pressure",
+        "working_conditions",
+        "data_quality"
+      ]
+    },
+    "severity": {
+      "$ref": "common.schema.json#/$defs/severity"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "resolved"
+      ]
+    },
+    "message": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "first_seen_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "last_seen_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "acknowledged_at": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolved_at": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "position": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/point"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "subject_id": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "threshold": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "metric",
+          "value",
+          "unit",
+          "threshold"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000
+    },
+    "action": {
+      "const": "warn_only"
+    }
+  },
+  "required": [
+    "alert_id",
+    "incident_id",
+    "session_id",
+    "machine_id",
+    "operator_id",
+    "rule_id",
+    "rule_version",
+    "type",
+    "severity",
+    "status",
+    "message",
+    "first_seen_at",
+    "last_seen_at",
+    "acknowledged_at",
+    "resolved_at",
+    "position",
+    "subject_id",
+    "evidence",
+    "action"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,42 @@
+{
+  "machine_id": "EXC001",
+  "operator_id": "OP1001",
+  "machine_model": "CAT 325",
+  "position": {
+    "x_m": 20,
+    "y_m": 25
+  },
+  "heading_deg": 90,
+  "speed_kmh": 0,
+  "engine_running": true,
+  "engine_hours": 1523.5,
+  "rpm": 1200,
+  "throttle_percent": 35,
+  "fuel_percent": 70,
+  "fuel_used_l_session": 0.2,
+  "engine_temperature_c": 75,
+  "hydraulic_pressure_psi": 1800,
+  "hydraulic_temperature_c": 60,
+  "load_percent": 30,
+  "idle_time_s_session": 5,
+  "load_cycles_session": 1,
+  "seatbelt_fastened": true,
+  "operator_present": true,
+  "parking_brake_engaged": true,
+  "attachment": {
+    "type": "bucket",
+    "upper_body_heading_deg": 90,
+    "boom_angle_deg": 35,
+    "stick_angle_deg": -30,
+    "bucket_angle_deg": 15,
+    "bucket_tip_position": {
+      "x_m": 25,
+      "y_m": 25
+    },
+    "bucket_tip_height_m": 1,
+    "bucket_load_m3": 0,
+    "footprint_radius_m": 2,
+    "arm_safety_radius_m": 1
+  },
+  "overridden_fields": []
+}

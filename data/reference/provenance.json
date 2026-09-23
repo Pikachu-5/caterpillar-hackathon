@@ -1,0 +1,21 @@
+{
+  "provenance": "provided_problem_statement_examples",
+  "transcribed_on": "2026-09-23",
+  "timezone": "unspecified",
+  "aggregation_interval": "unspecified",
+  "tables_linked": false,
+  "files": [
+    {
+      "filename": "operations.csv",
+      "rows": 4,
+      "source_photo": "IMG_1721.HEIC",
+      "sha256": "0cea95256aa5531c2c83f0b5c44c3d925d6c0e37c41569a832bcfc6b5c86ffc9"
+    },
+    {
+      "filename": "tasks.csv",
+      "rows": 5,
+      "source_photo": "IMG_1722.HEIC",
+      "sha256": "d3beda9b17d6e3f185b4fc923b4276d93e1aa0bfba732fcbbb89a13821e6699c"
+    }
+  ]
+}

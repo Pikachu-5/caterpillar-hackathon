@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/machine.schema.json",
+  "title": "Machine",
+  "type": "object",
+  "properties": {
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "model": {
+      "const": "CAT 325"
+    },
+    "machine_type": {
+      "const": "excavator"
+    },
+    "undercarriage": {
+      "const": "tracked"
+    },
+    "machine_age_years": {
+      "type": "number",
+      "minimum": 0
+    },
+    "manual_document_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "manual_serial_prefix": {
+      "const": "TEL"
+    },
+    "simulated": {
+      "const": true
+    }
+  },
+  "required": [
+    "machine_id",
+    "model",
+    "machine_type",
+    "undercarriage",
+    "machine_age_years",
+    "manual_document_id",
+    "manual_serial_prefix",
+    "simulated"
+  ],
+  "additionalProperties": false
+}

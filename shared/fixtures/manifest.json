@@ -1,0 +1,90 @@
+[
+  {
+    "file": "environment.json",
+    "schema": "environment.schema.json"
+  },
+  {
+    "file": "telemetry.json",
+    "schema": "telemetry.schema.json"
+  },
+  {
+    "file": "site.json",
+    "schema": "site.schema.json"
+  },
+  {
+    "file": "work-event.json",
+    "schema": "work-event.schema.json"
+  },
+  {
+    "file": "world-frame.json",
+    "schema": "world-frame.schema.json"
+  },
+  {
+    "file": "operator.json",
+    "schema": "operator.schema.json"
+  },
+  {
+    "file": "machine.json",
+    "schema": "machine.schema.json"
+  },
+  {
+    "file": "session.json",
+    "schema": "session.schema.json"
+  },
+  {
+    "file": "task.json",
+    "schema": "task.schema.json"
+  },
+  {
+    "file": "safety-event.json",
+    "schema": "safety-event.schema.json"
+  },
+  {
+    "file": "incident.json",
+    "schema": "incident.schema.json"
+  },
+  {
+    "file": "insight.json",
+    "schema": "insight.schema.json"
+  },
+  {
+    "file": "prediction.json",
+    "schema": "prediction.schema.json"
+  },
+  {
+    "file": "training.json",
+    "schema": "training.schema.json"
+  },
+  {
+    "file": "assistant-response.json",
+    "schema": "assistant-response.schema.json"
+  },
+  {
+    "file": "historical-operation.json",
+    "schema": "historical-operation.schema.json"
+  },
+  {
+    "file": "historical-task.json",
+    "schema": "historical-task.schema.json"
+  },
+  {
+    "file": "message-world_frame.json",
+    "schema": "message.schema.json"
+  },
+  {
+    "file": "message-snapshot.json",
+    "schema": "message.schema.json"
+  },
+  {
+    "file": "message-publisher_hello.json",
+    "schema": "message.schema.json"
+  },
+  {
+    "file": "message-frame_ack.json",
+    "schema": "message.schema.json"
+  },
+  {
+    "file": "message-error.json",
+    "schema": "message.schema.json"
+  }
+]

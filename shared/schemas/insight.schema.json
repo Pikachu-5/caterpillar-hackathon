@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/insight.schema.json",
+  "title": "Insight",
+  "type": "object",
+  "properties": {
+    "insight_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "operator_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "session_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "excessive_idling",
+        "unusual_usage",
+        "unsafe_pattern"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "severity": {
+      "$ref": "common.schema.json#/$defs/severity"
+    },
+    "observed_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "observed_value": {
+            "type": "number"
+          },
+          "baseline_value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "metric",
+          "observed_value",
+          "baseline_value",
+          "unit"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "rule",
+        "statistical",
+        "isolation_forest"
+      ]
+    },
+    "model_version": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "synthetic_basis": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "insight_id",
+    "operator_id",
+    "session_id",
+    "kind",
+    "summary",
+    "severity",
+    "observed_at",
+    "evidence",
+    "method",
+    "model_version",
+    "synthetic_basis"
+  ],
+  "additionalProperties": false
+}

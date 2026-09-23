@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/prediction.schema.json",
+  "title": "Prediction",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "estimated_total_minutes": {
+      "type": "number",
+      "minimum": 0
+    },
+    "remaining_minutes": {
+      "type": "number",
+      "minimum": 0
+    },
+    "interval_lower_minutes": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "interval_upper_minutes": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "interval_coverage": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "baseline",
+        "regression"
+      ]
+    },
+    "model_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "synthetic_basis": {
+      "const": true
+    },
+    "explanation_factors": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "maxItems": 10000
+    },
+    "computed_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "task_id",
+    "estimated_total_minutes",
+    "remaining_minutes",
+    "interval_lower_minutes",
+    "interval_upper_minutes",
+    "interval_coverage",
+    "method",
+    "model_version",
+    "synthetic_basis",
+    "explanation_factors",
+    "computed_at"
+  ],
+  "additionalProperties": false
+}

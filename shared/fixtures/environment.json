@@ -1,0 +1,18 @@
+{
+  "environment_id": "ENV001",
+  "weather_mode": "demo",
+  "weather_status": "fresh",
+  "weather": "Sunny",
+  "air_temperature_c": 28,
+  "precipitation_mm_h": 0,
+  "wind_speed_kmh": 8,
+  "observed_at": "2026-09-23T10:00:00Z",
+  "fetched_at": "2026-09-23T10:00:00Z",
+  "weather_provider": "demo",
+  "weather_code": null,
+  "location": null,
+  "soil_type": "Loam",
+  "soil_moisture_percent_vwc": 20,
+  "soil_source": "demo",
+  "terrain": "firm"
+}

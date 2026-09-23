@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-05-01 08:00:00",
+  "machine_id": "EXC001",
+  "operator_id": "OP1001",
+  "engine_hours": 1523.5,
+  "fuel_used_l": 5.2,
+  "load_cycles": 12,
+  "idling_time_min": 30,
+  "seatbelt_status": "Fastened",
+  "safety_alert_triggered": "No",
+  "provenance": "provided_sample"
+}

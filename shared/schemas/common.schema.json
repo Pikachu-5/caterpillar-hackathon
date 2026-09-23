@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/common.schema.json",
+  "title": "Common",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "percent": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "point": {
+      "type": "object",
+      "properties": {
+        "x_m": {
+          "type": "number"
+        },
+        "y_m": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "x_m",
+        "y_m"
+      ],
+      "additionalProperties": false
+    },
+    "heading": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMaximum": 360
+    },
+    "task_type": {
+      "type": "string",
+      "enum": [
+        "Earth Excavation",
+        "Trenching",
+        "Material Loading",
+        "Grading",
+        "Demolition"
+      ]
+    },
+    "skill": {
+      "type": "string",
+      "enum": [
+        "Beginner",
+        "Intermediate",
+        "Expert"
+      ]
+    },
+    "weather": {
+      "type": "string",
+      "enum": [
+        "Sunny",
+        "Rainy",
+        "Cloudy",
+        "Windy",
+        "Unknown"
+      ]
+    },
+    "soil_type": {
+      "type": "string",
+      "enum": [
+        "Sand",
+        "Loam",
+        "Clay",
+        "Gravel",
+        "Unknown"
+      ]
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Reserved for coordinated optional metadata; never reinterpret required fields."
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ]
+    }
+  }
+}

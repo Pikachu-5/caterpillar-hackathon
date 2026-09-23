@@ -1,0 +1,23 @@
+{
+  "task_id": "TASK001",
+  "operator_id": "OP1001",
+  "machine_id": "EXC001",
+  "title": "Move material from A to B",
+  "task_type": "Material Loading",
+  "scheduled_date": "2026-09-23",
+  "order_index": 0,
+  "status": "active",
+  "site_id": "SITE001",
+  "source_destination_id": "DEST_A",
+  "target_destination_id": "DEST_B",
+  "target_quantity_m3": 5,
+  "completed_quantity_m3": 0.5,
+  "progress_percent": 10,
+  "progress_mode": "material_volume",
+  "estimated_minutes": 5,
+  "remaining_minutes": 4.5,
+  "actual_minutes": null,
+  "revision": 2,
+  "created_at": "2026-09-23T10:00:00Z",
+  "updated_at": "2026-09-23T10:00:00Z"
+}

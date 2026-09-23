@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/training.schema.json",
+  "title": "TrainingModule",
+  "type": "object",
+  "properties": {
+    "module_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "estimated_minutes": {
+      "type": "number",
+      "minimum": 0
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "related_incident_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "maxItems": 10000
+    },
+    "content_markdown": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "choices": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "properties": {
+                "choice_id": {
+                  "$ref": "common.schema.json#/$defs/id"
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                }
+              },
+              "required": [
+                "choice_id",
+                "text"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "question_id",
+          "prompt",
+          "choices"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "completed"
+      ]
+    },
+    "best_score_percent": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/percent"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "completed_at": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "document_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "common.schema.json#/$defs/id"
+      },
+      "maxItems": 10000
+    }
+  },
+  "required": [
+    "module_id",
+    "title",
+    "estimated_minutes",
+    "reason",
+    "related_incident_ids",
+    "content_markdown",
+    "questions",
+    "status",
+    "best_score_percent",
+    "completed_at",
+    "document_ids"
+  ],
+  "additionalProperties": false
+}

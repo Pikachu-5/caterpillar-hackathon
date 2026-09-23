@@ -1,0 +1,10 @@
+{
+  "task_id": "T001",
+  "task_type": "Earth Excavation",
+  "weather": "Sunny",
+  "operator_skill": "Expert",
+  "machine_age_years": 2,
+  "estimated_minutes": 60,
+  "actual_minutes": 58,
+  "provenance": "provided_sample"
+}

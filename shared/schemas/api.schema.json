@@ -1,0 +1,723 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/api.schema.json",
+  "title": "ApiContracts",
+  "$defs": {
+    "Error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "validation_error",
+            "unauthenticated",
+            "forbidden",
+            "not_found",
+            "conflict",
+            "rate_limited",
+            "provider_unavailable",
+            "internal_error"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "request_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "request_id"
+      ],
+      "additionalProperties": false
+    },
+    "Register": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_.-]{3,64}$"
+        },
+        "password": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 128
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "skill_level": {
+          "$ref": "common.schema.json#/$defs/skill"
+        }
+      },
+      "required": [
+        "username",
+        "password",
+        "display_name",
+        "skill_level"
+      ],
+      "additionalProperties": false
+    },
+    "Login": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "username",
+        "password"
+      ],
+      "additionalProperties": false
+    },
+    "AuthState": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "$ref": "operator.schema.json"
+        },
+        "csrf_token": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "operator",
+        "csrf_token"
+      ],
+      "additionalProperties": false
+    },
+    "TaskWrite": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "task_type": {
+          "$ref": "common.schema.json#/$defs/task_type"
+        },
+        "machine_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "scheduled_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "site_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "source_destination_id": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_destination_id": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_quantity_m3": {
+          "anyOf": [
+            {
+              "type": "number",
+              "minimum": 0.001
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "progress_mode": {
+          "type": "string",
+          "enum": [
+            "material_volume",
+            "manual"
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "task_type",
+        "machine_id",
+        "scheduled_date",
+        "site_id",
+        "source_destination_id",
+        "target_destination_id",
+        "target_quantity_m3",
+        "progress_mode"
+      ],
+      "additionalProperties": false
+    },
+    "TaskEdit": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "task": {
+          "$ref": "api.schema.json#/$defs/TaskWrite"
+        }
+      },
+      "required": [
+        "expected_revision",
+        "task"
+      ],
+      "additionalProperties": false
+    },
+    "TaskAction": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "action": {
+          "type": "string",
+          "enum": [
+            "start",
+            "pause",
+            "resume",
+            "complete",
+            "cancel"
+          ]
+        }
+      },
+      "required": [
+        "expected_revision",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "TaskOrder": {
+      "type": "object",
+      "properties": {
+        "scheduled_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "tasks": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "properties": {
+              "task_id": {
+                "$ref": "common.schema.json#/$defs/id"
+              },
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "task_id",
+              "expected_revision"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "scheduled_date",
+        "tasks"
+      ],
+      "additionalProperties": false
+    },
+    "SessionStart": {
+      "type": "object",
+      "properties": {
+        "machine_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "site_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "demo",
+            "replay",
+            "simulator"
+          ]
+        },
+        "scenario_id": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "machine_id",
+        "site_id",
+        "source",
+        "scenario_id"
+      ],
+      "additionalProperties": false
+    },
+    "SessionAction": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "pause",
+            "resume",
+            "end"
+          ]
+        }
+      },
+      "required": [
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "WeatherSettings": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "demo",
+            "live"
+          ]
+        },
+        "location": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "latitude": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                },
+                "longitude": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180
+                }
+              },
+              "required": [
+                "latitude",
+                "longitude"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "demo_weather": {
+          "type": "string",
+          "enum": [
+            "Sunny",
+            "Rainy",
+            "Cloudy",
+            "Windy"
+          ]
+        },
+        "air_temperature_c": {
+          "type": "number",
+          "minimum": -60,
+          "maximum": 70
+        },
+        "precipitation_mm_h": {
+          "type": "number",
+          "minimum": 0
+        },
+        "wind_speed_kmh": {
+          "type": "number",
+          "minimum": 0
+        },
+        "soil_type": {
+          "$ref": "common.schema.json#/$defs/soil_type"
+        },
+        "soil_moisture_percent_vwc": {
+          "$ref": "common.schema.json#/$defs/percent"
+        },
+        "terrain": {
+          "type": "string",
+          "enum": [
+            "firm",
+            "mud",
+            "sand",
+            "rock",
+            "unknown"
+          ]
+        }
+      },
+      "required": [
+        "mode",
+        "location",
+        "demo_weather",
+        "air_temperature_c",
+        "precipitation_mm_h",
+        "wind_speed_kmh",
+        "soil_type",
+        "soil_moisture_percent_vwc",
+        "terrain"
+      ],
+      "additionalProperties": false
+    },
+    "Scenario": {
+      "type": "object",
+      "properties": {
+        "scenario_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "scenario_id",
+        "title",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "DemoControl": {
+      "type": "object",
+      "properties": {
+        "scenario_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "event": {
+          "type": "string",
+          "enum": [
+            "reset",
+            "worker_approach",
+            "seatbelt_off",
+            "overheat",
+            "clear_faults"
+          ]
+        },
+        "overrides": {
+          "type": "object",
+          "properties": {
+            "rpm": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "throttle_percent": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fuel_percent": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "engine_temperature_c": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "hydraulic_pressure_psi": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "hydraulic_temperature_c": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "load_percent": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "scenario_id",
+        "event",
+        "overrides"
+      ],
+      "additionalProperties": false
+    },
+    "QuizAttempt": {
+      "type": "object",
+      "properties": {
+        "answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question_id": {
+                "$ref": "common.schema.json#/$defs/id"
+              },
+              "choice_id": {
+                "$ref": "common.schema.json#/$defs/id"
+              }
+            },
+            "required": [
+              "question_id",
+              "choice_id"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 10000
+        }
+      },
+      "required": [
+        "answers"
+      ],
+      "additionalProperties": false
+    },
+    "QuizResult": {
+      "type": "object",
+      "properties": {
+        "module_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "score_percent": {
+          "$ref": "common.schema.json#/$defs/percent"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "feedback": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "maxItems": 10000
+        },
+        "completed_at": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/timestamp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "module_id",
+        "score_percent",
+        "passed",
+        "feedback",
+        "completed_at"
+      ],
+      "additionalProperties": false
+    },
+    "AssistantRequest": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "machine_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "question",
+        "machine_id",
+        "session_id"
+      ],
+      "additionalProperties": false
+    },
+    "Health": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "const": "ok"
+        },
+        "contract_version": {
+          "const": "1.0.0"
+        }
+      },
+      "required": [
+        "status",
+        "contract_version"
+      ],
+      "additionalProperties": false
+    },
+    "Snapshot": {
+      "type": "object",
+      "properties": {
+        "session": {
+          "anyOf": [
+            {
+              "$ref": "session.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "site": {
+          "anyOf": [
+            {
+              "$ref": "site.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "environment": {
+          "anyOf": [
+            {
+              "$ref": "environment.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "latest_frame": {
+          "anyOf": [
+            {
+              "$ref": "world-frame.schema.json"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active_alerts": {
+          "type": "array",
+          "items": {
+            "$ref": "safety-event.schema.json"
+          },
+          "maxItems": 10000
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "task.schema.json"
+          },
+          "maxItems": 10000
+        },
+        "insights": {
+          "type": "array",
+          "items": {
+            "$ref": "insight.schema.json"
+          },
+          "maxItems": 10000
+        },
+        "data_status": {
+          "type": "string",
+          "enum": [
+            "waiting",
+            "live",
+            "paused",
+            "stale",
+            "disconnected"
+          ]
+        }
+      },
+      "required": [
+        "session",
+        "site",
+        "environment",
+        "latest_frame",
+        "active_alerts",
+        "tasks",
+        "insights",
+        "data_status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

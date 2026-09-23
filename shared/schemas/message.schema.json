@@ -1,0 +1,523 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/message.schema.json",
+  "title": "RealtimeMessage",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "subscribe"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "session_id": {
+              "$ref": "common.schema.json#/$defs/id"
+            }
+          },
+          "required": [
+            "session_id"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "publisher_hello"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "session_id": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "csrf_token": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            }
+          },
+          "required": [
+            "session_id",
+            "csrf_token"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "world_frame"
+        },
+        "data": {
+          "$ref": "world-frame.schema.json"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "frame_ack"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "session_id": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "sequence": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "accepted_event_ids": {
+              "type": "array",
+              "items": {
+                "$ref": "common.schema.json#/$defs/id"
+              },
+              "maxItems": 10000
+            }
+          },
+          "required": [
+            "session_id",
+            "sequence",
+            "accepted_event_ids"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "snapshot"
+        },
+        "data": {
+          "$ref": "api.schema.json#/$defs/Snapshot"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "safety_event"
+        },
+        "data": {
+          "$ref": "safety-event.schema.json"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "task_update"
+        },
+        "data": {
+          "$ref": "task.schema.json"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "insight"
+        },
+        "data": {
+          "$ref": "insight.schema.json"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "prediction"
+        },
+        "data": {
+          "$ref": "prediction.schema.json"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "environment_update"
+        },
+        "data": {
+          "$ref": "environment.schema.json"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "session_update"
+        },
+        "data": {
+          "$ref": "session.schema.json"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "stream_status"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "session_id": {
+              "$ref": "common.schema.json#/$defs/id"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "waiting",
+                "live",
+                "paused",
+                "stale",
+                "disconnected"
+              ]
+            },
+            "last_sequence": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "session_id",
+            "status",
+            "last_sequence"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "error"
+        },
+        "data": {
+          "$ref": "api.schema.json#/$defs/Error"
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "ping"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "nonce": {
+              "$ref": "common.schema.json#/$defs/id"
+            }
+          },
+          "required": [
+            "nonce"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "message_id": {
+          "$ref": "common.schema.json#/$defs/id"
+        },
+        "sent_at": {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        "type": {
+          "const": "pong"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "nonce": {
+              "$ref": "common.schema.json#/$defs/id"
+            }
+          },
+          "required": [
+            "nonce"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schema_version",
+        "message_id",
+        "sent_at",
+        "type",
+        "data"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

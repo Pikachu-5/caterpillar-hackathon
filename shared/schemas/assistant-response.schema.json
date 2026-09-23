@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/assistant-response.schema.json",
+  "title": "AssistantResponse",
+  "type": "object",
+  "properties": {
+    "answer_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "answered",
+        "insufficient_evidence",
+        "unavailable"
+      ]
+    },
+    "answer": {
+      "type": "string",
+      "maxLength": 10000
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "document_id": {
+            "$ref": "common.schema.json#/$defs/id"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "edition": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "excerpt": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "document_id",
+          "title",
+          "edition",
+          "page",
+          "url",
+          "excerpt"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 10000
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    }
+  },
+  "required": [
+    "answer_id",
+    "status",
+    "answer",
+    "citations",
+    "model",
+    "created_at"
+  ],
+  "additionalProperties": false
+}

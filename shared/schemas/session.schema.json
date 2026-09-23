@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/session.schema.json",
+  "title": "Session",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "operator_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "machine_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "site_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "demo",
+        "replay",
+        "simulator"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "ended",
+        "disconnected"
+      ]
+    },
+    "started_at": {
+      "$ref": "common.schema.json#/$defs/timestamp"
+    },
+    "ended_at": {
+      "anyOf": [
+        {
+          "$ref": "common.schema.json#/$defs/timestamp"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "latest_sequence": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "environment_id": {
+      "$ref": "common.schema.json#/$defs/id"
+    }
+  },
+  "required": [
+    "session_id",
+    "operator_id",
+    "machine_id",
+    "site_id",
+    "source",
+    "status",
+    "started_at",
+    "ended_at",
+    "latest_sequence",
+    "environment_id"
+  ],
+  "additionalProperties": false
+}

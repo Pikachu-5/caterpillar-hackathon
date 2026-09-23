@@ -1,0 +1,26 @@
+{
+  "name": "cat-operator-hub",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.14.0 <23",
+    "npm": ">=10"
+  },
+  "workspaces": [
+    "apps/*",
+    "shared"
+  ],
+  "scripts": {
+    "check": "node scripts/check-scaffold.mjs && npm run contracts:typecheck",
+    "contracts:generate": "node scripts/generate-types.mjs",
+    "contracts:check": "node scripts/generate-types.mjs --check",
+    "contracts:typecheck": "tsc --noEmit --strict --lib ES2022,DOM --moduleResolution Bundler --module ESNext shared/types/index.d.ts"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "json-schema-to-typescript": "16.0.0",
+    "typescript": "5.9.3"
+  }
+}

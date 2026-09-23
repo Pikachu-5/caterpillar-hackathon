@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.cat-operator-hub.example/v1/contracts.schema.json",
+  "title": "Contracts",
+  "type": "object",
+  "properties": {
+    "environment": {
+      "$ref": "environment.schema.json"
+    },
+    "telemetry": {
+      "$ref": "telemetry.schema.json"
+    },
+    "site": {
+      "$ref": "site.schema.json"
+    },
+    "work_event": {
+      "$ref": "work-event.schema.json"
+    },
+    "world_frame": {
+      "$ref": "world-frame.schema.json"
+    },
+    "operator": {
+      "$ref": "operator.schema.json"
+    },
+    "machine": {
+      "$ref": "machine.schema.json"
+    },
+    "session": {
+      "$ref": "session.schema.json"
+    },
+    "task": {
+      "$ref": "task.schema.json"
+    },
+    "safety_event": {
+      "$ref": "safety-event.schema.json"
+    },
+    "incident": {
+      "$ref": "incident.schema.json"
+    },
+    "insight": {
+      "$ref": "insight.schema.json"
+    },
+    "prediction": {
+      "$ref": "prediction.schema.json"
+    },
+    "training": {
+      "$ref": "training.schema.json"
+    },
+    "assistant_response": {
+      "$ref": "assistant-response.schema.json"
+    },
+    "historical_operation": {
+      "$ref": "historical-operation.schema.json"
+    },
+    "historical_task": {
+      "$ref": "historical-task.schema.json"
+    },
+    "message": {
+      "$ref": "message.schema.json"
+    },
+    "api_Error": {
+      "$ref": "api.schema.json#/$defs/Error"
+    },
+    "api_Register": {
+      "$ref": "api.schema.json#/$defs/Register"
+    },
+    "api_Login": {
+      "$ref": "api.schema.json#/$defs/Login"
+    },
+    "api_AuthState": {
+      "$ref": "api.schema.json#/$defs/AuthState"
+    },
+    "api_TaskWrite": {
+      "$ref": "api.schema.json#/$defs/TaskWrite"
+    },
+    "api_TaskEdit": {
+      "$ref": "api.schema.json#/$defs/TaskEdit"
+    },
+    "api_TaskAction": {
+      "$ref": "api.schema.json#/$defs/TaskAction"
+    },
+    "api_TaskOrder": {
+      "$ref": "api.schema.json#/$defs/TaskOrder"
+    },
+    "api_SessionStart": {
+      "$ref": "api.schema.json#/$defs/SessionStart"
+    },
+    "api_SessionAction": {
+      "$ref": "api.schema.json#/$defs/SessionAction"
+    },
+    "api_WeatherSettings": {
+      "$ref": "api.schema.json#/$defs/WeatherSettings"
+    },
+    "api_Scenario": {
+      "$ref": "api.schema.json#/$defs/Scenario"
+    },
+    "api_DemoControl": {
+      "$ref": "api.schema.json#/$defs/DemoControl"
+    },
+    "api_QuizAttempt": {
+      "$ref": "api.schema.json#/$defs/QuizAttempt"
+    },
+    "api_QuizResult": {
+      "$ref": "api.schema.json#/$defs/QuizResult"
+    },
+    "api_AssistantRequest": {
+      "$ref": "api.schema.json#/$defs/AssistantRequest"
+    },
+    "api_Health": {
+      "$ref": "api.schema.json#/$defs/Health"
+    },
+    "api_Snapshot": {
+      "$ref": "api.schema.json#/$defs/Snapshot"
+    }
+  },
+  "required": [],
+  "additionalProperties": false
+}

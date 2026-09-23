@@ -25,12 +25,28 @@ export const backend = {
   login: (username: string, password: string) => request<AuthState>("/auth/login", { method: "POST", body: JSON.stringify({ username, password }) }),
   logout: (csrf: string) => request<void>("/auth/logout", { method: "POST" }, csrf),
   machines: async () => (await request<{ items: Machine[] }>("/machines?limit=100")).items,
-  sessions: async () => (await request<{ items: Session[] }>("/sessions?limit=100")).items,
-  tasks: async () => (await request<{ items: Task[] }>("/tasks?limit=100")).items,
+  sessions: () => listAll<Session>("/sessions"),
+  tasks: () => listAll<Task>("/tasks"),
   startSession: (csrf: string, body: SessionStart) => request<Session>("/sessions", { method: "POST", body: JSON.stringify(body) }, csrf),
   sessionAction: (csrf: string, sessionId: string, action: SessionAction["action"]) => request<Session>(`/sessions/${encodeURIComponent(sessionId)}/actions`, { method: "POST", body: JSON.stringify({ action } satisfies SessionAction) }, csrf),
   snapshot: (sessionId: string) => request<Snapshot>(`/sessions/${encodeURIComponent(sessionId)}/snapshot`),
 };
+
+async function listAll<T>(path: string): Promise<T[]> {
+  const result: T[] = [];
+  const seenCursors = new Set<string>();
+  let cursor: string | null = null;
+  do {
+    const query = new URLSearchParams({ limit: "100" });
+    if (cursor) query.set("cursor", cursor);
+    const page = await request<{ items: T[]; next_cursor: string | null }>(`${path}?${query}`);
+    result.push(...page.items);
+    cursor = page.next_cursor;
+    if (cursor && seenCursors.has(cursor)) throw new Error("The backend repeated a pagination cursor.");
+    if (cursor) seenCursors.add(cursor);
+  } while (cursor);
+  return result;
+}
 
 type ConnectionCallbacks = {
   snapshot: (snapshot: Snapshot) => void;
@@ -105,7 +121,7 @@ export class PublisherConnection {
     try { message = JSON.parse(raw) as RealtimeMessage; }
     catch { this.callbacks.error("The backend sent an unreadable realtime message."); return; }
     switch (message.type) {
-      case "snapshot": this.ready = true; this.retry = 0; this.lastPong = Date.now(); this.callbacks.status("live"); this.callbacks.snapshot(message.data); break;
+      case "snapshot": this.ready = true; this.retry = 0; this.lastPong = Date.now(); this.callbacks.snapshot(message.data); this.callbacks.status("live"); break;
       case "frame_ack": this.callbacks.acknowledged(message.data.accepted_event_ids); break;
       case "environment_update": this.callbacks.environment(message.data); break;
       case "session_update": this.callbacks.session(message.data); break;

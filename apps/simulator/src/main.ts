@@ -2,11 +2,10 @@ import Phaser from "phaser";
 import site from "../../../shared/fixtures/site.json";
 import environment from "../../../shared/fixtures/environment.json";
 import machine from "../../../shared/fixtures/machine.json";
-import operator from "../../../shared/fixtures/operator.json";
-import task from "../../../shared/fixtures/task.json";
 import { SiteScene } from "./scene";
 import { FrameStream, WorkEventOutbox } from "./telemetry";
-import type { Point, Site as SiteContract, Telemetry, WorldFrame, WorkEvent } from "@cat-hub/contracts";
+import { BackendError, backend, PublisherConnection } from "./backend";
+import type { AuthState, Environment, Machine, Point, Session, Site as SiteContract, Snapshot, Task, Telemetry, WorldFrame, WorkEvent } from "@cat-hub/contracts";
 import "./style.css";
 
 type SimState = {
@@ -21,12 +20,17 @@ type SiteActor = { actor_id: string; kind: "worker" | "vehicle"; position: Point
 type OverrideField = "rpm" | "throttle_percent" | "fuel_percent" | "engine_temperature_c" | "hydraulic_pressure_psi" | "hydraulic_temperature_c" | "load_percent";
 type OverrideSetting = { label: string; min: number; max: number; step: number; value: number };
 
-const siteData = site as SiteContract;
+let siteData = site as SiteContract;
 const root = document.querySelector<HTMLDivElement>("#app")!;
-const machineData = machine;
-const operatorData = operator;
-const taskData = task;
-const environmentData = environment;
+let machineData: Machine = machine as Machine;
+let operatorId = "";
+let taskData: Task | null = null;
+let environmentData: Environment = environment as Environment;
+let authState: AuthState | null = null;
+let currentSession: Session | null = null;
+let activeTasks: Task[] = [];
+let publisher: PublisherConnection | null = null;
+let sessionBusy = false;
 const overrideSettings: Record<OverrideField, OverrideSetting> = {
   rpm: { label: "Engine RPM", min: 0, max: 5000, step: 50, value: 1350 },
   throttle_percent: { label: "Throttle", min: 0, max: 100, step: 1, value: 36 },
@@ -51,7 +55,7 @@ let scene: SiteScene | null = null;
 let frameStream: FrameStream | null = null;
 let unsubscribeFrames: (() => void) | null = null;
 let latestFrame: WorldFrame | null = null;
-let paused = false;
+let paused = true;
 let animationFrame = 0;
 let previousTick = performance.now();
 let keys = new Set<string>();
@@ -64,16 +68,16 @@ function renderShell(): void {
     <header class="topbar"><a class="brand" href="#"><span class="cat-badge">CAT</span><span>OPERATOR SIMULATOR</span></a><div class="top-status"><span id="frame-dot" class="status-dot live"></span><span id="frame-status">LOCAL FRAME STREAM · 5 HZ</span><span class="divider"></span><span class="operator-label">CAT 325 · TRACKED EXCAVATOR</span></div></header>
     <main class="cockpit">
       <section class="workspace">
-        <div class="section-heading"><div><p class="eyebrow">${escapeHtml(siteData.name)} · ${siteData.width_m} × ${siteData.height_m} m</p><h1>CAT 325 <span class="subheading">Site Simulator</span></h1></div><div class="source-chip"><span class="pulse"></span>LOCAL SESSION</div></div>
+        <div class="section-heading"><div><p id="site-label" class="eyebrow">${escapeHtml(siteData.name)} · ${siteData.width_m} × ${siteData.height_m} m</p><h1>CAT 325 <span class="subheading">Site Simulator</span></h1></div><div class="source-chip"><span class="pulse"></span><span id="source-label">NO ACTIVE SESSION</span></div></div>
         <div class="viewport"><div id="sim-world"></div><div class="viewport-label"><span>LOCAL SITE COORDINATES</span><span id="metric-position">MACHINE 018, 024 M</span><span>ORIGIN SOUTHWEST · +X EAST · +Y NORTH</span></div></div>
-        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button"></button><button id="belt-control" class="toggle-button"></button><button id="brake-control" class="toggle-button"></button></div><div class="action-group"><button id="pause-control" class="primary small">Pause simulation</button><button id="hazard-control" class="secondary small">Stage worker proximity</button><button id="reset-control" class="secondary small">Reset session</button></div></div>
+        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button"></button><button id="belt-control" class="toggle-button"></button><button id="brake-control" class="toggle-button"></button></div><div class="action-group"><button id="session-control" class="primary small">Start simulator session</button><button id="pause-control" class="secondary small" disabled>Pause simulation</button><button id="hazard-control" class="secondary small">Stage worker proximity</button><button id="reset-control" class="secondary small">Reset session</button><button id="logout-control" class="secondary small">Log out</button></div></div>
         <div class="key-legend"><span class="legend-title">CONTROLS</span><kbd>W</kbd><kbd>S</kbd><span>travel</span><kbd>A</kbd><kbd>D</kbd><span>tracks</span><kbd>Q</kbd><kbd>E</kbd><span>swing</span><kbd>R</kbd><kbd>F</kbd><span>boom</span><kbd>T</kbd><kbd>G</kbd><span>stick</span><kbd>Y</kbd><kbd>H</kbd><span>bucket</span><kbd>Space</kbd><span>pickup / deposit</span></div>
         <div class="banner hidden" id="banner" role="status"></div>
       </section>
       <aside class="telemetry-panel">
         <div class="panel-title"><div><p class="eyebrow">SIMULATED READINGS</p><h2>Machine status</h2></div><span id="machine-state" class="machine-state running">RUNNING</span></div>
         <div class="metric-grid"><div class="metric"><span>GROUND SPEED</span><strong id="metric-speed">0.0</strong><small>km/h</small></div><div class="metric"><span>ENGINE SPEED</span><strong id="metric-rpm">1,200</strong><small>RPM</small></div><div class="metric"><span>FUEL USED</span><strong id="metric-fuel">0.0</strong><small>L this session</small></div><div class="metric"><span>LOAD CYCLES</span><strong id="metric-cycles">0</strong><small>cycles</small></div></div>
-        <div class="task-card"><div class="task-heading"><h3>Preset job · A → B</h3><span id="task-state" class="task-state">READY</span></div><strong id="task-title">${escapeHtml(taskData.title)}</strong><p id="task-route">Pickup at Material pickup · Deposit at Deposit</p><div id="task-amount" class="task-amount">No deposits pending acknowledgement.</div><button id="work-control" class="primary work-button">Pickup / deposit material</button></div>
+        <div class="task-card"><div class="task-heading"><h3>Active backend task</h3><span id="task-state" class="task-state">NO TASK</span></div><strong id="task-title">No active task selected</strong><p id="task-route">Start a simulator session after an active material-volume task is available.</p><div id="task-amount" class="task-amount">Deposit events will be acknowledged by the backend.</div><button id="work-control" class="primary work-button" disabled>Pickup / deposit material</button></div>
         <div class="task-card attachment-card"><div class="task-heading"><h3>Attachment pose</h3><span class="local-tag">SIMPLIFIED KINEMATICS</span></div><div class="pose-grid"><div><span>BOOM</span><strong id="metric-boom">35°</strong></div><div><span>STICK</span><strong id="metric-stick">−30°</strong></div><div><span>BUCKET</span><strong id="metric-bucket">15°</strong></div><div><span>UPPER BODY</span><strong id="metric-swing">000°</strong></div></div></div>
         <details id="override-card" class="override-card"><summary><span>Telemetry overrides</span><span id="override-mark" class="override-mark">0 OVERRIDDEN</span></summary><p class="hint">Override individual readings; active fields are marked in every schema-validated frame.</p><div id="override-list" class="override-list"></div><button id="clear-overrides" class="text-button" type="button">Clear all overrides</button></details>
         <div class="site-facts"><div><span>HEADING</span><strong id="metric-heading">000°</strong></div><div><span>BUCKET LOAD</span><strong id="metric-load">0.00 m³</strong></div><div><span>SIM TIME</span><strong id="metric-time">00:00</strong></div></div>
@@ -83,6 +87,7 @@ function renderShell(): void {
   </div>`;
   bindControls();
   createGame();
+  loadBackendWorkspace();
   updateReadings();
 }
 
@@ -102,9 +107,10 @@ function createGame(): void {
   unsubscribeFrames = frameStream.subscribe(frame => {
     latestFrame = frame;
     setFrameStatus(`FRAME ${frame.sequence} VALIDATED · 5 HZ`, "live");
+    publisher?.publish(frame);
     onFrame(frame);
   });
-  frameStream.start();
+  if (paused) frameStream.pause(); else frameStream.start();
 }
 
 function bindControls(): void {
@@ -112,11 +118,11 @@ function bindControls(): void {
   root.querySelector<HTMLButtonElement>("#belt-control")!.onclick = () => { state.seatbelt_fastened = !state.seatbelt_fastened; updateReadings(); };
   root.querySelector<HTMLButtonElement>("#brake-control")!.onclick = () => { state.parking_brake_engaged = !state.parking_brake_engaged; if (state.parking_brake_engaged) state.speed_mps = 0; updateReadings(); };
   root.querySelector<HTMLButtonElement>("#pause-control")!.onclick = () => {
-    paused = !paused; previousTick = performance.now();
-    if (paused) frameStream?.pause(); else frameStream?.resume();
-    updateReadings();
+    void toggleSessionPause();
   };
   root.querySelector<HTMLButtonElement>("#reset-control")!.onclick = resetSimulation;
+  root.querySelector<HTMLButtonElement>("#session-control")!.onclick = () => { void startSimulatorSession(); };
+  root.querySelector<HTMLButtonElement>("#logout-control")!.onclick = () => { void logout(); };
   root.querySelector<HTMLButtonElement>("#hazard-control")!.onclick = toggleHazard;
   root.querySelector<HTMLButtonElement>("#work-control")!.onclick = pickupOrDeposit;
   root.querySelector<HTMLButtonElement>("#clear-overrides")!.onclick = clearOverrides;
@@ -124,6 +130,151 @@ function bindControls(): void {
   window.addEventListener("keydown", keyHandler);
   window.addEventListener("keyup", keyHandler);
   window.addEventListener("blur", releaseKeys);
+}
+
+function renderLogin(message = "Sign in with your operator account to connect this simulator to the backend."): void {
+  root.innerHTML = `<main class="login-shell"><section class="login-card"><div class="brand-mark">CAT<span>OPERATOR SIMULATOR</span></div><p class="eyebrow">AUTHENTICATED SIMULATOR</p><h1>Operator sign in</h1><p class="muted">Use the same operator account as the dashboard.</p><form id="login-form"><label>Username<input name="username" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">Sign in</button><p id="login-message" class="form-message" role="status">${escapeHtml(message)}</p></form></section><aside class="login-art"><div class="site-line"></div><div class="mini-excavator">325</div><span>SIMULATED SITE · AUTHENTICATED FEED</span></aside></main>`;
+  root.querySelector<HTMLFormElement>("#login-form")!.onsubmit = async event => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget as HTMLFormElement);
+    const button = root.querySelector<HTMLButtonElement>("#login-form button")!; button.disabled = true;
+    try { authState = await backend.login(String(form.get("username")), String(form.get("password"))); operatorId = authState.operator.operator_id; renderShell(); }
+    catch (error) { const label = root.querySelector<HTMLElement>("#login-message"); if (label) label.textContent = error instanceof Error ? error.message : "Sign in failed."; button.disabled = false; }
+  };
+}
+
+async function loadBackendWorkspace(): Promise<void> {
+  if (!authState) {
+    try { authState = await backend.me(); operatorId = authState.operator.operator_id; }
+    catch (error) { renderLogin(error instanceof BackendError && error.status !== 401 ? error.message : undefined); return; }
+  }
+  try {
+    const [machines, sessions, tasks] = await Promise.all([backend.machines(), backend.sessions(), backend.tasks()]);
+    const selected = machines.find(item => item.model === "CAT 325");
+    if (!selected) throw new Error("No CAT 325 machine is assigned to this operator.");
+    machineData = selected;
+    const relatedSessions = sessions.filter(item => item.machine_id === selected.machine_id).sort((a, b) => b.started_at.localeCompare(a.started_at));
+    const siteId = relatedSessions[0]?.site_id;
+    activeTasks = tasks.filter(item => item.machine_id === selected.machine_id && (!siteId || item.site_id === siteId) && item.status === "active");
+    taskData = activeTasks.find(item => item.progress_mode === "material_volume" && item.source_destination_id && item.target_destination_id) ?? null;
+    const title = root.querySelector<HTMLElement>("#task-title"), route = root.querySelector<HTMLElement>("#task-route"), button = root.querySelector<HTMLButtonElement>("#work-control");
+    if (title) title.textContent = taskData?.title ?? "No active material-volume task";
+    if (route) route.textContent = taskData ? `Task destination ${taskData.target_destination_id ?? "not set"} · ${taskData.completed_quantity_m3.toFixed(2)} / ${taskData.target_quantity_m3?.toFixed(2) ?? "—"} m³` : "Create and start a material-volume task in the dashboard before recording deposits.";
+    if (button) button.disabled = !taskData;
+    setFrameStatus("AUTHENTICATED · READY TO START", "paused");
+  } catch (error) {
+    if (error instanceof BackendError && error.status === 401) { authState = null; renderLogin("Your sign-in expired. Sign in again to continue."); }
+    else showBanner(error instanceof Error ? error.message : "Could not load operator data.", true);
+  }
+}
+
+async function startSimulatorSession(): Promise<void> {
+  if (!authState || sessionBusy) return;
+  if (!taskData) { showBanner("Start a material-volume task with source and deposit destinations for the selected CAT 325 first.", true); return; }
+  sessionBusy = true;
+  const button = root.querySelector<HTMLButtonElement>("#session-control"); if (button) button.disabled = true;
+  try {
+    const sessions = await backend.sessions();
+    const openSession = sessions.find(item => item.machine_id === machineData.machine_id && item.status !== "ended");
+    if (openSession) await backend.sessionAction(authState.csrf_token, openSession.session_id, "end");
+    const session = await backend.startSession(authState.csrf_token, { machine_id: machineData.machine_id, site_id: openSession?.site_id ?? taskData.site_id ?? siteData.site_id, source: "simulator", scenario_id: null });
+    currentSession = session; localSessionId = session.session_id;
+    const snapshot = await backend.snapshot(session.session_id);
+    applySnapshot(snapshot);
+    publisher?.close();
+    let firstSnapshot = true;
+    publisher = new PublisherConnection(session.session_id, authState.csrf_token, {
+      snapshot: snapshot => {
+        applySnapshot(snapshot);
+        if (firstSnapshot && snapshot.session?.status === "active") { firstSnapshot = false; paused = false; frameStream?.resume(); previousTick = performance.now(); updateReadings(); }
+      },
+      acknowledged: ids => { outbox.acknowledge(ids); updateReadings(); },
+      environment: next => { environmentData = next; showBanner("Site environment updated by the backend."); },
+      session: update => { currentSession = update; if (update.status !== "active") pauseLocally(update.status === "paused" ? "SESSION PAUSED" : "SESSION ENDED"); else setFrameStatus("SESSION ACTIVE", "live"); },
+      task: update => {
+        const index = activeTasks.findIndex(item => item.task_id === update.task_id);
+        if (index >= 0) activeTasks[index] = update; else activeTasks.push(update);
+        if (taskData?.task_id === update.task_id) taskData = update.status === "active" ? update : null;
+        if (!taskData && update.status === "active" && update.progress_mode === "material_volume" && update.source_destination_id && update.target_destination_id) taskData = update;
+        const title = root.querySelector<HTMLElement>("#task-title"), button = root.querySelector<HTMLButtonElement>("#work-control");
+        if (title) title.textContent = taskData?.title ?? "No active material-volume task";
+        if (button) button.disabled = !taskData;
+        updateReadings();
+      },
+      status: status => {
+        if (status === "live") { setFrameStatus("PUBLISHER CONNECTED · 5 HZ", "live"); }
+        else if (status === "login") { pauseLocally("REAUTHENTICATION REQUIRED"); showBanner("The publisher session was rejected. Sign in again to reconnect.", true); }
+        else { pauseLocally(status === "connecting" ? "PUBLISHER CONNECTING" : "PUBLISHER DISCONNECTED"); }
+      },
+      error: message => showBanner(message, true),
+    });
+    publisher.connect();
+    paused = true; frameStream?.pause(); previousTick = performance.now();
+    setSessionControls(true);
+    showBanner("Simulator session started. The previous open session was ended when source changed.");
+  } catch (error) {
+    if (error instanceof BackendError && error.status === 401) { authState = null; publisher?.close(); renderLogin("Your sign-in expired. Sign in again to continue."); }
+    else showBanner(error instanceof Error ? error.message : "Could not start simulator session.", true);
+    setFrameStatus(error instanceof BackendError && error.status === 401 ? "SIGN IN REQUIRED" : "SESSION START FAILED", "error");
+  } finally { sessionBusy = false; if (button) button.disabled = false; }
+}
+
+function applySnapshot(snapshot: Snapshot): void {
+  if (snapshot.session) currentSession = snapshot.session;
+  if (snapshot.site) siteData = snapshot.site;
+  if (snapshot.environment) environmentData = snapshot.environment;
+  activeTasks = snapshot.tasks.filter(item => item.machine_id === machineData.machine_id && item.status === "active");
+  taskData = activeTasks.find(item => item.progress_mode === "material_volume" && item.source_destination_id && item.target_destination_id) ?? null;
+  const frame = snapshot.latest_frame;
+  if (frame) {
+    localSessionId = frame.session_id;
+    const clock = Math.max(state.elapsed_s, frame.simulation_time_s);
+    const engineHours = Math.max(state.engine_hours, frame.telemetry.engine_hours);
+    const fuelUsed = Math.max(state.fuel_used_l, frame.telemetry.fuel_used_l_session);
+    const idleSeconds = Math.max(state.idle_seconds, frame.telemetry.idle_time_s_session);
+    const loadCycles = Math.max(state.load_cycles, frame.telemetry.load_cycles_session);
+    Object.assign(state, {
+      x_m: frame.telemetry.position.x_m, y_m: frame.telemetry.position.y_m,
+      heading_deg: frame.telemetry.heading_deg, speed_mps: frame.telemetry.speed_kmh / 3.6,
+      engine_running: frame.telemetry.engine_running, engine_hours: engineHours,
+      fuel_used_l: fuelUsed, idle_seconds: idleSeconds,
+      load_cycles: loadCycles, elapsed_s: clock,
+      upper_heading_deg: frame.telemetry.attachment.upper_body_heading_deg,
+      boom_angle_deg: frame.telemetry.attachment.boom_angle_deg, stick_angle_deg: frame.telemetry.attachment.stick_angle_deg,
+      bucket_angle_deg: frame.telemetry.attachment.bucket_angle_deg, bucket_load_m3: frame.telemetry.attachment.bucket_load_m3,
+      seatbelt_fastened: frame.telemetry.seatbelt_fastened, parking_brake_engaged: frame.telemetry.parking_brake_engaged,
+    });
+    actors.splice(0, actors.length, ...frame.actors.map(actor => ({ ...actor, position: { ...actor.position } })));
+  }
+  frameStream?.reset((frame?.sequence ?? currentSession?.latest_sequence ?? -1) + 1);
+  const siteLabel = root.querySelector<HTMLElement>("#site-label");
+  if (siteLabel) siteLabel.textContent = `${siteData.name} · ${siteData.width_m} × ${siteData.height_m} m`;
+  const title = root.querySelector<HTMLElement>("#task-title"), route = root.querySelector<HTMLElement>("#task-route"), button = root.querySelector<HTMLButtonElement>("#work-control");
+  if (title) title.textContent = taskData?.title ?? "No active material-volume task";
+  if (route) route.textContent = taskData ? `Deposit at ${taskData.target_destination_id} · ${taskData.completed_quantity_m3.toFixed(2)} / ${taskData.target_quantity_m3?.toFixed(2) ?? "—"} m³` : "Start a material-volume task for this machine and site in the dashboard.";
+  if (button) button.disabled = !taskData;
+  scene?.configure(siteData, state, actors); scene?.setActors(actors); scene?.setState(state);
+  setSessionControls(Boolean(currentSession)); updateReadings();
+}
+
+function setSessionControls(active: boolean): void {
+  const sessionButton = root.querySelector<HTMLButtonElement>("#session-control"), pauseButton = root.querySelector<HTMLButtonElement>("#pause-control"), source = root.querySelector<HTMLElement>("#source-label");
+  if (sessionButton) { sessionButton.textContent = active ? "End session / start new" : "Start simulator session"; sessionButton.disabled = sessionBusy; }
+  if (pauseButton) pauseButton.disabled = !active;
+  if (source) source.textContent = active ? "SIMULATOR SESSION" : "NO ACTIVE SESSION";
+}
+
+function pauseLocally(status: string): void {
+  paused = true; frameStream?.pause(); previousTick = performance.now(); setFrameStatus(status, "disconnected"); updateReadings();
+}
+
+async function logout(): Promise<void> {
+  publisher?.close(); publisher = null; paused = true; frameStream?.pause();
+  try {
+    if (authState && currentSession && currentSession.status !== "ended") await backend.sessionAction(authState.csrf_token, currentSession.session_id, "end");
+  } catch { /* Clear the local session even if the service is unavailable. */ }
+  try { if (authState) await backend.logout(authState.csrf_token); } catch { /* Local logout still clears the operator view. */ }
+  authState = null; currentSession = null; taskData = null; operatorId = ""; renderLogin();
 }
 
 function keyHandler(event: KeyboardEvent): void {
@@ -171,9 +322,10 @@ function moveActors(): void {
 
 function pickupOrDeposit(): void {
   if (paused) { showBanner("Resume the simulation before moving material.", true); return; }
-  const pickup = siteData.destinations.find(destination => destination.destination_id === "DEST_A");
-  const deposit = siteData.destinations.find(destination => destination.destination_id === "DEST_B");
-  if (!pickup || !deposit) { showBanner("The site fixture is missing the preset A → B destinations.", true); return; }
+  if (!currentSession || !taskData) { showBanner("Start a simulator session with an active material-volume task first.", true); return; }
+  const pickup = siteData.destinations.find(destination => destination.destination_id === taskData?.source_destination_id);
+  const deposit = siteData.destinations.find(destination => destination.destination_id === taskData?.target_destination_id);
+  if (!pickup || !deposit) { showBanner("The active task references a destination missing from this site revision.", true); return; }
   const tip = bucketTip();
   const atPickup = distance(tip, pickup.position) <= pickup.radius_m;
   const atDeposit = distance(tip, deposit.position) <= deposit.radius_m;
@@ -206,7 +358,7 @@ function makeFrame(sequence: number): WorldFrame {
     load_percent: Math.min(100, 14 + state.bucket_load_m3 * 60 + Math.abs(state.speed_mps) * 6),
   };
   const telemetry: Telemetry = {
-    machine_id: machineData.machine_id, operator_id: operatorData.operator_id, machine_model: "CAT 325",
+    machine_id: machineData.machine_id, operator_id: operatorId, machine_model: "CAT 325",
     position: { x_m: state.x_m, y_m: state.y_m }, heading_deg: state.heading_deg,
     speed_kmh: Math.abs(state.speed_mps) * 3.6, engine_running: state.engine_running,
     engine_hours: state.engine_hours, rpm: overrides.rpm ?? derived.rpm,
@@ -278,7 +430,7 @@ function toggleHazard(): void {
   showBanner(hazardStaged ? "Proximity scenario staged: the worker is held 3 m from the machine. No safety action changes movement." : "Proximity staging cleared; the worker is back on the preset route.");
 }
 
-function setFrameStatus(label: string, stateClass: "live" | "error"): void {
+function setFrameStatus(label: string, stateClass: "live" | "paused" | "connecting" | "disconnected" | "stale" | "error"): void {
   const status = root.querySelector<HTMLElement>("#frame-status"), dot = root.querySelector<HTMLElement>("#frame-dot");
   if (status) status.textContent = label;
   if (dot) dot.className = `status-dot ${stateClass}`;
@@ -307,7 +459,7 @@ function updateReadings(): void {
   setText("#metric-time", `${String(Math.floor(state.elapsed_s / 60)).padStart(2, "0")}:${String(Math.floor(state.elapsed_s % 60)).padStart(2, "0")}`);
   const pendingVolume = outbox.pending().reduce((total, event) => total + event.quantity_m3, 0);
   setText("#task-amount", `${outbox.size} deposit event${outbox.size === 1 ? "" : "s"} awaiting acknowledgement · ${pendingVolume.toFixed(2)} m³ queued`);
-  setText("#task-state", state.bucket_load_m3 > 0 ? "LOADED" : outbox.size > 0 ? "PENDING ACK" : state.load_cycles > 0 ? "EVENTS ACKED" : "READY");
+  setText("#task-state", state.bucket_load_m3 > 0 ? "LOADED" : outbox.size > 0 ? "PENDING ACK" : taskData ? taskData.status.toUpperCase() : "NO TASK");
   setToggle("#engine-control", `ENGINE ${state.engine_running ? "ON" : "OFF"}`, state.engine_running);
   setToggle("#belt-control", `SEATBELT ${state.seatbelt_fastened ? "FASTENED" : "UNFASTENED"}`, state.seatbelt_fastened);
   setToggle("#brake-control", `PARKING BRAKE ${state.parking_brake_engaged ? "ON" : "OFF"}`, state.parking_brake_engaged);
@@ -318,16 +470,35 @@ function updateReadings(): void {
   if (overrideMark) overrideMark.textContent = `${Object.keys(overrides).length} OVERRIDDEN`;
 }
 
+async function toggleSessionPause(): Promise<void> {
+  if (!currentSession || !authState) { showBanner("Start a simulator session first.", true); return; }
+  const action = paused ? "resume" : "pause";
+  try {
+    currentSession = await backend.sessionAction(authState.csrf_token, currentSession.session_id, action);
+    paused = action === "pause"; previousTick = performance.now();
+    if (paused) frameStream?.pause(); else frameStream?.resume();
+    updateReadings();
+  } catch (error) { showBanner(error instanceof Error ? error.message : "Session action failed.", true); }
+}
+
 function setToggle(selector: string, label: string, active: boolean): void {
   const button = root.querySelector<HTMLButtonElement>(selector); if (button) { button.textContent = label; button.classList.toggle("active", active); }
 }
-function resetSimulation(): void {
+async function resetSimulation(): Promise<void> {
+  if (currentSession && authState) {
+    try { await backend.sessionAction(authState.csrf_token, currentSession.session_id, "end"); }
+    catch (error) { showBanner(error instanceof Error ? error.message : "Could not end the current session.", true); return; }
+  }
+  publisher?.close(); publisher = null; currentSession = null;
   Object.assign(state, { x_m: 19, y_m: 22, heading_deg: 0, upper_heading_deg: 153.435, speed_mps: 0, boom_angle_deg: 90, stick_angle_deg: 90, bucket_angle_deg: 15, bucket_load_m3: 0, engine_running: true, seatbelt_fastened: true, parking_brake_engaged: false, fuel_used_l: 0, idle_seconds: 0, load_cycles: 0, elapsed_s: 0, deposited_m3: 0 });
   localSessionId = makeLocalSessionId(); outbox.clear(); frameStream?.reset(0); latestFrame = null;
   for (const field of Object.keys(overrides) as OverrideField[]) delete overrides[field];
   hazardStaged = false; actors.splice(0, actors.length); keys.clear(); paused = false; previousTick = performance.now(); moveActors();
   scene?.setActors(actors); scene?.setState(state); renderOverrides(); updateReadings();
-  showBanner("New local simulator session started. Session counters, sequence, and pending events were reset.");
+  setSessionControls(false); paused = true;
+  showBanner("Current session ended. Start a new simulator session to continue; history is retained.");
+  updateReadings();
+  if (taskData) void startSimulatorSession();
 }
 function showBanner(message: string, error = false): void {
   const banner = root.querySelector<HTMLDivElement>("#banner"); if (!banner) return;
@@ -342,9 +513,12 @@ function escapeHtml(value: string): string { return value.replace(/[&<>"']/g, ch
 
 function cleanup(): void {
   if (animationFrame) window.clearInterval(animationFrame);
-  frameStream?.stop(); unsubscribeFrames?.();
+  publisher?.close(); frameStream?.stop(); unsubscribeFrames?.();
   game?.destroy(true); game = null; scene = null;
   window.removeEventListener("keydown", keyHandler); window.removeEventListener("keyup", keyHandler); window.removeEventListener("blur", releaseKeys);
 }
 window.addEventListener("pagehide", cleanup);
-renderShell();
+void (async () => {
+  try { authState = await backend.me(); operatorId = authState.operator.operator_id; renderShell(); }
+  catch (error) { renderLogin(error instanceof BackendError && error.status !== 401 ? error.message : undefined); }
+})();

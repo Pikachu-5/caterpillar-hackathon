@@ -44,8 +44,24 @@ uv run ruff format --check .
 
 All generated data is marked `provenance: "synthetic"` and conforms to `shared/schemas/historical-operation.schema.json` and `historical-task.schema.json`.
 
+## ML-001 — ETA and unusual usage
+
+Train and evaluate the ETA regressor and usage baseline from the checked-in generated dataset:
+
+```bash
+cd ml/
+uv run python train_models.py --data ../data/generated --artifacts artifacts
+```
+
+The command uses the manifest's chronological train, validation, and test row blocks. ETA uses a task-type median baseline and a Random Forest regressor. It excludes `actual_minutes`, `estimated_minutes`, IDs, and start timestamps from the regression features. Validation absolute residuals calibrate a 90% interval; the independent test block reports actual interval coverage. Metrics are emitted for the overall test set and each task category.
+
+`models.py` exposes `ETAUsageModels.load(...)`, `predict_eta(...)`, and `detect_unusual_usage(...)`. Returned dictionaries follow the shared Prediction and Insight schemas. The usage adapter compares interval idle fraction with the training 95th percentile and estimated active-hour rates with robust median/MAD statistics from the training block. It only produces inefficiency insights; deterministic safety evaluation remains in the backend.
+
+The command writes `eta_model.joblib` and `metadata.json` to the selected artifact directory. Metadata records model version, model and dataset SHA256 hashes, features, split counts, per-category metrics, calibration details, and synthetic-data limitations. Model artifacts are local and gitignored. Load verifies the serialized model hash and model version before use.
+
 ## Limitations
 
 - All relationships are synthetic demo hypotheses, NOT measured CAT 325 behavior.
 - Evaluation demonstrates pipeline behavior, not real-world predictive accuracy.
 - The 4+5 reference rows in `data/reference/` are preserved exactly and never modified.
+- Prediction intervals and anomaly thresholds are calibrated from synthetic training/validation data and must not be presented as CAT thresholds or real-world guarantees.

@@ -89,21 +89,19 @@ function renderShell(): void {
     <header class="topbar"><a class="brand" href="#"><span class="cat-badge">CAT</span><span>OPERATOR SIMULATOR</span></a><div class="top-status"><span class="operator-label">CAT 325</span></div></header>
     <main class="cockpit">
       <section class="workspace">
-        <div class="section-heading"><h1>CAT 325</h1></div>
         <div class="viewport"><div id="sim-world"></div><div id="map-tooltip" class="map-tooltip" role="tooltip" hidden></div><div class="viewport-label"><span>SITE MAP</span><span id="metric-position">18, 22 M</span></div></div>
         <div id="environment-cues" class="environment-cues" role="group" aria-label="Site conditions" aria-live="polite">
           <div class="environment-cue weather-cue"><span id="environment-weather-icon" class="environment-icon weather-sunny" aria-hidden="true"></span><div class="environment-copy"><span class="environment-label">WEATHER</span><strong id="environment-weather">Sunny</strong><small id="environment-temperature">28°C</small></div></div>
           <div id="environment-terrain-cue" class="environment-cue terrain-cue terrain-firm"><span class="environment-icon terrain-icon" aria-hidden="true">${environmentIconMarkup("terrain")}</span><div class="environment-copy"><span class="environment-label">TERRAIN</span><strong id="environment-terrain">Firm</strong><small>Site surface</small></div></div>
           <div class="environment-cue soil-cue"><span class="environment-icon soil-icon" aria-hidden="true">${environmentIconMarkup("soil")}</span><div class="environment-copy"><span class="environment-label">SOIL · <span id="environment-soil-source">DEMO INPUT</span></span><strong id="environment-soil">Loam</strong><div class="moisture-row"><span id="environment-moisture">20% VWC</span><span class="moisture-track" aria-hidden="true"><span id="environment-moisture-fill"></span></span></div></div></div>
-          <span id="environment-freshness" class="environment-freshness"><span class="freshness-dot"></span><span>DEMO · FRESH</span></span>
         </div>
-        <div class="control-strip"><div class="switch-group"><button id="engine-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="belt-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="brake-control" class="toggle-button" type="button" aria-pressed="false"></button></div><div class="action-group"><button id="session-control" class="primary small" type="button" data-icon="engine">${iconMarkup("engine")}<span class="button-label">Start simulator session</span></button><button id="pause-control" class="secondary small" type="button" data-icon="pause" disabled>${iconMarkup("pause")}<span class="button-label">Pause simulation</span></button><button id="hazard-control" class="secondary small" type="button" aria-pressed="false" data-icon="hazard">${iconMarkup("hazard")}<span class="button-label">Stage worker proximity</span></button><button id="reset-control" class="secondary small" type="button" data-icon="reset">${iconMarkup("reset")}<span class="button-label">Reset session</span></button><button id="logout-control" class="secondary small" type="button" data-icon="logout">${iconMarkup("logout")}<span class="button-label">Log out</span></button></div></div>
         <div class="key-legend"><span class="legend-title">KEYS</span>W / S Drive <span>·</span> A / D Steer <span>·</span> Q / E Swing <span>·</span> R / F Boom <span>·</span> T / G Stick <span>·</span> Y / H Bucket <span>·</span> Space Work</div>
         <div class="banner hidden" id="banner" role="status"></div>
       </section>
       <aside class="telemetry-panel">
-        <div class="panel-title"><div><h2>Readings</h2></div></div>
-        <div class="metric-grid"><div class="metric"><span>GROUND SPEED</span><strong id="metric-speed">0.0</strong><small>km/h</small></div><div class="metric"><span>ENGINE SPEED</span><strong id="metric-rpm">1,200</strong><small>RPM</small></div><div class="metric"><span>FUEL USED</span><strong id="metric-fuel">0.0</strong><small>L this session</small></div><div class="metric"><span>LOAD CYCLES</span><strong id="metric-cycles">0</strong><small>cycles</small></div></div>
+        <section class="readings-card"><div class="panel-title"><div><h2>Readings</h2></div></div>
+        <div class="metric-grid"><div class="metric"><span>GROUND SPEED</span><strong id="metric-speed">0.0</strong><small>km/h</small></div><div class="metric"><span>ENGINE SPEED</span><strong id="metric-rpm">1,200</strong><small>RPM</small></div><div class="metric"><span>FUEL USED</span><strong id="metric-fuel">0.0</strong><small>L this session</small></div><div class="metric"><span>LOAD CYCLES</span><strong id="metric-cycles">0</strong><small>cycles</small></div></div></section>
+        <section class="controls-card"><div class="task-heading"><h3>Controls</h3></div><div class="action-group"><button id="session-control" class="primary small" type="button" data-icon="engine">${iconMarkup("engine")}<span class="button-label">Start session</span></button><button id="pause-control" class="secondary small" type="button" data-icon="pause" disabled>${iconMarkup("pause")}<span class="button-label">Pause</span></button><button id="hazard-control" class="secondary small" type="button" aria-pressed="false" data-icon="hazard">${iconMarkup("hazard")}<span class="button-label">Stage worker</span></button><button id="reset-control" class="secondary small" type="button" data-icon="reset">${iconMarkup("reset")}<span class="button-label">Reset</span></button><button id="logout-control" class="secondary small" type="button" data-icon="logout">${iconMarkup("logout")}<span class="button-label">Log out</span></button></div><div class="switch-group"><button id="engine-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="belt-control" class="toggle-button" type="button" aria-pressed="false"></button><button id="brake-control" class="toggle-button" type="button" aria-pressed="false"></button></div></section>
         <div class="task-card"><div class="task-heading"><h3>Active backend task</h3><span id="task-state" class="task-state">NO TASK</span></div><strong id="task-title">No active task selected</strong><div id="task-amount" class="task-amount">Deposit events will be acknowledged by the backend.</div><button id="work-control" class="primary work-button" type="button" data-icon="work" disabled>${iconMarkup("work")}<span class="button-label">Pickup / deposit material</span></button></div>
         <div class="task-card attachment-card"><div class="task-heading"><h3>Attachment pose</h3></div><div class="pose-grid"><div><span>Boom</span><strong id="metric-boom">35°</strong></div><div><span>Stick</span><strong id="metric-stick">−30°</strong></div><div><span>Bucket</span><strong id="metric-bucket">15°</strong></div><div><span>Upper body</span><strong id="metric-swing">000°</strong></div></div></div>
         <details id="override-card" class="override-card"><summary><span>Telemetry overrides</span><span id="override-mark" class="override-mark">0 OVERRIDDEN</span></summary><p class="hint">Override individual readings; active fields are marked in every schema-validated frame.</p><div id="override-list" class="override-list"></div><button id="clear-overrides" class="text-button" type="button">Clear all overrides</button></details>
@@ -304,7 +302,7 @@ function applySnapshot(snapshot: Snapshot): void {
 
 function setSessionControls(active: boolean): void {
   const sessionButton = root.querySelector<HTMLButtonElement>("#session-control"), pauseButton = root.querySelector<HTMLButtonElement>("#pause-control"), source = root.querySelector<HTMLElement>("#source-label");
-  if (sessionButton) { sessionButton.textContent = active ? "End session / start new" : "Start simulator session"; sessionButton.disabled = sessionBusy; }
+  if (sessionButton) { setButtonLabel(sessionButton, active ? "End session" : "Start session"); sessionButton.setAttribute("aria-label", active ? "End simulator session and start a new one" : "Start simulator session"); sessionButton.disabled = sessionBusy; }
   if (pauseButton) pauseButton.disabled = !active || !publisherSynchronized;
   if (source) source.textContent = active ? "SIMULATOR SESSION" : "NO ACTIVE SESSION";
 }
@@ -493,7 +491,7 @@ function toggleHazard(): void {
   hazardStaged = !hazardStaged;
   moveActors(); scene?.setActors(actors);
   const button = root.querySelector<HTMLButtonElement>("#hazard-control");
-  if (button) { setButtonLabel(button, hazardStaged ? "Clear worker proximity" : "Stage worker proximity"); button.setAttribute("aria-pressed", String(hazardStaged)); }
+  if (button) { setButtonLabel(button, hazardStaged ? "Clear worker" : "Stage worker"); button.setAttribute("aria-label", hazardStaged ? "Clear staged worker proximity" : "Stage worker proximity"); button.setAttribute("aria-pressed", String(hazardStaged)); }
   showBanner(hazardStaged ? "Proximity scenario staged: the worker is held 3 m from the machine. No safety action changes movement." : "Proximity staging cleared; the worker is back on the preset route.");
 }
 
@@ -525,9 +523,9 @@ function updateReadings(): void {
   setToggle("#belt-control", `SEATBELT ${state.seatbelt_fastened ? "FASTENED" : "UNFASTENED"}`, state.seatbelt_fastened);
   setToggle("#brake-control", `PARKING BRAKE ${state.parking_brake_engaged ? "ON" : "OFF"}`, state.parking_brake_engaged);
   const pauseButton = root.querySelector<HTMLButtonElement>("#pause-control");
-  if (pauseButton) { setButtonLabel(pauseButton, paused ? "Resume simulation" : "Pause simulation"); setButtonIcon(pauseButton, paused ? "play" : "pause"); }
+  if (pauseButton) { setButtonLabel(pauseButton, paused ? "Resume" : "Pause"); pauseButton.setAttribute("aria-label", paused ? "Resume simulation" : "Pause simulation"); setButtonIcon(pauseButton, paused ? "play" : "pause"); }
   const hazardButton = root.querySelector<HTMLButtonElement>("#hazard-control");
-  if (hazardButton) { setButtonLabel(hazardButton, hazardStaged ? "Clear worker proximity" : "Stage worker proximity"); hazardButton.setAttribute("aria-pressed", String(hazardStaged)); }
+  if (hazardButton) { setButtonLabel(hazardButton, hazardStaged ? "Clear worker" : "Stage worker"); hazardButton.setAttribute("aria-label", hazardStaged ? "Clear staged worker proximity" : "Stage worker proximity"); hazardButton.setAttribute("aria-pressed", String(hazardStaged)); }
   const overrideMark = root.querySelector<HTMLElement>("#override-mark");
   if (overrideMark) overrideMark.textContent = `${Object.keys(overrides).length} OVERRIDDEN`;
 }
@@ -555,12 +553,6 @@ function updateEnvironmentReadout(): void {
   if (moistureFill) moistureFill.style.width = moisture === null ? "0%" : `${Phaser.Math.Clamp(moisture, 0, 100)}%`;
   setText("#environment-soil-source", environmentData.soil_source === "operator_input" ? "OPERATOR INPUT" : environmentData.soil_source === "demo" ? "DEMO INPUT" : "SOURCE UNKNOWN");
 
-  const freshness = root.querySelector<HTMLElement>("#environment-freshness");
-  if (freshness) {
-    freshness.className = `environment-freshness freshness-${environmentData.weather_status}`;
-    const label = freshness.querySelector<HTMLElement>("span:last-child");
-    if (label) label.textContent = `${environmentData.weather_mode.toUpperCase()} · ${environmentData.weather_status.toUpperCase()}`;
-  }
 }
 
 function environmentIconMarkup(name: keyof typeof environmentIcons): string {

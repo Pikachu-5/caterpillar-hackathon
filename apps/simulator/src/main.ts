@@ -82,7 +82,8 @@ function bindControls(): void {
 }
 
 function keyHandler(event: KeyboardEvent): void {
-  if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+  const target = event.target;
+  if (target instanceof Element && (target.closest("button, input, select, textarea, summary, [contenteditable='true'], [role='button']"))) return;
   const key = event.key.toLowerCase();
   if (["w", "a", "s", "d", "q", "e", "r", "f", "t", "g", "y", "h", " "].includes(key)) event.preventDefault();
   if (event.type === "keydown" && key === " " && !event.repeat) pickupOrDeposit();
@@ -97,7 +98,9 @@ function tick(now: number): void {
   if (!state.engine_running || state.parking_brake_engaged) state.speed_mps = 0;
   else state.speed_mps = Phaser.Math.Clamp(state.speed_mps + drive * 1.2 * dt - (drive === 0 ? Math.sign(state.speed_mps) * Math.min(Math.abs(state.speed_mps), dt * 0.6) : 0), -3, 3);
   const trackTurn = Number(keys.has("d")) - Number(keys.has("a"));
-  state.heading_deg = normalize(state.heading_deg + trackTurn * dt * (state.speed_mps === 0 ? 35 : 20));
+  if (state.engine_running && !state.parking_brake_engaged) {
+    state.heading_deg = normalize(state.heading_deg + trackTurn * dt * (state.speed_mps === 0 ? 35 : 20));
+  }
   const heading = Phaser.Math.DegToRad(state.heading_deg - 90);
   state.x_m = Phaser.Math.Clamp(state.x_m + Math.cos(heading) * state.speed_mps * dt, 1, siteData.width_m - 1);
   state.y_m = Phaser.Math.Clamp(state.y_m - Math.sin(heading) * state.speed_mps * dt, 1, siteData.height_m - 1);
@@ -125,6 +128,7 @@ function moveActors(): void {
 
 function pickupOrDeposit(): void {
   if (paused) { showBanner("Resume the simulation before moving material.", true); return; }
+  if (state.deposited_m3 >= 5) { showBanner("The local demo task is complete."); return; }
   const pickup = siteData.destinations.find(destination => destination.destination_id === "DEST_A");
   const deposit = siteData.destinations.find(destination => destination.destination_id === "DEST_B");
   if (!pickup || !deposit) { showBanner("The site fixture is missing the preset A → B destinations.", true); return; }
@@ -134,7 +138,8 @@ function pickupOrDeposit(): void {
     state.bucket_load_m3 = 0.5; state.boom_angle_deg = 50; state.stick_angle_deg = 0; state.bucket_angle_deg = -10;
     showBanner("Bucket loaded with 0.50 m³ of simulated material. Move to Deposit and unload.");
   } else if (state.bucket_load_m3 > 0 && atDeposit) {
-    state.deposited_m3 += state.bucket_load_m3; state.load_cycles += 1; state.bucket_load_m3 = 0;
+    const acceptedLoad = Math.min(state.bucket_load_m3, 5 - state.deposited_m3);
+    state.deposited_m3 += acceptedLoad; state.load_cycles += 1; state.bucket_load_m3 = 0;
     showBanner(`Deposit added · ${state.deposited_m3.toFixed(2)} / 5.00 m³ for the local demo job.`);
   } else if (state.bucket_load_m3 > 0) showBanner("Move the excavator to the Deposit area before unloading.", true);
   else showBanner("Move the excavator into the Material pickup area to load the bucket.", true);
